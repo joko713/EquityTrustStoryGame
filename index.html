@@ -113,6 +113,9 @@ nav{display:flex;flex-direction:column;gap:6px;position:sticky;top:16px}
 @keyframes inU{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .ctrl{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
 .btn{background:var(--btn);color:var(--btnText);border:0;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px}
+kbd{display:inline-grid;place-items:center;width:20px;height:18px;border:1px solid currentColor;border-radius:5px;opacity:.55;margin-left:2px}
+kbd svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:none),(max-width:980px){kbd{display:none}}
 .btn.ghost{background:none;color:var(--text);border:1px solid var(--line)}
 .btn.coral{background:var(--coral);color:#fff}
 .side{display:flex;flex-direction:column;gap:14px}
@@ -242,7 +245,8 @@ button.dot{cursor:pointer}button.dot:hover{outline:2px solid var(--line);outline
   .ctrl{position:sticky;bottom:0;z-index:5;background:linear-gradient(to top,var(--surface) 72%,transparent);margin:6px -12px 0;padding:14px 12px;padding-bottom:max(12px,env(safe-area-inset-bottom));flex-wrap:nowrap}
   .ctrl .btn{flex:1;justify-content:center;min-height:46px;padding:10px 12px;font-size:14px}
   .ctrl .btn.ghost{background:var(--surface)}
-  .ctrl .btn[data-act="replay"]{flex:0 0 46px;padding:0;font-size:0;gap:0}
+  .ctrl .btn[data-act="replay"],.ctrl .btn.bk{flex:0 0 46px;padding:0;font-size:0;gap:0}
+  .ctrl .btn.bk svg{width:20px;height:20px}
   .ctrl .btn[data-act="replay"] svg{width:20px;height:20px}
   .story{gap:14px}
   .key p{font-size:14px}
@@ -295,6 +299,7 @@ const ICON = {
   quiz:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.8"/><path d="M12 17.2h.01"/>',
   arrow:'<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
   panel:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16"/>',
+  back:'<path d="M19 12H5"/><path d="m11 6-6 6 6 6"/>',
   redo:'<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>'
 };
 const ic = (n, cls='i') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
@@ -333,6 +338,7 @@ const UI = {
   cmpResult:{ko:"복귀신탁",en:"Resulting trust"},
   cmpCon:{ko:"의제신탁",en:"Constructive trust"},
   replay:{ko:"스토리 처음부터",en:"Replay story"},
+  back:{ko:"이전",en:"Back"},
   prev:{ko:"이전 문제",en:"Previous"},
   review:{ko:"답 다시 보기",en:"Review answers"},
   colType:{ko:"구분",en:"Type"},colAuth:{ko:"판례·법령",en:"Authority"},colPoint:{ko:"핵심",en:"Key point"},
@@ -341,7 +347,7 @@ const UI = {
   menu:{ko:"챕터 메뉴 접기/펼치기",en:"Show or hide chapter menu"},
   hardTag:{ko:"JD 수준",en:"JD level"}
 };
-UI.replay.zh="重播故事";UI.prev.zh="上一题";UI.review.zh="回顾答案";UI.colType.zh="类型";UI.colAuth.zh="判例与法规";UI.colPoint.zh="要点";UI.isCase.zh="判例";UI.isAct.zh="法规";UI.easy.zh="简单";UI.hard.zh="困难";UI.menu.zh="显示或隐藏章节菜单";UI.hardTag.zh="JD 水平";
+UI.replay.zh="重播故事";UI.back.zh="上一句";UI.prev.zh="上一题";UI.review.zh="回顾答案";UI.colType.zh="类型";UI.colAuth.zh="判例与法规";UI.colPoint.zh="要点";UI.isCase.zh="判例";UI.isAct.zh="法规";UI.easy.zh="简单";UI.hard.zh="困难";UI.menu.zh="显示或隐藏章节菜单";UI.hardTag.zh="JD 水平";
 
 const CAST = {
   narr:{c:"var(--muted)",i:"N",ko:"해설",en:"Narrator",rk:"",re:""},
@@ -1104,8 +1110,9 @@ function storyView(c,i){
       <div class="bub"><div class="who">${L(p)}<span>${role(p)}</span></div>${L(l)}</div></div>`}).join("");
   const more=n<c.story.length;
   const replay=n>1?`<button class="btn ghost" data-act="replay">${ic("redo")}${u("replay")}</button>`:"";
-  const ctrl=(more?`<button class="btn" data-act="line">${u("next")}${ic("arrow")}</button><button class="btn ghost" data-act="all">${u("all")}</button>`
-    :`<button class="btn" data-tab="cards">${u("toCards")}${ic("arrow")}</button>`)+replay;
+  const back=n>1?`<button class="btn ghost bk" data-act="back" aria-label="${u("back")}">${ic("back")}<span class="bt">${u("back")}</span><kbd><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></kbd></button>`:"";
+  const ctrl=back+(more?`<button class="btn" data-act="line">${u("next")}${ic("arrow")}<kbd><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></kbd></button><button class="btn ghost" data-act="all">${u("all")}</button>`
+    :`<button class="btn" data-tab="cards">${u("toCards")}${ic("arrow")}<kbd><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></kbd></button>`)+replay;
   const side=`<div class="key"><h4>${u("key")}</h4><p>${L(c.key)}</p></div>
     ${c.diagram?`<div class="diagram">${diagram()}</div>`:""}
     ${c.compare?`<div class="cmp">${c.compare.map(x=>`<div><b>${u(x.n)}</b><span class="src">${L(x.s)}</span><br><span class="eg">${L(x.e)}</span></div>`).join("")}</div>`:""}`;
@@ -1133,7 +1140,7 @@ function quizView(c,i){
     return k<=p.length?`<button class="dot ${cls}" data-jump="${k}" aria-label="${u("question")} ${k+1}"></button>`:`<span class="dot"></span>`}).join("");
   if(qi>=c.quiz.length && p.length===c.quiz.length){
     const sc=chScore(i), msg=sc===c.quiz.length?u("great"):sc>=c.quiz.length-2?u("good"):u("low");
-    const nxt=i<CH.length-1?`<button class="btn" data-ch="${i+1}">${u("nextCh")}${ic("arrow")}</button>`:`<button class="btn coral" data-res="1">${u("results")}${ic("flag")}</button>`;
+    const nxt=i<CH.length-1?`<button class="btn" data-ch="${i+1}">${u("nextCh")}${ic("arrow")}<kbd><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></kbd></button>`:`<button class="btn coral" data-res="1">${u("results")}${ic("flag")}</button>`;
     return `<div class="dots">${dots}</div><div class="done"><div class="big">${sc}/${c.quiz.length}</div>
       <div><b>${u("thisCh")}</b><p>${msg}</p><div class="ctrl">${nxt}<button class="btn ghost" data-jump="0">${u("review")}</button><button class="btn ghost" data-act="retry">${ic("redo")}${u("retry")}</button></div></div></div>`;
   }
@@ -1143,9 +1150,9 @@ function quizView(c,i){
     if(answered){cls=oi===q.a?"right":(oi===chosen?"wrong":"dim")}
     return `<button class="opt ${cls}" data-opt="${oi}" ${answered?"disabled":""}><span class="l">${"ABCD"[pos]}</span><span>${L(q.o[oi])}</span></button>`}).join("");
   const ok=chosen===q.a;
-  const prev=qi>0?`<button class="btn ghost" data-jump="${qi-1}">${u("prev")}</button>`:"";
+  const prev=qi>0?`<button class="btn ghost bk" data-jump="${qi-1}" aria-label="${u("prev")}">${ic("back")}<span class="bt">${u("prev")}</span><kbd><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></kbd></button>`:"";
   const fb=(answered?`<div class="fb ${ok?"ok":"no"}"><b>${ok?u("right"):u("wrong")}</b>${L(q.y)}</div>`:"")+
-    `<div class="ctrl">${prev}${answered?`<button class="btn" data-act="nextq">${qi===c.quiz.length-1?u("finish"):u("nextQ")}${ic("arrow")}</button>`:""}</div>`;
+    `<div class="ctrl">${prev}${answered?`<button class="btn" data-act="nextq">${qi===c.quiz.length-1?u("finish"):u("nextQ")}${ic("arrow")}<kbd><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></kbd></button>`:""}</div>`;
   return `<div class="quiz"><div><div class="dots">${dots}</div><p class="q">${L(q.q)}</p><div class="opts">${opts}</div>${fb}</div>
     <div class="qside">${u("question")}<div class="big">${qi+1}<span style="color:var(--muted);font-size:18px">/${c.quiz.length}</span></div>${u("thisCh")} <b class="mono" style="color:var(--text)">${chScore(i)}</b></div></div>`;
 }
@@ -1184,6 +1191,21 @@ function openCard(b){
   box.scrollIntoView({block:"nearest",behavior:"smooth"});
 }
 window.addEventListener("resize",()=>{const on=document.querySelector(".card.on");if(on&&document.querySelector(".card-detail")){on.dataset.step=(+on.dataset.step)-1;openCard(on)}});
+document.addEventListener("keydown",e=>{
+  if(e.altKey||e.ctrlKey||e.metaKey||e.shiftKey||S.view!=="ch")return;
+  if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;
+  const t=e.target; if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;
+  const i=S.ch,c=CH[i],k=pk(i),R=e.key==="ArrowRight";
+  if(S.tab==="story"){const n=S.line[k]||1;
+    if(R){if(n<c.story.length){S.line[k]=n+1;render(".chat > .new")}else{S.tab="cards";render();toPanel()}}
+    else if(n>1){S.line[k]=n-1;render()}
+    e.preventDefault();return}
+  if(S.tab==="quiz"){const qi=Math.min(S.qi[k]||0,c.quiz.length),p=picks(i);
+    if(R){if(qi<c.quiz.length&&p[qi]!==undefined){S.qi[k]=qi+1;render();toPanel()}else if(qi>=c.quiz.length&&i<CH.length-1){S.ch=i+1;S.tab="story";render();window.scrollTo({top:0})}}
+    else if(qi>0){S.qi[k]=qi-1;render();toPanel()}
+    e.preventDefault();return}
+  if(S.tab==="cards"){S.tab=R?"quiz":"story";render();toPanel();e.preventDefault()}
+});
 const app=document.getElementById("app");
 function render(focus){
   document.documentElement.lang=S.lang==="zh"?"zh-Hans":S.lang;
@@ -1210,6 +1232,7 @@ app.addEventListener("click",e=>{
     case "line":S.line[pk(i)]=(S.line[pk(i)]||1)+1;break;
     case "all":S.line[pk(i)]=CH[i].story.length;break;
     case "replay":S.line[pk(i)]=1;break;
+    case "back":S.line[pk(i)]=Math.max(1,(S.line[pk(i)]||1)-1);break;
     case "nextq":S.qi[pk(i)]=(S.qi[pk(i)]||0)+1;break;
     case "retry":S.picks[pk(i)]=[];S.qi[pk(i)]=0;ORDER[S.mode][i]=CH[i].quiz.map(()=>shuffle([0,1,2,3]));break;
     case "nav":S.navMin=!S.navMin;break;
