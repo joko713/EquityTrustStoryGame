@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trust Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F8F6F2;--surface:#FFFFFF;--surface2:#FAFAFA;--text:#1A1F2B;--muted:#4A5568;--line:#E8E4DE;
+  --ink:#28293A;--steel:#365A72;--teal:#4F7D73;--sand:#D3B792;--coral:#D67B68;
+  --head:#28293A;--headText:#F8F6F2;--btn:#28293A;--btnText:#F8F6F2;
+  --tealTint:rgba(79,125,115,.10);--coralTint:rgba(214,123,104,.10);--sandTint:rgba(211,183,146,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1A1F2B;--surface:#232536;--surface2:#282A3C;--text:#F1EEE8;--muted:#A9B1C0;--line:#363950;
+    --head:#14171F;--steel:#7FA3BC;--teal:#86B3A8;--btn:#F1EEE8;--btnText:#1A1F2B;
+    --tealTint:rgba(134,179,168,.14);--coralTint:rgba(214,123,104,.16);--sandTint:rgba(211,183,146,.14);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1A1F2B;--surface:#232536;--surface2:#282A3C;--text:#F1EEE8;--muted:#A9B1C0;--line:#363950;
+  --head:#14171F;--steel:#7FA3BC;--teal:#86B3A8;--btn:#F1EEE8;--btnText:#1A1F2B;
+  --tealTint:rgba(134,179,168,.14);--coralTint:rgba(214,123,104,.16);--sandTint:rgba(211,183,146,.14);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:Manrope,"Noto Sans KR","Noto Sans SC","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,summary:focus-visible,.card:focus-visible{outline:2px solid var(--steel);outline-offset:2px}
+svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+.top{background:var(--head);color:var(--headText)}
+.top-in{max-width:1320px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}
+.brand svg{width:22px;height:22px;color:var(--sand)}
+.brand small{font-weight:500;font-size:13px;opacity:.7;margin-left:6px}
+.spacer{flex:1}
+.score{display:flex;align-items:center;gap:8px;font-size:13px;opacity:.9}
+.score b{font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--sand)}
+.seg{display:flex;border:1px solid rgba(248,246,242,.25);border-radius:999px;padding:3px}
+.seg button{background:none;border:0;padding:5px 14px;border-radius:999px;font-weight:700;font-size:13px;color:var(--headText);opacity:.7}
+.seg button.on{background:var(--headText);color:var(--head);opacity:1}
+
+.wrap{max-width:1320px;margin:0 auto;padding:20px 24px 32px;display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
+nav{display:flex;flex-direction:column;gap:6px;position:sticky;top:16px}
+.nav-item{display:flex;align-items:center;gap:10px;background:none;border:1px solid transparent;border-radius:10px;padding:10px 12px;text-align:left;width:100%}
+.nav-item:hover{background:var(--surface)}
+.nav-item.on{background:var(--surface);border-color:var(--line)}
+.nav-num{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);width:20px}
+.nav-t{flex:1;font-weight:600;font-size:14px;line-height:1.3}
+.nav-s{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--teal);display:flex;align-items:center;gap:4px}
+.nav-s svg{width:14px;height:14px}
+.nav-res{margin-top:8px;border-top:1px solid var(--line);padding-top:12px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px 26px;min-width:0}
+.ch-head{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.ch-head .num{font-family:"JetBrains Mono",monospace;font-size:44px;font-weight:600;line-height:.9;color:var(--sand)}
+.ch-head h2{margin:0;font-size:24px;letter-spacing:-.015em;line-height:1.2}
+.ch-head p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.tabs{display:flex;gap:6px;margin-left:auto}
+.tab{background:none;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;color:var(--muted)}
+.tab.on{background:var(--btn);color:var(--btnText);border-color:var(--btn)}
+
+.story{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px}
+.cast{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.cast-p{display:flex;align-items:center;gap:9px}
+.cast-p .av{width:46px;height:46px}
+.cast-p b{display:block;font-size:14px;line-height:1.2}
+.cast-p span{font-size:12.5px;color:var(--c);font-weight:600}
+.chatbox{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:16px;min-height:260px}
+.chat{display:flex;flex-direction:column;gap:12px}
+.av{border-radius:50%;flex:none;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--c)}
+.av svg{width:100%;height:100%;display:block;border-radius:50%}
+.msg{display:flex;gap:10px;align-items:flex-end;max-width:86%}
+.msg .av{width:44px;height:44px}
+.msg.r{align-self:flex-end;flex-direction:row-reverse}
+.bub{background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 16px 4px;padding:8px 14px 10px;max-width:60ch}
+.msg.r .bub{background:var(--tealTint);border-color:transparent;border-radius:16px 16px 4px 16px}
+.who{font-size:12px;font-weight:700;color:var(--c);display:flex;gap:6px;align-items:baseline;margin-bottom:1px}
+.who span{font-weight:500;color:var(--muted)}
+.msg.r .who{justify-content:flex-end}
+.sys{align-self:center;display:flex;gap:8px;align-items:flex-start;max-width:92%;background:var(--sandTint);border-radius:12px;padding:8px 14px;color:var(--muted);font-size:14px}
+.sys svg{margin-top:2px;width:16px;height:16px;color:var(--sand)}
+.new.l{animation:inL .35s ease both}.new.r{animation:inR .35s ease both}.sys.new{animation:inU .35s ease both}
+@keyframes inL{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes inR{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+@keyframes inU{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ctrl{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.btn{background:var(--btn);color:var(--btnText);border:0;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px}
+.btn.ghost{background:none;color:var(--text);border:1px solid var(--line)}
+.btn.coral{background:var(--coral);color:#fff}
+.side{display:flex;flex-direction:column;gap:14px}
+.key{border-left:3px solid var(--coral);background:var(--coralTint);border-radius:0 12px 12px 0;padding:12px 16px}
+.key h4{margin:0 0 4px;font-size:13px;color:var(--coral)}
+.key p{margin:0;font-size:14.5px}
+.diagram{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface2);overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:520px;height:auto}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cmp div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface2);font-size:13.5px}
+.cmp b{display:block;font-size:14px;margin-bottom:2px}
+.cmp .src{color:var(--teal);font-weight:600}
+.cmp .eg{color:var(--muted)}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;align-items:start}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface2);text-align:left;width:100%;display:flex;flex-direction:column;gap:6px}
+.card:hover{border-color:var(--steel)}
+.card-top{display:flex;align-items:baseline;gap:8px}
+.card-top b{font-size:15.5px}
+.card-top span{color:var(--muted);font-size:13px}
+.pips{margin-left:auto;display:flex;gap:4px;align-self:center}
+.pips i{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted)}
+.card.s1 .pips i:first-child,.card.s2 .pips i{background:var(--teal);border-color:var(--teal)}
+.card p{margin:0;font-size:14px;display:none}
+.card.s1 p,.card.s2 p{display:block}
+.when{display:none;border-top:1px dashed var(--line);padding-top:8px;margin-top:2px;font-size:13.5px}
+.card.s2 .when{display:block}
+.card.s1,.card.s2{border-color:var(--teal)}
+.when em{font-style:normal;font-weight:700;color:var(--teal);display:block;font-size:12.5px;margin-bottom:2px}
+.hint{color:var(--muted);font-size:13px;margin:0 0 12px}
+details.law{margin-top:16px;border:1px solid var(--line);border-radius:12px;background:var(--sandTint)}
+details.law summary{cursor:pointer;padding:11px 16px;font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;gap:8px}
+details.law summary::-webkit-details-marker{display:none}
+details.law summary svg{margin-left:auto;transition:transform .2s}
+details.law[open] summary svg{transform:rotate(180deg)}
+.tbl{overflow-x:auto;padding:0 16px 14px}
+.tbl table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--surface);border-radius:10px;overflow:hidden}
+.tbl th{text-align:left;font-weight:700;font-size:12.5px;color:var(--muted);padding:9px 12px;border-bottom:1px solid var(--line);background:var(--surface2)}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td:first-child{white-space:nowrap}
+.tag{font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;border:1px solid var(--c);color:var(--c)}
+
+.quiz{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px}
+.dots{display:flex;gap:6px;margin-bottom:14px}
+.dot{width:26px;height:6px;border-radius:3px;background:var(--line);border:0;padding:0}
+button.dot{cursor:pointer}button.dot:hover{outline:2px solid var(--line);outline-offset:2px}
+.dot.ok{background:var(--teal)}.dot.no{background:var(--coral)}.dot.cur{background:var(--steel)}
+.q{font-size:18px;font-weight:700;margin:0 0 14px;line-height:1.45;max-width:70ch}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:12px 14px;text-align:left;font-size:14.5px;display:flex;gap:10px;align-items:flex-start}
+.opt .l{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 6px;flex:none;margin-top:1px}
+.opt:hover:not([disabled]){border-color:var(--steel)}
+.opt[disabled]{cursor:default}
+.opt.right{border-color:var(--teal);background:var(--tealTint)}
+.opt.wrong{border-color:var(--coral);background:var(--coralTint)}
+.opt.dim{opacity:.55}
+.fb{margin-top:14px;border-radius:12px;padding:12px 16px;font-size:14.5px}
+.fb.ok{background:var(--tealTint);border-left:3px solid var(--teal)}
+.fb.no{background:var(--coralTint);border-left:3px solid var(--coral)}
+.fb b{display:block;margin-bottom:2px}
+.qside{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface2);font-size:13.5px;color:var(--muted);align-self:start}
+.qside .big{font-family:"JetBrains Mono",monospace;font-size:30px;color:var(--text);font-weight:600}
+.done{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.done .big{font-family:"JetBrains Mono",monospace;font-size:56px;font-weight:600;color:var(--sand);line-height:1}
+.done p{margin:4px 0 0;max-width:52ch}
+
+.res{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px;align-items:start}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:1fr 110px 44px;gap:10px;align-items:center;font-size:14px}
+.track{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.fill{height:100%;background:var(--sand);border-radius:4px}
+.bar .mono{text-align:right;font-size:13px;color:var(--muted)}
+
+@media (max-width:980px){
+  .wrap{grid-template-columns:1fr}
+  nav{position:static;flex-direction:row;overflow-x:auto;padding-bottom:4px}
+  .nav-item{width:auto;flex:none}
+  .nav-res{margin:0;border:0;padding:0}
+  .story,.quiz,.res{grid-template-columns:1fr}
+  .tabs{margin-left:0;width:100%}
+}
+@media (max-width:640px){
+  .top-in{flex-wrap:wrap;padding:12px 16px}
+  .brand small{display:none}
+  .wrap{padding:14px 12px 24px}
+  .panel{padding:16px}
+  .opts{grid-template-columns:1fr}
+  .cmp{grid-template-columns:1fr}
+  .ch-head .num{font-size:34px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const ICON = {
+  users:'<path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20"/><circle cx="10" cy="8" r="3.5"/><path d="M20 20v-1.5a3.5 3.5 0 0 0-2.5-3.35"/><path d="M15.5 4.6a3.5 3.5 0 0 1 0 6.8"/>',
+  file:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/>',
+  shield:'<path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z"/><path d="m9.5 12 2 2 3.5-4"/>',
+  branch:'<circle cx="6" cy="5.5" r="2.3"/><circle cx="6" cy="18.5" r="2.3"/><circle cx="18" cy="8" r="2.3"/><path d="M6 7.8v8.4"/><path d="M18 10.3c0 4.2-5.5 4-10.4 7"/>',
+  scale:'<path d="M12 3v18"/><path d="M7.5 21h9"/><path d="M4 7h16"/><path d="m7 7-3 7a3 3 0 0 0 6 0z"/><path d="m17 7-3 7a3 3 0 0 0 6 0z"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  flag:'<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>',
+  chev:'<path d="m6 9 6 6 6-6"/>',
+  story:'<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20"/>',
+  cards:'<rect x="3" y="6" width="13" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/>',
+  quiz:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.8"/><path d="M12 17.2h.01"/>',
+  arrow:'<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+  redo:'<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>'
+};
+const ic = (n, cls='i') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
+
+const UI = {
+  sub:{ko:"호주 신탁법, 이야기로 배우기",en:"Australian trust law through one family's story"},
+  score:{ko:"점수",en:"Score"},
+  story:{ko:"스토리",en:"Story"},
+  cards:{ko:"개념 카드",en:"Concept cards"},
+  quiz:{ko:"퀴즈",en:"Quiz"},
+  next:{ko:"다음",en:"Next"},
+  all:{ko:"전체 보기",en:"Show all"},
+  toCards:{ko:"개념 카드 보기",en:"Open concept cards"},
+  toQuiz:{ko:"퀴즈 풀기",en:"Take the quiz"},
+  key:{ko:"핵심",en:"Key idea"},
+  when:{ko:"언제 쓰여요",en:"When it applies"},
+  tap:{ko:"카드를 한 번 누르면 뜻, 두 번 누르면 언제 쓰이는지 보여요. 세 번 누르면 닫혀요.",en:"Tap once for the meaning, twice for when it applies, and a third time to close."},
+  law:{ko:"법학도용 판례와 법령",en:"Cases and statutes for law students"},
+  right:{ko:"정답이에요",en:"Correct"},
+  wrong:{ko:"아쉬워요",en:"Not quite"},
+  nextQ:{ko:"다음 문제",en:"Next question"},
+  finish:{ko:"결과 확인",en:"See my score"},
+  retry:{ko:"다시 풀기",en:"Try again"},
+  nextCh:{ko:"다음 챕터",en:"Next chapter"},
+  results:{ko:"최종 결과",en:"Final results"},
+  question:{ko:"문제",en:"Question"},
+  thisCh:{ko:"이번 챕터 점수",en:"This chapter"},
+  great:{ko:"완벽해요. 이 챕터 개념은 확실히 잡았어요.",en:"Perfect. You've nailed this chapter."},
+  good:{ko:"좋아요. 틀린 문제는 개념 카드에서 한 번 더 확인해 보세요.",en:"Nice work. Check the concept cards for the ones you missed."},
+  low:{ko:"스토리와 개념 카드를 다시 보고 도전해 보세요.",en:"Have another look at the story and cards, then try again."},
+  resTitle:{ko:"사건 종결",en:"Case closed"},
+  resSub:{ko:"다섯 챕터를 모두 지나왔어요. 한 장의 관계도로 정리해 볼까요?",en:"You've made it through all five chapters. Here's the whole picture on one map."},
+  restart:{ko:"처음부터 다시",en:"Start over"},
+  notYet:{ko:"아직 안 푼 챕터가 있어요.",en:"Some chapters are still waiting."},
+  cmpExpress:{ko:"명시신탁",en:"Express trust"},
+  cmpResult:{ko:"복귀신탁",en:"Resulting trust"},
+  cmpCon:{ko:"의제신탁",en:"Constructive trust"},
+  replay:{ko:"스토리 처음부터",en:"Replay story"},
+  prev:{ko:"이전 문제",en:"Previous"},
+  review:{ko:"답 다시 보기",en:"Review answers"},
+  colType:{ko:"구분",en:"Type"},colAuth:{ko:"판례·법령",en:"Authority"},colPoint:{ko:"핵심",en:"Key point"},
+  isCase:{ko:"판례",en:"Case"},isAct:{ko:"법령",en:"Statute"}
+};
+UI.replay.zh="重播故事";UI.prev.zh="上一题";UI.review.zh="回顾答案";UI.colType.zh="类型";UI.colAuth.zh="判例与法规";UI.colPoint.zh="要点";UI.isCase.zh="判例";UI.isAct.zh="法规";
+
+const CAST = {
+  narr:{c:"var(--muted)",i:"N",ko:"해설",en:"Narrator",rk:"",re:""},
+  rose:{c:"var(--sand)",i:"R",ko:"로즈 할머니",en:"Nana Rose",rk:"설정자",re:"Settlor"},
+  dev:{c:"var(--steel)",i:"D",ko:"데브 삼촌",en:"Uncle Dev",rk:"수탁자",re:"Trustee"},
+  mia:{c:"var(--teal)",i:"M",ko:"미아",en:"Mia",rk:"수익자",re:"Beneficiary",side:"r"},
+  leo:{c:"var(--teal)",i:"L",ko:"레오",en:"Leo",rk:"수익자",re:"Beneficiary",side:"r"},
+  barry:{c:"var(--muted)",i:"B",ko:"배리 아저씨",en:"Barry",rk:"이웃",re:"Neighbour"},
+  jack:{c:"var(--muted)",i:"J",ko:"잭",en:"Jack",rk:"레오 친구",re:"Leo's mate"},
+  judge:{c:"var(--coral)",i:"K",ko:"카우르 판사",en:"Justice Kaur",rk:"법원",re:"Court"}
+};
+
+const EYES='<circle cx="27.5" cy="28" r="1.5" fill="#2A2A35"/><circle cx="36.5" cy="28" r="1.5" fill="#2A2A35"/>';
+const SMILE='<path d="M28.5 33.2 Q32 35.9 35.5 33.2" stroke="#2A2A35" stroke-width="1.4" fill="none" stroke-linecap="round"/>';
+const CHEEK='<circle cx="24.8" cy="31.6" r="2.1" fill="#E8998A" opacity=".45"/><circle cx="39.2" cy="31.6" r="2.1" fill="#E8998A" opacity=".45"/>';
+const AV={
+  rose:{bg:"#F1E6D3",skin:"#F2D3B8",shirt:"#B8916A",
+    back:'<circle cx="32" cy="12.5" r="5.6" fill="#C9CBD1"/>',
+    collar:'<path d="M26 43.5 L32 50 L38 43.5" fill="none" stroke="#F8F6F2" stroke-width="1.6"/>',
+    face:EYES+SMILE,
+    hair:'<path d="M20.5 28 C19 14 45 14 43.5 28 C42 21 37 18.5 32 18.5 C27 18.5 22 21 20.5 28Z" fill="#C9CBD1"/>',
+    top:'<g stroke="#5A5A66" stroke-width="1.2" fill="none"><circle cx="27.5" cy="28" r="3.3"/><circle cx="36.5" cy="28" r="3.3"/><path d="M30.8 28h2.4"/></g>'},
+  dev:{bg:"#D6E1E9",skin:"#E0B08C",shirt:"#365A72",
+    collar:'<path d="M27 43.5 L32 47.5 L37 43.5" fill="none" stroke="#F8F6F2" stroke-width="1.6"/>',
+    face:EYES+'<path d="M21.2 26 C20.5 47 43.5 47 42.8 26 C41.5 33.5 37.5 35.2 32 35.2 C26.5 35.2 22.5 33.5 21.2 26Z" fill="#3B2F2A"/><path d="M29.5 37.8 Q32 39.3 34.5 37.8" stroke="#F5E1D0" stroke-width="1.3" fill="none" stroke-linecap="round"/>',
+    hair:'<path d="M20.6 26 C19.5 8.5 44.5 8.5 43.4 26 C41 21.5 36 20.5 32 20.5 C28 20.5 23.5 21.5 20.6 26Z" fill="#3B2F2A"/>'},
+  mia:{bg:"#D8E6E2",skin:"#F0C9A8",shirt:"#4F7D73",
+    back:'<path d="M19.5 28 C18 12 46 12 44.5 28 L46 47 C42 49 39.5 43 40 37 L24 37 C24.5 43 22 49 18 47Z" fill="#6B4632"/>',
+    face:EYES+SMILE+CHEEK,
+    hair:'<path d="M20.6 27 C19.8 10.5 44.2 10.5 43.4 26 C38 21 29 20.5 20.6 27Z" fill="#6B4632"/>'},
+  leo:{bg:"#D8E6E2",skin:"#C68E6A",shirt:"#3F6A61",
+    collar:'<path d="M21.5 45 C24 51 40 51 42.5 45" fill="none" stroke="#2F524A" stroke-width="2.2"/><path d="M29 48.5v6M35 48.5v6" stroke="#F8F6F2" stroke-width="1.3" stroke-linecap="round"/>',
+    face:EYES+SMILE+CHEEK,
+    hair:'<path d="M20.5 26 L21.5 17.5 L25.5 19.5 L28 14 L32 18 L36 13.5 L38.5 19 L42.5 17 L43.5 26 C40 21 24 21 20.5 26Z" fill="#22222A"/>'},
+  barry:{bg:"#E4E6EB",skin:"#F2D3B8",shirt:"#7C8595",
+    face:EYES+'<path d="M26.5 32.6 Q32 29.4 37.5 32.6 Q32 35.2 26.5 32.6Z" fill="#A5A7AE"/>',
+    hair:'<path d="M20.9 30 C20 22 21.5 20 23.2 19.5 L23.6 26.5Z M43.1 30 C44 22 42.5 20 40.8 19.5 L40.4 26.5Z" fill="#A5A7AE"/>'},
+  jack:{bg:"#E4E6EB",skin:"#8D5A3C",shirt:"#4A5568",
+    face:EYES+SMILE,
+    hair:'<path d="M20.5 24.5 C21 12 43 12 43.5 24.5Z" fill="#D67B68"/><path d="M40 24 L51.5 25.6 L43.5 27.2Z" fill="#B8634F"/>'},
+  judge:{bg:"#F4DAD3",skin:"#B87A56",shirt:"#28293A",
+    back:'<circle cx="43.5" cy="31" r="5.6" fill="#1E1A1A"/>',
+    collar:'<path d="M29.6 44.5h2.2v8.5h-2.2Z M32.2 44.5h2.2v8.5h-2.2Z" fill="#F8F6F2"/>',
+    face:EYES+'<path d="M29 33.4 Q32 34.8 35 33.4" stroke="#2A2A35" stroke-width="1.4" fill="none" stroke-linecap="round"/>',
+    hair:'<path d="M20.4 28.5 C18.8 9 45.2 9 43.6 28.5 C41 21 33 19.5 26 22 C23 23 21.5 25.5 20.5 28.5Z" fill="#1E1A1A"/>'}
+};
+let AVN=0;
+function avatar(k,attrs=""){
+  const A=AV[k], id="cp"+(AVN++);
+  return `<svg ${attrs} viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="${id}"><circle cx="32" cy="32" r="32"/></clipPath></defs>
+  <g clip-path="url(#${id})"><rect width="64" height="64" fill="${A.bg}"/>${A.back||""}
+  <path d="M8 66 C8 49.5 19 43.5 32 43.5 C45 43.5 56 49.5 56 66Z" fill="${A.shirt}"/>
+  <rect x="28" y="35" width="8" height="10" rx="3" fill="${A.skin}"/>${A.collar||""}
+  <ellipse cx="32" cy="27" rx="11" ry="12.5" fill="${A.skin}"/>${A.face}${A.hair||""}${A.top||""}</g></svg>`;
+}
+
+const CH = [
+{
+  icon:"users",
+  title:{ko:"등장인물과 관계",en:"Meet the cast"},
+  sub:{ko:"신탁은 소유권을 두 겹으로 나눠요",en:"A trust splits ownership into two layers"},
+  story:[
+    {w:"narr",ko:"로즈 할머니는 20만 달러어치 주식을 가지고 있어요. 손주 미아(16세)와 레오(13세)가 나중에 대학 갈 때 이 돈을 쓰길 바라죠. 문제는 둘 다 아직 큰돈을 관리하기엔 어리다는 거예요.",en:"Nana Rose owns $200,000 worth of shares. She wants her grandkids Mia (16) and Leo (13) to use the money for uni one day. The problem is they're too young to manage it."},
+    {w:"rose",ko:"데브, 이 주식을 네 명의로 옮길게. 서류상으로는 네 것이지만, 실제로는 미아와 레오를 위한 거야.",en:"Dev, I'm transferring these shares into your name. On paper they're yours. In reality they're for Mia and Leo."},
+    {w:"dev",ko:"그러니까 제가 법적 소유자인데, 저를 위해서는 한 푼도 못 쓴다는 거죠?",en:"So I'm the legal owner, but I can't spend a cent on myself?"},
+    {w:"mia",ko:"그리고 실제로 혜택을 받는 건 저랑 레오고요?",en:"And Leo and I are the ones who actually benefit?"},
+    {w:"rose",ko:"맞아. 이렇게 해두면 나는 빠지는 거야. 이제부터는 너희 셋 사이의 일이란다.",en:"Exactly. Once it's done, I step back. From here it's between the three of you."},
+    {w:"narr",ko:"이게 바로 신탁이에요. 재산은 하나인데 소유권이 두 겹으로 나뉘고, 형평법(equity)이 이 관계를 지켜줘요.",en:"That's a trust. One set of property, two layers of ownership, and equity enforces the relationship."}
+  ],
+  key:{ko:"수탁자는 법적 소유권(legal title)을, 수익자는 형평법상 권리(equitable interest)를 가져요. 수탁자가 신탁재산을 자기 것처럼 쓰면 법원이 형평법에 따라 막아요.",en:"The trustee holds legal title. The beneficiaries hold the equitable interest. If the trustee treats the property as their own, a court applying equity will step in."},
+  diagram:true,
+  cards:[
+    {t:"Trust",k:"신탁",d:{ko:"한 사람이 다른 사람의 이익을 위해 재산을 보유하는 관계예요. 회사나 법인이 아니라 ‘관계’라는 점이 핵심이에요.",en:"A relationship where one person holds property for the benefit of others. It is a relationship, not a company or a legal person."},w:{ko:"호주에서는 가족 자산, 연금(superannuation), 자선단체, 투자펀드, 가족 사업이 신탁 구조로 운영되는 경우가 많아요.",en:"Family wealth, superannuation funds, charities, managed funds and family businesses in Australia often run through trusts."}},
+    {t:"Settlor",k:"신탁설정자",d:{ko:"재산을 수탁자에게 넘겨 신탁을 만드는 사람이에요. 신탁이 만들어지면 보통 더 이상 관여할 권한이 없어요.",en:"The person who creates the trust by giving property to a trustee. After that, the settlor usually has no further say."},w:{ko:"명시신탁(express trust)을 만들 때마다 등장해요. 유언으로 만들면 유언자(testator)라고 불러요.",en:"Whenever an express trust is set up. If it is created by a will, the settlor is called the testator."}},
+    {t:"Trustee",k:"수탁자",d:{ko:"신탁재산의 법적 소유권을 가지고, 자기가 아닌 수익자를 위해 관리해야 하는 사람(또는 회사)이에요.",en:"The person or company who holds legal title to the trust property and must manage it for the beneficiaries, never for themselves."},w:{ko:"모든 신탁에 필요해요. 다만 수탁자가 없다는 이유만으로 신탁이 무효가 되지는 않고, 법원이 수탁자를 선임할 수 있어요.",en:"Every trust needs one. Equity won't let a trust fail just for want of a trustee, because the court can appoint one."}},
+    {t:"Beneficiary",k:"수익자",d:{ko:"신탁으로 이익을 받는 사람이에요. 법원에 수탁자가 신탁 내용을 지키도록 청구할 수 있어요.",en:"The person who benefits from the trust. They can go to court to make the trustee carry it out."},w:{ko:"고정신탁(fixed trust)에서는 각자 몫이 정해져 있고, 재량신탁(discretionary trust)에서는 수탁자가 누구에게 얼마를 줄지 정해요.",en:"Under a fixed trust each beneficiary has a set share. Under a discretionary trust, the trustee chooses who gets what."}},
+    {t:"Legal title",k:"법적 소유권",d:{ko:"보통법(common law)이 인정하는 소유권이에요. 주식이나 토지의 등록 명의자가 되는 것이 대표적이에요.",en:"Ownership recognised by the common law, such as being the registered owner of shares or land."},w:{ko:"주주명부나 토지등기부에 수탁자 이름이 올라가요.",en:"The trustee's name goes on the share register or the land title."}},
+    {t:"Equitable interest",k:"형평법상 권리",d:{ko:"재산에서 나오는 이익을 누릴 수익자의 권리로, 형평법이 인정하고 보호해요.",en:"The beneficiary's right to the benefit of the property, recognised and protected by equity."},w:{ko:"재산권이라서 재산을 넘겨받은 제3자에게도 주장할 수 있어요. 단, 사정을 모르고 대가를 치른 선의의 매수인(bona fide purchaser for value without notice)은 예외예요.",en:"It is a property right, so it can bind third parties who receive the property. The exception is a bona fide purchaser for value without notice."}},
+    {t:"Equity",k:"형평법",d:{ko:"엄격한 보통법 규칙이 낳는 불공정한(unconscionable) 결과를 바로잡으려고 옛 형평법원(Court of Chancery)이 발전시킨 법 체계예요.",en:"A body of law developed by the old Court of Chancery to correct unconscionable results of strict common law rules."},w:{ko:"지금 호주 법원은 보통법과 형평법을 함께 적용하고, 둘이 충돌하면 형평법이 우선해요.",en:"Australian courts now apply common law and equity together. Where they conflict, equity prevails."}}
+  ],
+  law:[
+    ["Earl of Oxford's Case (1615) 1 Rep Ch 1",{ko:"형평법과 보통법이 충돌하면 형평법 우선",en:"Equity prevails over common law"}],
+    ["Law Reform (Law and Equity) Act 1972 (NSW) s 5",{ko:"충돌 시 형평법 우선을 법률로 규정",en:"Statutory rule that equity prevails"}],
+    ["Saunders v Vautier (1841) 4 Beav 115",{ko:"확정적 권리를 가진 성인 수익자의 신탁 종료권",en:"Adult beneficiaries absolutely entitled can end the trust"}]
+  ],
+  quiz:[
+    {q:{ko:"지금 주식의 법적 소유자는 누구일까요?",en:"Who is the legal owner of the shares now?"},o:[{ko:"로즈 할머니",en:"Nana Rose"},{ko:"데브 삼촌",en:"Uncle Dev"},{ko:"미아와 레오",en:"Mia and Leo"},{ko:"신탁 그 자체",en:"The trust itself"}],a:1,y:{ko:"데브 삼촌이 수탁자이므로 주식은 데브 명의로 등록돼요. 신탁은 법인이 아니라서 스스로 재산을 소유할 수 없어요.",en:"Dev is the trustee, so the shares are registered in his name. A trust is not a legal person, so it can't own anything itself."}},
+    {q:{ko:"1년 뒤 로즈 할머니가 마음이 바뀌어 주식을 돌려받고 싶어 해요. 가져갈 수 있을까요?",en:"A year later Rose changes her mind and wants the shares back. Can she take them?"},o:[{ko:"네, 원래 할머니 돈이니까요",en:"Yes, it was her money first"},{ko:"아니요, 신탁을 만들 때 철회권을 남겨두지 않았다면 안 돼요",en:"No, unless she kept a power to revoke when she set it up"},{ko:"데브 삼촌이 동의하면 돼요",en:"Only if Dev agrees"},{ko:"로즈 할머니가 주식을 다시 사면 돼요",en:"Only if she buys them back"}],a:1,y:{ko:"신탁이 제대로 성립하면 설정자는 빠지게 돼요. 신탁증서에 철회권(power of revocation)을 남겨두지 않았다면 되돌릴 수 없어요.",en:"Once a trust is properly set up, the settlor steps out. Without a power of revocation in the trust deed, she can't undo it."}},
+    {q:{ko:"데브 삼촌이 신탁자금으로 새 차를 사서 자기가 타고 다녀요. 미아와 레오가 이를 막을 수 있는 이유는?",en:"Dev buys a new car with trust money and drives it himself. Why can Mia and Leo stop him?"},o:[{ko:"데브 삼촌이 법적 소유자가 아니라서",en:"Because Dev isn't the legal owner"},{ko:"수탁자가 신탁재산을 자기를 위해 쓰는 것은 형평법상 비양심적이라서",en:"Because equity treats a trustee using trust property for himself as unconscionable"},{ko:"로즈 할머니가 대신 소송할 수 있어서",en:"Because Rose can sue for them"},{ko:"막을 수 없어요. 법적 소유권이 이겨요",en:"They can't. Legal title wins"}],a:1,y:{ko:"데브 삼촌은 법적 소유자가 맞지만, 형평법은 양심(conscience)을 봐요. 수익자의 형평법상 권리를 무시하는 것은 비양심적이에요.",en:"Dev is the legal owner, but equity looks at conscience. Ignoring the beneficiaries' equitable interest would be unconscionable."}},
+    {q:{ko:"몇 년 뒤 미아와 레오가 모두 성인이 됐고, 둘이 함께 신탁재산 전부에 대한 권리를 가져요. 무엇을 할 수 있을까요?",en:"Years later Mia and Leo are both adults and together entitled to everything. What can they do?"},o:[{ko:"데브 삼촌이 결정할 때까지 기다려야 해요",en:"Wait until Dev decides"},{ko:"법원에 로즈 할머니 교체를 청구해요",en:"Ask a court to replace Rose"},{ko:"함께 신탁을 끝내고 재산을 달라고 할 수 있어요",en:"Together, end the trust and call for the property"},{ko:"데브 삼촌에게만 지분을 팔 수 있어요",en:"Sell their share only to Dev"}],a:2,y:{ko:"Saunders v Vautier 원칙에 따라, 행위능력이 있는 성인 수익자들이 함께 재산 전부에 대해 확정적 권리(absolutely entitled)를 가지면 신탁을 끝내고 재산을 가져갈 수 있어요.",en:"Under the rule in Saunders v Vautier, adult beneficiaries of full capacity who are together absolutely entitled can end the trust and take the property."}}
+  ]
+},
+{
+  icon:"file",
+  title:{ko:"신탁이 성립하려면",en:"Making it stick"},
+  sub:{ko:"세 가지 확실성과 재산 이전",en:"The three certainties and handing over the property"},
+  story:[
+    {w:"narr",ko:"로즈 할머니의 이웃 배리 아저씨도 따라 하고 싶어 해요. 메모를 급하게 적어요.",en:"Rose's neighbour Barry wants to copy her. He scribbles a quick note."},
+    {w:"barry",ko:"“조카가 착하게 굴면, 내 물건 중 일부를 아마 받았으면 좋겠어.”",en:"“I'd like my nephew to maybe get some of my stuff, if he's good.”"},
+    {w:"rose",ko:"배리, 그걸로는 신탁이 안 돼요. 형평법은 세 가지가 확실해야 인정해요.",en:"Barry, that won't create a trust. Equity needs three things to be certain."},
+    {w:"mia",ko:"맞혀볼게요. 진짜로 신탁을 만들 의도가 있어야 하고, 어떤 재산인지, 누가 받는지 정확해야 하죠?",en:"Let me guess. He has to actually mean it, say exactly what property, and say exactly who gets it?"},
+    {w:"rose",ko:"정확해. 그리고 그 재산을 실제로 수탁자에게 넘겨야 해.",en:"Spot on. Then he has to actually hand the property over to the trustee."},
+    {w:"narr",ko:"배리 아저씨의 메모는 통과하지 못해요. ‘좋겠어’와 ‘아마’는 바람일 뿐이고, ‘물건 중 일부’는 막연하며, ‘착하게 굴면’은 판단 기준이 없어요.",en:"Barry's note doesn't pass. “I'd like” and “maybe” express a wish, “some of my stuff” is vague, and “if he's good” gives no clear test."}
+  ],
+  key:{ko:"의도(intention), 대상재산(subject matter), 수익자(objects) 세 가지가 모두 확실해야 해요. 그다음 재산이 실제로 수탁자에게 넘어가야(vest) 신탁이 생겨요.",en:"Intention, subject matter and objects must all be certain. Then the property must actually vest in the trustee."},
+  cards:[
+    {t:"Certainty of intention",k:"의도의 확실성",d:{ko:"설정자에게 신탁을 만들 의도가 있어야 해요. 속마음이 아니라 말과 행동으로 객관적으로 판단해요.",en:"The settlor must intend to create a trust. Courts judge this objectively from words and conduct, not secret thoughts."},w:{ko:"누군가 재산이 신탁으로 보유됐다고 주장하면 법원이 가장 먼저 따져요. 가족 간 비공식 약속에서 특히 자주 문제가 돼요.",en:"It is the first question when someone claims property was held on trust, especially in informal family arrangements."}},
+    {t:"Precatory words",k:"권고적 문언",d:{ko:"‘바란다’, ‘희망한다’처럼 바람을 나타내는 말이에요. 보통 도덕적 부탁일 뿐 구속력 있는 신탁은 아니에요.",en:"Words of hope or wish, like “I hope” or “I would like”. They usually show a moral request, not a binding trust."},w:{ko:"직접 쓴 유언장이나 메모에서 자주 나와요.",en:"Common in home-made wills and notes."}},
+    {t:"Certainty of subject matter",k:"대상재산의 확실성",d:{ko:"어떤 재산이 신탁재산인지, 각 수익자 몫이 얼마인지 분명해야 해요.",en:"It must be clear what property is held on trust and what share each beneficiary gets."},w:{ko:"와인이나 금 같은 물건은 보통 따로 분리돼 있어야 해요. 같은 회사의 동일한 주식은 분리하지 않아도 될 수 있어요.",en:"Goods like wine or gold usually must be separated out. Identical shares in one company may not need separating."}},
+    {t:"Certainty of objects",k:"수익자의 확실성",d:{ko:"누가 수익자인지 분명해야 법원이 신탁을 집행할 수 있어요.",en:"It must be clear who the beneficiaries are, so the court can enforce the trust."},w:{ko:"고정신탁은 전체 명단 테스트(complete list test), 재량신탁은 해당 여부 테스트(is-or-is-not test)를 적용해요.",en:"A fixed trust uses the complete list test. A discretionary trust uses the is-or-is-not test."}},
+    {t:"Fixed trust",k:"고정신탁",d:{ko:"각 수익자의 몫이 신탁 조건으로 정해져 있어요. 예를 들어 절반씩처럼요.",en:"Each beneficiary's share is set by the trust terms, for example half each."},w:{ko:"설정자가 몫을 확정해 두고 싶을 때 써요.",en:"When the settlor wants shares locked in from the start."}},
+    {t:"Discretionary trust",k:"재량신탁",d:{ko:"수탁자가 정해진 범위(class) 안에서 누구에게 수익이나 원본을 얼마나 줄지 결정해요.",en:"The trustee decides which beneficiaries within a class receive income or capital, and how much."},w:{ko:"호주 가족신탁(family trust)에서 매우 흔해요. 유연성과 세금 계획 목적으로 많이 써요.",en:"Very common for Australian family trusts, often for flexibility and tax planning."}},
+    {t:"Constitution",k:"신탁의 구성",d:{ko:"재산이 실제로 수탁자에게 넘어가야(vest) 신탁이 생겨요. 형평법은 설정자가 끝내지 않은 증여를 대신 완성해 주지 않아요.",en:"The trust exists only once the property vests in the trustee. Equity won't finish a gift the settlor left incomplete."},w:{ko:"설정자가 자신이 해야 할 일을 모두 마쳤다면, 등록 전이라도 형평법은 증여가 완성된 것으로 봐요.",en:"If the settlor has done everything they personally had to do, equity treats the gift as complete even before registration."}}
+  ],
+  law:[
+    ["Knight v Knight (1840) 3 Beav 148",{ko:"세 가지 확실성",en:"The three certainties"}],
+    ["Byrnes v Kendle (2011) 243 CLR 253",{ko:"의도는 객관적으로 판단",en:"Intention is assessed objectively"}],
+    ["Korda v Australian Executor Trustees (SA) Ltd (2015) 255 CLR 62",{ko:"상업 거래에서의 신탁 의도",en:"Intention to create a trust in commercial dealings"}],
+    ["Re London Wine Co (Shippers) Ltd [1986] PCC 121",{ko:"분리되지 않은 물건은 대상 불확실",en:"Unseparated goods fail for uncertainty"}],
+    ["White v Shortall (2006) 68 NSWLR 650",{ko:"동일 주식의 일부에 대한 신탁 유효",en:"Trust over part of a holding of identical shares"}],
+    ["McPhail v Doulton [1971] AC 424",{ko:"재량신탁의 is-or-is-not 테스트",en:"Is-or-is-not test for discretionary trusts"}],
+    ["Milroy v Lord (1862) 4 De GF & J 264",{ko:"형평법은 불완전한 증여를 완성하지 않음",en:"Equity won't perfect an imperfect gift"}],
+    ["Corin v Patton (1990) 169 CLR 540",{ko:"설정자가 할 일을 다 했으면 형평법상 완성",en:"Gift complete in equity once settlor has done all required"}]
+  ],
+  quiz:[
+    {q:{ko:"유언장에 “아내에게 집을 준다. 아내가 아이들을 잘 돌볼 것이라 굳게 믿는다.”라고 적혀 있어요. 아이들을 위한 신탁일까요?",en:"A will says “I give my house to my wife, in full confidence that she will look after our children.” Is there a trust for the children?"},o:[{ko:"네, 아이들이 언급됐으니까요",en:"Yes, the children are mentioned"},{ko:"아마 아니에요. 바람을 표현한 권고적 문언이에요",en:"Probably not. These are precatory words expressing hope"},{ko:"네, 유언장에 있으니까요",en:"Yes, because it's in a will"},{ko:"아내가 동의할 때만 신탁이에요",en:"Only if the wife agrees"}],a:1,y:{ko:"‘굳게 믿는다’는 바람의 표현이에요. 구속력 있는 의무를 부과하려는 객관적 의도가 없으면 아내가 집을 온전히 가져요.",en:"“In full confidence” expresses hope. Without an objective intention to impose a binding obligation, the wife takes the house outright."}},
+    {q:{ko:"배리 아저씨가 “지하 창고 와인 100병 중 20병”을 신탁한다고 선언했지만 따로 분리하지 않았어요. 어떤 확실성이 부족할까요?",en:"Barry declares a trust over “20 of the 100 bottles of wine in my cellar” but never separates them. Which certainty fails?"},o:[{ko:"의도",en:"Intention"},{ko:"대상재산",en:"Subject matter"},{ko:"수익자",en:"Objects"},{ko:"부족한 것 없음",en:"None of them"}],a:1,y:{ko:"와인은 병마다 다를 수 있어서, 20병을 분리하지 않으면 어느 병이 신탁재산인지 알 수 없어요.",en:"Bottles of wine can differ, so without separating the 20 no one can tell which ones are trust property."}},
+    {q:{ko:"재량신탁의 수익자 범위가 “내 직원과 그 친척”이에요. 법원은 어떤 테스트를 쓸까요?",en:"A discretionary trust is for “any of my employees and their relatives”. Which test applies to the objects?"},o:[{ko:"전체 명단 테스트",en:"Complete list test"},{ko:"해당 여부(is-or-is-not) 테스트",en:"Is-or-is-not test"},{ko:"과반수 테스트",en:"Majority test"},{ko:"테스트가 필요 없어요",en:"No test is needed"}],a:1,y:{ko:"재량신탁에서는 어떤 사람이 범위 안에 있는지 없는지만 판단할 수 있으면 충분해요. 전체 명단이 필요하지 않아요.",en:"For a discretionary trust it's enough that you can say of any given person whether they are or are not in the class. You don't need a full list."}},
+    {q:{ko:"로즈 할머니가 주식양도서에 서명하고 주권과 함께 데브 삼촌에게 줬어요. 회사가 데브 명의로 등록하기 전에 할머니가 돌아가셨어요. 신탁이 구성됐을까요?",en:"Rose signs a share transfer form and gives it with the share certificate to Dev. She dies before the company registers Dev. Is the trust constituted?"},o:[{ko:"아니요, 등록이 안 됐으니까요",en:"No, registration never happened"},{ko:"형평법상 네, 할머니가 할 일을 모두 마쳤으니까요",en:"Yes in equity, she had done everything she needed to"},{ko:"유언장에 적혀 있을 때만요",en:"Only if her will says so"},{ko:"아니요, 데브가 대금을 내야 해요",en:"No, Dev must pay for the shares"}],a:1,y:{ko:"Corin v Patton에 따르면, 설정자가 자기 몫의 일을 모두 마쳤고 양수인이 설정자 없이도 이전을 완료할 수 있다면 형평법상 증여가 완성돼요.",en:"Under Corin v Patton, once the settlor has done all that is necessary on their part and the transferee can complete it without them, the gift is complete in equity."}}
+  ]
+},
+{
+  icon:"shield",
+  title:{ko:"수탁자의 의무",en:"Dev's rulebook"},
+  sub:{ko:"의무, 권한, 그리고 수탁자의 권리",en:"Duties, powers and the trustee's own rights"},
+  story:[
+    {w:"narr",ko:"데브 삼촌이 수탁자가 된 지 몇 년이 지났어요. 신탁재산이 늘어서 이제 작은 바닷가 아파트도 있어요. 삼촌에게 슬슬 이런저런 생각이 들어요.",en:"Dev has been trustee for a few years. The fund has grown and now includes a small beach unit. Dev is starting to get ideas."},
+    {w:"dev",ko:"바닷가 아파트를 내가 사면 어때? 시세대로 낼게, 진짜로.",en:"What if I buy the beach unit myself? I'll pay market price, promise."},
+    {w:"mia",ko:"삼촌이 삼촌한테 판다고요? 이해충돌 같은데요.",en:"You'd be selling to yourself? That sounds like a conflict."},
+    {w:"dev",ko:"알았어. 그럼 전부 요즘 뜨는 코인 하나에 넣을게. 수익률 엄청나대!",en:"Fine. Then I'll put everything into one hot crypto coin. Huge returns!"},
+    {w:"leo",ko:"그리고 우리 각자 얼마 받을지는 누가 정해요?",en:"And who decides how much each of us gets?"},
+    {w:"dev",ko:"간단해. 동전 던져서 정하지 뭐.",en:"Easy. I'll flip a coin."},
+    {w:"narr",ko:"나쁜 아이디어 세 개, 서로 다른 의무 세 개예요. 데브 삼촌이 어떤 규칙을 어기려는지 살펴봐요.",en:"Three bad ideas, three different duties. Let's see which rules Dev is about to break."}
+  ],
+  key:{ko:"수탁자는 신인의무자(fiduciary)예요. 핵심은 이해충돌 금지(no conflict)와 이익 취득 금지(no profit)예요. 여기에 신탁 조건 준수, 주의의무, 재량을 제대로 고려할 의무가 더해져요.",en:"A trustee is a fiduciary. The core rules are no conflict and no profit. On top of those sit the duties to follow the terms, take care, and properly consider any discretion."},
+  cards:[
+    {t:"Fiduciary duty",k:"신인의무",d:{ko:"충실의무예요. 수탁자는 자기 이익을 제쳐두고 수익자의 이익을 위해 행동해야 해요.",en:"A duty of loyalty. The trustee must act in the beneficiaries' interests and put their own aside."},w:{ko:"호주에서 신인의무는 금지적(proscriptive) 성격이에요. 무엇을 하라고 요구하기보다 무엇을 하지 말라고 정해요.",en:"In Australia fiduciary duties are proscriptive. They tell the trustee what not to do rather than imposing positive duties to act."}},
+    {t:"No-conflict rule",k:"이해충돌 금지",d:{ko:"수탁자는 자기 이익과 의무가 충돌할 수 있는 위치에 서면 안 돼요. 신탁재산을 자기가 사는 자기거래(self-dealing)가 대표적이에요.",en:"The trustee must not be in a position where their interest may conflict with their duty. Buying trust property for themselves (self-dealing) is the classic example."},w:{ko:"가격이 공정했더라도 수익자는 자기거래를 취소할 수 있어요. 신탁증서, 수익자의 충분한 정보에 기초한 동의(informed consent), 법원 허가가 있으면 예외예요.",en:"Beneficiaries can set aside self-dealing even at a fair price, unless the trust deed, their informed consent or the court authorised it."}},
+    {t:"No-profit rule",k:"이익 취득 금지",d:{ko:"수탁자는 그 지위를 이용해 허락받지 않은 이익을 얻으면 안 돼요. 신탁이 손해를 보지 않았더라도 마찬가지예요.",en:"The trustee must not make an unauthorised profit from their position, even if the trust loses nothing."},w:{ko:"그런 이익은 반환해야 하고(account of profits), 의제신탁(constructive trust)으로 보유된 것으로 볼 수 있어요.",en:"Any such profit must be handed over (account of profits) and may be held on constructive trust."}},
+    {t:"Duty to follow the terms",k:"신탁 조건 준수 의무",d:{ko:"수탁자는 신탁증서 내용을 정확히 이행하고 올바른 사람에게 지급해야 해요.",en:"The trustee must carry out the trust deed exactly and pay the right people."},w:{ko:"정직한 실수로 엉뚱한 사람에게 지급해도 의무 위반이에요.",en:"Paying the wrong person is a breach even if it was an honest mistake."}},
+    {t:"Duty of care",k:"주의의무",d:{ko:"재산을 투자하고 관리할 때, 남의 재산을 관리하는 신중한 사람(prudent person) 수준의 주의, 성실, 능력을 발휘해야 해요.",en:"When investing and managing the property, the trustee must use the care, diligence and skill of a prudent person managing someone else's property."},w:{ko:"각 주의 Trustee Act에 규정돼 있어요. 예를 들어 Trustee Act 1925 (NSW) s 14A예요. 전문 수탁자에게는 더 높은 기준이 적용돼요.",en:"Set out in state Trustee Acts, for example Trustee Act 1925 (NSW) s 14A. Professional trustees are held to a higher standard."}},
+    {t:"Duty to consider",k:"재량 고려 의무",d:{ko:"수탁자에게 재량이 있으면, 행사할지와 어떻게 행사할지를 실질적이고 진지하게 고려(real and genuine consideration)해야 해요.",en:"Where a trustee has a discretion, they must give real and genuine consideration to whether and how to use it."},w:{ko:"법원은 결과 자체에는 잘 간섭하지 않지만, 악의, 적절한 고려 부재, 부당한 목적이 있으면 개입해요.",en:"Courts rarely second-guess the outcome, but will step in for bad faith, lack of proper consideration or an improper purpose."}},
+    {t:"Duty of impartiality",k:"공평의무",d:{ko:"수탁자는 수익자들 사이에서 공평하게 행동해야 해요. 수익(income) 수익자와 원본(capital) 수익자 사이가 대표적이에요.",en:"The trustee must act even-handedly between beneficiaries, such as those entitled to income and those entitled to capital."},w:{ko:"지금 수익은 크지만 원본 성장은 적은 투자처럼, 한쪽에 유리한 투자를 할 때 문제가 돼요.",en:"It matters when an investment favours one group, like high income now but little capital growth."}},
+    {t:"Duty to account",k:"회계 및 정보제공 의무",d:{ko:"수탁자는 회계 기록을 제대로 남기고, 신탁 운영 상황을 수익자에게 보여줄 준비가 돼 있어야 해요.",en:"The trustee must keep proper accounts and be ready to show beneficiaries how the trust is run."},w:{ko:"수익자는 신탁 서류 열람을 요청할 수 있어요. 다만 재량 결정의 이유 같은 일부 서류는 법원이 열람 범위를 정해요.",en:"Beneficiaries can ask to inspect trust documents. For some, such as reasons for discretionary decisions, the court controls access."}},
+    {t:"Right of indemnity",k:"비용상환청구권",d:{ko:"수탁자는 적법하게 지출한 비용을 신탁재산에서 지급하거나 돌려받을 수 있어요.",en:"A trustee can pay properly incurred expenses out of the trust assets, or be reimbursed from them."},w:{ko:"신탁재산에 대한 형평법상 우선특권(equitable lien)이 뒷받침해요. 그래서 수탁자가 교체될 때 특히 중요해져요.",en:"It is backed by an equitable lien over the trust assets, which is why it matters so much when a trustee is replaced."}}
+  ],
+  law:[
+    ["Keech v Sandford (1726) Sel Cas Ch 61",{ko:"수탁자의 엄격한 이익 취득 금지",en:"Strict rule against trustee profit"}],
+    ["Boardman v Phipps [1967] 2 AC 46",{ko:"손해가 없어도 이익 반환",en:"Profit must be surrendered even without loss"}],
+    ["Chan v Zacharia (1984) 154 CLR 178",{ko:"호주의 이해충돌 및 이익 규칙",en:"Australian statement of conflict and profit rules"}],
+    ["Breen v Williams (1996) 186 CLR 71",{ko:"신인의무의 금지적 성격",en:"Fiduciary duties are proscriptive"}],
+    ["Speight v Gaunt (1883) 9 App Cas 1",{ko:"신중한 사업가 기준",en:"Prudent person of business standard"}],
+    ["Trustee Act 1925 (NSW) s 14A",{ko:"투자 시 주의의무",en:"Duty of care when investing"}],
+    ["Karger v Paul [1984] VR 161",{ko:"재량 행사에 대한 법원 심사",en:"Court review of discretionary decisions"}],
+    ["Schmidt v Rosewood Trust Ltd [2003] 2 AC 709",{ko:"수익자의 신탁 서류 열람",en:"Beneficiary access to trust documents"}],
+    ["Naaman v Jaken Properties Australia Pty Ltd [2025] HCA 1",{ko:"수탁자 교체와 비용상환청구권",en:"Right of indemnity when trustees change"}]
+  ],
+  quiz:[
+    {q:{ko:"데브 삼촌이 신탁 소유 바닷가 아파트를 시세대로 샀어요. 미아와 레오가 매매를 취소할 수 있을까요?",en:"Dev buys the trust's beach unit at full market price. Can Mia and Leo undo the sale?"},o:[{ko:"아니요, 가격이 공정했으니까요",en:"No, the price was fair"},{ko:"네, 적법한 허가가 없었다면 가격과 관계없이 자기거래는 취소할 수 있어요",en:"Yes, self-dealing can be set aside whatever the price, unless properly authorised"},{ko:"손해를 봤을 때만 가능해요",en:"Only if they lost money"},{ko:"로즈 할머니가 반대할 때만 가능해요",en:"Only if Rose objects"}],a:1,y:{ko:"자기거래 규칙은 엄격해요. 가격이 공정했다는 건 방어가 안 돼요. 이해충돌 자체가 문제이기 때문이에요.",en:"The self-dealing rule is strict. A fair price is no answer, because the conflict itself is the problem."}},
+    {q:{ko:"데브 삼촌이 신탁자금 전부를 위험한 코인 하나에 넣었어요. 가장 관련 있는 의무는?",en:"Dev puts the whole fund into one risky crypto coin. Which duty is most in play?"},o:[{ko:"이익 취득 금지",en:"No-profit rule"},{ko:"주의의무(신중한 사람 기준)",en:"Duty of care (prudent person)"},{ko:"회계 의무",en:"Duty to account"},{ko:"비용상환청구권",en:"Right of indemnity"}],a:1,y:{ko:"투기성이 높은 자산 하나에 전부 넣는 것은 위험, 분산투자, 수익자의 필요를 고려하는 신중한 사람 기준을 충족하기 어려워요.",en:"Putting everything into one highly speculative asset is unlikely to meet the prudent person standard, which weighs risk, diversification and the beneficiaries' needs."}},
+    {q:{ko:"수탁자로 일하다 좋은 투자 정보를 알게 된 데브 삼촌이 자기 돈으로 투자했어요. 신탁은 손해가 없어요. 이익을 가져도 될까요?",en:"While acting as trustee, Dev learns about a great investment and buys it for himself. The trust loses nothing. Can he keep the profit?"},o:[{ko:"네, 손해가 없으면 문제없어요",en:"Yes, no loss means no problem"},{ko:"아니요, 지위를 통해 얻은 이익은 반환해야 해요",en:"No, he must account for profit made through his position"},{ko:"정직하게 했다면 가져도 돼요",en:"Yes, if he acted honestly"},{ko:"절반만 가질 수 있어요",en:"He keeps half"}],a:1,y:{ko:"이익 취득 금지 규칙은 수탁자가 정직했고 신탁에 손해가 없어도 적용돼요. Boardman v Phipps 사건의 결론이에요.",en:"The no-profit rule applies even when the trustee is honest and the trust suffers no loss. That was the result in Boardman v Phipps."}},
+    {q:{ko:"데브 삼촌에게는 미아와 레오 사이에 수익을 나눌 재량이 있어요. 동전을 던져 정했어요. 무엇이 문제일까요?",en:"Dev has a discretion to split income between Mia and Leo. He flips a coin. What's wrong?"},o:[{ko:"문제없어요. 재량이니까요",en:"Nothing, it's his discretion"},{ko:"결정에 실질적이고 진지한 고려를 하지 않았어요",en:"He failed to give real and genuine consideration"},{ko:"항상 반반 나눠야 해요",en:"He must always split it 50/50"},{ko:"로즈 할머니만 정할 수 있어요",en:"Only Rose can decide"}],a:1,y:{ko:"재량에도 제대로 고려할 의무가 따라요. 우연에 맡기면 수익자 사정을 실질적으로 고려하지 않은 거예요.",en:"A discretion still carries a duty to think. Leaving it to chance shows no real consideration of the beneficiaries' circumstances."}},
+    {q:{ko:"데브 삼촌이 신탁 주식 등록 문제를 해결하려고 변호사에게 800달러를 냈어요. 최종적으로 누가 부담할까요?",en:"Dev pays a lawyer $800 to fix a problem with the trust's share registration. Who bears the cost in the end?"},o:[{ko:"데브 삼촌 개인",en:"Dev personally"},{ko:"비용상환청구권에 따라 신탁재산",en:"The trust assets, through the right of indemnity"},{ko:"로즈 할머니",en:"Nana Rose"},{ko:"미아와 레오 개인",en:"Mia and Leo personally"}],a:1,y:{ko:"신탁 운영을 위해 적법하게 지출한 비용은 신탁재산에서 부담해요. 이것이 수탁자의 비용상환청구권이에요.",en:"Expenses properly incurred in running the trust come out of the trust assets. That is the trustee's right of indemnity."}}
+  ]
+},
+{
+  icon:"branch",
+  title:{ko:"법이 만드는 신탁",en:"Trusts the law makes"},
+  sub:{ko:"복귀신탁과 의제신탁",en:"Resulting and constructive trusts"},
+  story:[
+    {w:"narr",ko:"레오가 19살이 됐어요. 차 값 3만 달러를 전부 냈지만, 친구 잭의 이름으로 샀어요. 잭의 보험료가 더 싸다는 이유였죠.",en:"Leo is 19 now. He pays the full $30,000 for a car but buys it in his mate Jack's name, because Jack's insurance is cheaper."},
+    {w:"jack",ko:"서류에 내 이름이 있잖아. 이제 내 차지?",en:"My name's on the papers. Car's mine now, right?"},
+    {w:"leo",ko:"너한테 주려던 게 아니었다고!",en:"I never meant to give it to you!"},
+    {w:"narr",ko:"아무도 신탁증서를 쓰지 않았어요. 그래도 형평법은 레오에게 증여할 의도가 없었다고 추정해요. 이게 복귀신탁이에요.",en:"Nobody wrote a trust deed. Even so, equity presumes Leo didn't intend a gift. That's a resulting trust."},
+    {w:"narr",ko:"한편 데브 삼촌은 신탁 정보를 이용해 몰래 5천 달러를 벌었어요. 법은 데브의 의도를 묻지 않아요. 그 돈은 미아와 레오를 위한 의제신탁으로 보유돼요.",en:"Meanwhile, Dev secretly made $5,000 using trust information. The law doesn't ask what Dev intended. That money is held on constructive trust for Mia and Leo."},
+    {w:"mia",ko:"그러니까 어떤 신탁은 사람들이 아마 의도했을 것에서 생기고, 어떤 신탁은 재산을 가지는 게 비양심적이라서 법이 강제로 만드는 거네요?",en:"So some trusts come from what people probably meant, and others are imposed because keeping the property would be unconscionable?"},
+    {w:"rose",ko:"바로 그거야.",en:"That's it exactly."}
+  ],
+  key:{ko:"명시신탁은 표현된 의도에서, 복귀신탁은 추정된 의도에서 생겨요. 의제신탁은 당사자의 의도와 관계없이 비양심적인 행동을 막기 위해 법이 부과해요.",en:"Express trusts come from stated intention. Resulting trusts come from presumed intention. Constructive trusts are imposed by law to prevent unconscionable conduct, whatever anyone intended."},
+  compare:[
+    {n:"cmpExpress",s:{ko:"표현된 의도",en:"Stated intention"},e:{ko:"로즈 할머니의 신탁",en:"Rose's trust for the kids"}},
+    {n:"cmpResult",s:{ko:"추정된 의도",en:"Presumed intention"},e:{ko:"잭 명의로 산 레오의 차",en:"Leo's car in Jack's name"}},
+    {n:"cmpCon",s:{ko:"법이 부과",en:"Imposed by law"},e:{ko:"데브 삼촌이 몰래 번 돈",en:"Dev's secret profit"}}
+  ],
+  cards:[
+    {t:"Resulting trust",k:"복귀신탁",d:{ko:"재산이나 돈을 제공한 사람에게 수익권이 되돌아가는(result) 신탁이에요.",en:"A trust where the beneficial interest goes back (results) to the person who provided the property or money."},w:{ko:"주로 두 경우예요. 남의 명의로 재산을 사줬을 때, 또는 명시신탁이 실패하거나 재산이 남았을 때예요.",en:"Two main situations. Someone pays for property put in another's name, or an express trust fails or leaves a surplus."}},
+    {t:"Purchase money resulting trust",k:"매수대금 복귀신탁",d:{ko:"A가 돈을 내고 B 명의로 재산을 사면, 형평법은 A에게 증여 의도가 없었다고 추정해요. B는 A를 위해 그 재산을 보유해요.",en:"If A pays for property put in B's name, equity presumes A didn't intend a gift. B holds it on trust for A."},w:{ko:"여러 사람이 다르게 기여했다면 각자 낸 금액 비율대로 지분이 정해질 수 있어요.",en:"Where people contribute unequally, the shares can follow what each paid."}},
+    {t:"Presumption of advancement",k:"증여 추정",d:{ko:"특정 관계에서는 형평법이 반대로 증여를 추정해요. 부모가 자녀 명의로, 남편이 아내 명의로 재산을 사주는 경우예요.",en:"In certain relationships equity presumes a gift instead, such as a parent buying for a child or a husband for a wife."},w:{ko:"호주에서는 여전히 적용되지만 추정일 뿐이라서, 실제 의도에 관한 증거로 뒤집을 수 있어요.",en:"It still applies in Australia, but it is only a presumption. Evidence of actual intention can rebut it."}},
+    {t:"Automatic resulting trust",k:"자동적 복귀신탁",d:{ko:"명시신탁이 실패하거나 재산이 다 쓰이지 않으면, 남은 재산은 설정자(또는 그 상속재산)에게 돌아가요.",en:"If an express trust fails or doesn't use up all the property, the leftover goes back to the settlor or their estate."},w:{ko:"목적을 다 이룬 기금에 돈이 남았을 때가 대표적이에요.",en:"A classic case is a fund for a purpose that has finished, with money left over."}},
+    {t:"Constructive trust",k:"의제신탁",d:{ko:"법적 소유자가 재산을 자기 것으로 유지하는 게 비양심적일 때, 누구의 의도와도 관계없이 법이 부과하는 신탁이에요.",en:"A trust imposed by law, regardless of intention, where it would be unconscionable for the legal owner to keep the property."},w:{ko:"신인의무자가 얻은 이익, 사기로 얻은 재산, 무산된 공동사업(joint endeavour), 재산에 관한 일부 약속 위반에서 쓰여요.",en:"Fiduciary profits, property obtained by fraud, failed joint endeavours and some broken promises about property."}},
+    {t:"Joint endeavour",k:"공동사업 의제신탁",d:{ko:"관계나 공동사업이 누구의 잘못 없이 끝났을 때, 한쪽이 상대방의 기여분까지 가지는 것은 비양심적일 수 있어요.",en:"When a relationship or joint venture ends without fault, it can be unconscionable for one party to keep the other's contributions."},w:{ko:"사실혼 관계나 가족 재산 분쟁에서 자주 쓰여요.",en:"Often used in disputes between de facto partners and family members."}}
+  ],
+  law:[
+    ["Calverley v Green (1984) 155 CLR 242",{ko:"매수대금 복귀신탁과 기여 비율",en:"Purchase money resulting trust in proportion to contributions"}],
+    ["Nelson v Nelson (1995) 184 CLR 538",{ko:"호주에서의 증여 추정",en:"Presumption of advancement in Australia"}],
+    ["Muschinski v Dodds (1985) 160 CLR 583",{ko:"무산된 공동사업과 의제신탁",en:"Constructive trust after a failed joint endeavour"}],
+    ["Baumgartner v Baumgartner (1987) 164 CLR 137",{ko:"사실혼 관계에서의 적용",en:"Applied to a de facto relationship"}],
+    ["Giumelli v Giumelli (1999) 196 CLR 101",{ko:"의제신탁은 최후의 구제수단",en:"Constructive trust as a remedy of last resort"}]
+  ],
+  quiz:[
+    {q:{ko:"레오가 차 값을 전액 내고 잭 명의로 샀어요. 다른 증거가 없다면 형평법상 소유자는?",en:"Leo paid the full price for the car bought in Jack's name. With no other evidence, who owns it in equity?"},o:[{ko:"잭",en:"Jack"},{ko:"레오",en:"Leo"},{ko:"둘이 반씩",en:"Both equally"},{ko:"아무도 아님",en:"Nobody"}],a:1,y:{ko:"형평법은 레오가 친구인 잭에게 증여할 의도가 없었다고 추정해요. 잭은 레오를 위해 차를 복귀신탁으로 보유해요.",en:"Equity presumes Leo didn't intend a gift to Jack, who is just a mate. Jack holds the car on resulting trust for Leo."}},
+    {q:{ko:"아버지가 아파트를 사서 성인 딸 명의로 했어요. 형평법은 무엇을 추정할까요?",en:"A father buys a flat and puts it in his adult daughter's name. What does equity presume?"},o:[{ko:"아버지를 위한 복귀신탁",en:"A resulting trust for the father"},{ko:"딸에 대한 증여(증여 추정)",en:"A gift to the daughter (presumption of advancement)"},{ko:"의제신탁",en:"A constructive trust"},{ko:"아무것도 추정하지 않아요",en:"Nothing at all"}],a:1,y:{ko:"호주에서는 부모와 자녀 사이에 증여 추정이 적용돼요. 아버지는 증여 의도가 없었다는 증거로 이를 뒤집을 수 있어요.",en:"The presumption of advancement applies between parent and child in Australia. The father can rebut it with evidence he didn't intend a gift."}},
+    {q:{ko:"로즈 할머니의 신탁은 미아와 레오의 대학 등록금 용도였어요. 둘 다 졸업했는데 1만 2천 달러가 남았고, 신탁증서엔 아무 말이 없어요. 보통 어디로 갈까요?",en:"Rose's trust was only for Mia and Leo's uni fees. Both graduate and $12,000 is left. The deed says nothing. Where does it usually go?"},o:[{ko:"데브 삼촌이 가져요",en:"Dev keeps it"},{ko:"복귀신탁으로 로즈 할머니나 그 상속재산에",en:"Back to Rose or her estate on resulting trust"},{ko:"정부로",en:"To the government"},{ko:"자선단체로",en:"To charity"}],a:1,y:{ko:"보통은 설정자에게 복귀해요. 다만 법원이 ‘등록금’을 단순한 증여 동기로 보고 미아와 레오에게 온전히 준 것으로 해석할 여지도 있어요.",en:"Usually it results back to the settlor. A court might instead read “uni fees” as just the motive for an outright gift to Mia and Leo."}},
+    {q:{ko:"샘과 알렉스가 돈을 모아 함께 집을 샀어요. 누구의 잘못도 없이 헤어졌는데, 법적 소유자인 샘이 전부 가지려 해요. 법원은 무엇을 쓸 수 있을까요?",en:"Sam and Alex pool money to buy a house together. They split up with neither at fault. Sam, the legal owner, tries to keep it all. What might the court use?"},o:[{ko:"명시신탁",en:"An express trust"},{ko:"무산된 공동사업에 근거한 의제신탁",en:"A constructive trust based on a failed joint endeavour"},{ko:"증여 추정",en:"The presumption of advancement"},{ko:"쓸 수 있는 게 없어요",en:"Nothing"}],a:1,y:{ko:"Muschinski v Dodds와 Baumgartner 판결에 따르면, 공동사업이 누구 잘못 없이 끝났을 때 상대방 기여분을 가지는 것은 비양심적이에요.",en:"Muschinski v Dodds and Baumgartner hold that keeping the other's contributions after a joint endeavour fails without fault is unconscionable."}},
+    {q:{ko:"복귀신탁과 의제신탁의 핵심 차이는?",en:"What's the key difference between a resulting and a constructive trust?"},o:[{ko:"복귀신탁은 서면이 필요해요",en:"Resulting trusts must be in writing"},{ko:"복귀신탁은 추정된 의도에, 의제신탁은 비양심성을 막으려는 법에 근거해요",en:"Resulting trusts rest on presumed intention, constructive trusts on law preventing unconscionability"},{ko:"의제신탁은 토지에만 적용돼요",en:"Constructive trusts only apply to land"},{ko:"차이가 없어요",en:"There's no difference"}],a:1,y:{ko:"복귀신탁은 재산 제공자가 아마 의도했을 바에 반응하고, 의제신탁은 누구의 의도와 관계없이 양심에 반응해요.",en:"Resulting trusts respond to what the provider probably intended. Constructive trusts respond to conscience, whatever anyone intended."}}
+  ]
+},
+{
+  icon:"scale",
+  title:{ko:"신탁 위반과 구제",en:"Court day"},
+  sub:{ko:"신탁 위반, 구제수단, 항변",en:"Breach of trust, remedies and defences"},
+  story:[
+    {w:"narr",ko:"모든 게 드러났어요. 데브 삼촌은 코인으로 4만 달러를 잃었고, 신탁자금 6만 달러로 보트를 샀어요. 친구 킴은 무슨 일인지 알면서 돈 옮기는 걸 도왔어요.",en:"It all comes out. Dev lost $40,000 on crypto and used $60,000 of trust money to buy a boat. His friend Kim helped move the money, knowing exactly what was going on."},
+    {w:"judge",ko:"하나씩 봅시다. 수익자들은 무엇을 원하나요?",en:"Let's take this one step at a time. What do the beneficiaries want?"},
+    {w:"mia",ko:"잃은 4만 달러를 채워 넣는 거요. 그리고 보트요. 지금 값이 더 올랐거든요.",en:"The lost $40,000 put back. And the boat, because it's worth more now."},
+    {w:"leo",ko:"그리고 데브 삼촌을 수탁자에서 교체하고 싶어요.",en:"And we want Dev replaced as trustee."},
+    {w:"dev",ko:"금융 인플루언서 말을 따랐을 뿐이에요! 저는 정직했다고요!",en:"I just followed a finance influencer! I was honest!"},
+    {w:"judge",ko:"정직했을 수도 있죠. 합리적이었는지는 다른 문제예요.",en:"Honest, perhaps. Whether you were reasonable is another question."}
+  ],
+  key:{ko:"수익자는 수탁자에게 인적 청구(형평법상 보상, 이익반환)를 하거나, 추적(tracing)을 통해 재산 자체를 청구할 수 있어요. 사정을 알고 가담한 제3자도 책임질 수 있어요.",en:"Beneficiaries can bring personal claims against the trustee (equitable compensation or an account of profits) or claim the property itself by tracing. Third parties who knowingly take part can be liable too."},
+  cards:[
+    {t:"Breach of trust",k:"신탁 위반",d:{ko:"고의, 과실, 정직한 실수를 불문하고 수탁자가 의무를 이행하지 않은 모든 경우예요.",en:"Any failure by the trustee to carry out their duties, whether deliberate, careless or an honest mistake."},w:{ko:"수익자가 청구를 시작하는 출발점이에요.",en:"The starting point for any claim by the beneficiaries."}},
+    {t:"Equitable compensation",k:"형평법상 보상",d:{ko:"신탁재산을 원래 있어야 할 상태로 회복시키기 위해 수탁자가 지급해야 하는 금전이에요.",en:"Money the trustee must pay to restore the trust fund to where it should be."},w:{ko:"코인으로 잃은 4만 달러 같은 손실에 쓰여요. 위반과 손실 사이에 인과관계가 필요해요.",en:"Used for losses like the $40,000 lost on crypto. There must be a causal link between the breach and the loss."}},
+    {t:"Account of profits",k:"이익반환",d:{ko:"위반으로 얻은 이익을 전부 내놓아야 해요. 신탁이 손해를 보지 않았어도요.",en:"The trustee must hand over any profit made from the breach, even if the trust lost nothing."},w:{ko:"몰래 얻은 이익이나 허락받지 않은 이익에 쓰여요.",en:"Used for secret or unauthorised profits."}},
+    {t:"Tracing",k:"추적",d:{ko:"신탁재산의 가치가 무엇으로 바뀌었는지 따라가는 절차예요. 보트를 사는 데 쓰인 돈이 그 예예요.",en:"A process for following trust value into whatever it was turned into, such as money used to buy a boat."},w:{ko:"수익자가 새 자산과 그 가치 상승분까지 청구할 수 있게 해줘요.",en:"It lets beneficiaries claim the new asset, including any rise in value."}},
+    {t:"Proprietary and personal claims",k:"물권적 청구와 인적 청구",d:{ko:"인적 청구는 수탁자에게 돈을 달라는 것이고, 물권적 청구는 특정 재산 자체를 달라는 거예요.",en:"A personal claim is for money from the trustee. A proprietary claim is to a specific asset itself."},w:{ko:"수탁자가 파산했을 때 특히 중요해요. 일반 채권자보다 우선할 수 있기 때문이에요.",en:"It matters most when the trustee is bankrupt, because a proprietary claim can take priority over ordinary creditors."}},
+    {t:"Removal of trustee",k:"수탁자 해임",d:{ko:"법원은 수익자 보호를 위해 수탁자를 해임하고 새 수탁자를 선임할 수 있어요.",en:"The court can remove a trustee and appoint a new one to protect the beneficiaries."},w:{ko:"수탁자의 행동이 신탁재산이나 수익자의 이익을 위태롭게 할 때예요.",en:"Where the trustee's conduct puts the trust property or the beneficiaries' welfare at risk."}},
+    {t:"Statutory relief",k:"법정 면책",d:{ko:"정직하고 합리적으로 행동했고 공정하게 면책되어야 할 수탁자는 법원이 책임을 면해줄 수 있어요.",en:"The court may excuse a trustee who acted honestly and reasonably and ought fairly to be excused."},w:{ko:"Trustee Act 1925 (NSW) s 85가 그 예예요. 정직만으로는 부족해요.",en:"For example Trustee Act 1925 (NSW) s 85. Honesty alone is not enough."}},
+    {t:"Beneficiary consent",k:"수익자의 동의",d:{ko:"충분히 알고 자유롭게 위반에 동의한 성인 수익자는 나중에 그 위반으로 수탁자에게 청구할 수 없어요.",en:"An adult beneficiary who freely consented to a breach with full knowledge can't later sue the trustee for it."},w:{ko:"동의한 수익자에게만 효력이 있고, 다른 수익자에게는 없어요.",en:"It only binds the beneficiary who consented, not the others."}},
+    {t:"Third-party liability",k:"제3자 책임",d:{ko:"외부인도 Barnes v Addy 원칙에 따라 책임질 수 있어요. 사정을 알고 신탁재산을 받은 경우(knowing receipt), 또는 부정직하고 기망적인 위반을 알면서 도운 경우(knowing assistance)예요.",en:"Outsiders can be liable under Barnes v Addy if they knowingly receive trust property, or knowingly assist a dishonest and fraudulent breach."},w:{ko:"수탁자는 돈이 없지만 도운 사람에게는 돈이 있을 때 유용해요.",en:"Useful when the trustee has no money but the helper does."}}
+  ],
+  law:[
+    ["Youyang Pty Ltd v Minter Ellison Morris Fletcher (2003) 212 CLR 484",{ko:"형평법상 보상과 인과관계",en:"Equitable compensation and causation"}],
+    ["Warman International Ltd v Dwyer (1995) 182 CLR 544",{ko:"이익반환",en:"Account of profits"}],
+    ["Foskett v McKeown [2001] 1 AC 102",{ko:"추적과 가치 상승분",en:"Tracing into an asset that rose in value"}],
+    ["Barnes v Addy (1874) LR 9 Ch App 244",{ko:"제3자 책임의 두 원칙",en:"The two limbs of third-party liability"}],
+    ["Farah Constructions Pty Ltd v Say-Dee Pty Ltd (2007) 230 CLR 89",{ko:"호주의 Barnes v Addy 적용",en:"Barnes v Addy in Australia"}],
+    ["Trustee Act 1925 (NSW) s 85",{ko:"정직하고 합리적인 수탁자의 면책",en:"Relief for honest and reasonable trustees"}],
+    ["Letterstedt v Broers (1884) 9 App Cas 371",{ko:"법원의 수탁자 해임",en:"Court's power to remove trustees"}]
+  ],
+  quiz:[
+    {q:{ko:"데브 삼촌이 신탁자금 6만 달러로 산 보트가 지금 7만 5천 달러예요. 수익자에게 가장 유리한 청구는?",en:"Dev used $60,000 of trust money on a boat now worth $75,000. What's the beneficiaries' best claim?"},o:[{ko:"6만 달러 보상만 청구",en:"$60,000 compensation only"},{ko:"보트로 추적해서 가치 상승분까지 보트 자체를 청구",en:"Trace into the boat and claim it, rise in value included"},{ko:"청구할 수 없어요. 보트는 데브 것이에요",en:"Nothing, the boat is Dev's"},{ko:"보트 판매자에게 청구",en:"Sue the boat seller"}],a:1,y:{ko:"추적을 통해 신탁자금이 보트로 바뀐 것을 따라가 자산 자체를 청구할 수 있어요. 늘어난 1만 5천 달러까지 가져올 수 있죠.",en:"Tracing follows the trust money into the boat, so they can claim the asset itself and capture the extra $15,000."}},
+    {q:{ko:"데브 삼촌이 파산했어요. 지금 물권적 청구가 왜 중요할까요?",en:"Dev goes bankrupt. Why does a proprietary claim matter now?"},o:[{ko:"절차가 더 빨라서",en:"It's quicker"},{ko:"데브의 일반 채권자보다 우선할 수 있어서",en:"It can take priority over Dev's ordinary creditors"},{ko:"받는 금액이 두 배가 돼서",en:"It doubles the payout"},{ko:"중요하지 않아요",en:"It doesn't matter"}],a:1,y:{ko:"인적 청구는 다른 채권자들과 같은 줄에 서는 거예요. 물권적 청구는 그 자산이 애초에 데브 삼촌 것이 아니었다고 주장하는 거죠.",en:"A personal claim puts the beneficiaries in line with every other creditor. A proprietary claim says the asset was never really Dev's."}},
+    {q:{ko:"데브 삼촌은 SNS 인플루언서를 따랐으니 정직했다고 말해요. 법원이 s 85로 면책해 줄까요?",en:"Dev says he was honest because he followed a social media influencer. Will the court excuse him under s 85?"},o:[{ko:"네, 정직하면 충분해요",en:"Yes, honesty is enough"},{ko:"어려워요. 합리적으로 행동했어야 해요",en:"Unlikely. He must also have acted reasonably"},{ko:"사과하면 면책돼요",en:"Yes, if he apologises"},{ko:"로즈 할머니가 동의하면 돼요",en:"Only if Rose agrees"}],a:1,y:{ko:"면책에는 정직성과 합리성이 모두 필요해요. 제대로 된 자문 대신 인플루언서를 따른 것은 합리적이라고 보기 어려워요.",en:"Relief needs honesty and reasonableness. Relying on an influencer instead of proper advice is hard to call reasonable."}},
+    {q:{ko:"킴은 데브 삼촌이 신탁자금을 부정하게 쓰는 걸 알면서 돈 옮기는 걸 도왔어요. 수익자가 킴에게 청구할 수 있을까요?",en:"Kim helped move the money, knowing Dev was dishonestly misusing it. Can the beneficiaries sue Kim?"},o:[{ko:"아니요, 킴은 수탁자가 아니었어요",en:"No, Kim was never a trustee"},{ko:"네, Barnes v Addy의 knowing assistance로요",en:"Yes, for knowing assistance under Barnes v Addy"},{ko:"킴이 돈을 받았을 때만요",en:"Only if Kim got a cut"},{ko:"로즈 할머니만 청구할 수 있어요",en:"Only Rose can sue"}],a:1,y:{ko:"Barnes v Addy의 두 번째 원칙에 따라, 부정직하고 기망적인 위반을 알면서 도운 사람은 아무것도 받지 않았어도 책임져요.",en:"Under the second limb of Barnes v Addy, someone who knowingly assists a dishonest and fraudulent breach is liable even if they received nothing."}},
+    {q:{ko:"코인 투자 전에 미아는 위험을 모두 읽고 서면으로 동의했어요. 레오에게는 아무도 묻지 않았어요. 코인 손실에 대해 누가 청구할 수 있을까요?",en:"Before the crypto investment, Mia read all the risks and agreed in writing. Nobody asked Leo. Who can sue over the crypto loss?"},o:[{ko:"둘 다",en:"Both"},{ko:"레오만",en:"Only Leo"},{ko:"미아만",en:"Only Mia"},{ko:"아무도 못 해요",en:"Neither"}],a:1,y:{ko:"성인 수익자의 충분한 정보에 기초한 동의는 동의한 사람의 청구만 막아요. 레오는 동의한 적이 없으니 여전히 청구할 수 있어요.",en:"Informed consent from an adult beneficiary only stops that beneficiary from suing. Leo never consented, so he can still claim."}}
+  ]
+}
+];
+
+const ZH={
+ui:{sub:"通过一个家庭的故事学习澳大利亚信托法",score:"得分",story:"故事",cards:"概念卡",quiz:"测验",next:"下一句",all:"全部显示",toCards:"查看概念卡",toQuiz:"开始测验",key:"要点",when:"何时适用",tap:"点一次看含义，点两次看何时适用，点第三次收起。",law:"供法学生参考的判例与法规",right:"答对了",wrong:"差一点",nextQ:"下一题",finish:"查看得分",retry:"重新作答",nextCh:"下一章",results:"最终结果",question:"题目",thisCh:"本章得分",great:"满分！这一章你已经完全掌握了。",good:"做得不错。答错的题可以再看看概念卡。",low:"再看一遍故事和概念卡，然后再试一次。",resTitle:"结案",resSub:"五章全部完成。用一张关系图来总结吧。",restart:"从头开始",notYet:"还有未完成的章节。",cmpExpress:"明示信托",cmpResult:"归复信托",cmpCon:"推定信托"},
+cast:{narr:["旁白",""],rose:["罗丝奶奶","委托人"],dev:["德夫叔叔","受托人"],mia:["米娅","受益人"],leo:["利奥","受益人"],barry:["巴里","邻居"],jack:["杰克","利奥的朋友"],judge:["考尔法官","法院"]},
+ch:[
+{t:"人物与关系",s:"信托把所有权分成两层",
+story:["罗丝奶奶持有价值20万澳元的股票。她希望孙女米娅（16岁）和孙子利奥（13岁）将来上大学时能用这笔钱。问题是，他们现在还太小，管理不了这么多钱。","德夫，我把这些股票转到你名下。纸面上是你的，但实际上是给米娅和利奥的。","也就是说我是法律上的所有人，但一分钱都不能花在自己身上？","真正得到好处的是我和利奥，对吧？","没错。这样安排好之后，我就退出了。接下来是你们三个人之间的事。","这就是信托。财产只有一份，所有权却分成两层，由衡平法（equity）来保障这种关系。"],
+key:"受托人持有普通法所有权（legal title），受益人享有衡平法权益（equitable interest）。如果受托人把信托财产当成自己的来用，法院会依照衡平法加以制止。",
+cards:[["信托","一个人为了他人的利益而持有财产的关系。重点在于它是一种“关系”，而不是公司或法人。","在澳大利亚，家族财富、养老金（superannuation）、慈善机构、投资基金和家族企业经常采用信托结构。"],
+["委托人","把财产交给受托人从而设立信托的人。信托设立后，委托人通常不再有发言权。","每次设立明示信托（express trust）时都会出现。如果通过遗嘱设立，则称为立遗嘱人（testator）。"],
+["受托人","持有信托财产的普通法所有权，必须为受益人而不是为自己管理财产的人或公司。","每个信托都需要受托人。但信托不会仅因为没有受托人而无效，法院可以任命一位。"],
+["受益人","从信托中获得利益的人。他们可以向法院请求强制受托人履行信托。","在固定信托（fixed trust）中，每个人的份额是确定的；在全权信托（discretionary trust）中，由受托人决定谁得到多少。"],
+["普通法所有权","普通法（common law）承认的所有权，例如成为股票或土地的登记所有人。","受托人的名字会登记在股东名册或土地登记簿上。"],
+["衡平法权益","受益人享受财产所带来利益的权利，由衡平法承认和保护。","这是一种财产权，所以对接收财产的第三人也可以主张。例外是不知情且支付了对价的善意购买人（bona fide purchaser for value without notice）。"],
+["衡平法","旧时的衡平法院（Court of Chancery）为纠正严格适用普通法所产生的不公平（unconscionable）结果而发展出来的法律体系。","如今澳大利亚法院同时适用普通法和衡平法；两者冲突时，以衡平法为准。"]],
+law:["衡平法与普通法冲突时衡平法优先","以法律规定冲突时衡平法优先","享有绝对权利的成年受益人可以终止信托"],
+quiz:[["现在股票在法律上的所有人是谁？",["罗丝奶奶","德夫叔叔","米娅和利奥","信托本身"],"德夫是受托人，所以股票登记在他名下。信托不是法人，本身不能拥有财产。"],
+["一年后，罗丝奶奶改变主意，想拿回股票。她可以拿回来吗？",["可以，本来就是她的钱","不可以，除非她设立信托时保留了撤销权","德夫同意就可以","她把股票买回来就可以"],"信托一旦有效设立，委托人就退出了。如果信托文件中没有保留撤销权（power of revocation），她就不能撤回。"],
+["德夫用信托资金买了一辆新车自己开。米娅和利奥为什么可以阻止他？",["因为德夫不是法律上的所有人","因为受托人为自己使用信托财产，在衡平法上属于违背良心","因为罗丝奶奶可以替他们起诉","不能阻止，普通法所有权优先"],"德夫确实是法律上的所有人，但衡平法看重良心（conscience）。无视受益人的衡平法权益是违背良心的。"],
+["几年后，米娅和利奥都成年了，两人共同对全部信托财产享有权利。他们可以做什么？",["只能等德夫决定","请求法院更换罗丝奶奶","共同终止信托并要求取得财产","只能把份额卖给德夫"],"根据 Saunders v Vautier 规则，具有完全行为能力、共同享有绝对权利（absolutely entitled）的成年受益人可以终止信托并取得财产。"]]},
+{t:"信托如何成立",s:"三个确定性与财产转移",
+story:["罗丝奶奶的邻居巴里也想照着做。他匆匆写了一张便条。","“如果我侄子表现好，我希望他也许能得到我的一些东西。”","巴里，这样是设立不了信托的。衡平法要求三件事都必须确定。","让我猜猜。他必须真的有设立信托的意图，要说清楚是什么财产，还要说清楚谁来得到？","完全正确。然后还必须把财产真正交给受托人。","巴里的便条通不过。“希望”和“也许”只是愿望，“一些东西”太模糊，“表现好”也没有明确的判断标准。"],
+key:"意图（intention）、标的财产（subject matter）和受益对象（objects）三者都必须确定。之后，财产还必须真正转移（vest）给受托人。",
+cards:[["意图的确定性","委托人必须有设立信托的意图。法院根据言行客观判断，而不是看内心想法。","当有人主张某项财产以信托方式持有时，这是法院首先审查的问题，在家庭内部的非正式安排中尤其常见。"],
+["训诫性用语","像“我希望”“我想要”这样表达愿望的话。通常只是道德上的请求，不构成有约束力的信托。","常见于自己写的遗嘱和便条。"],
+["标的的确定性","必须清楚哪些财产属于信托财产，以及每位受益人的份额是多少。","葡萄酒或黄金等物品通常必须单独分开；同一家公司的相同股票可能不需要分开。"],
+["受益对象的确定性","必须清楚谁是受益人，法院才能执行信托。","固定信托适用完整名单测试（complete list test），全权信托适用“是或不是”测试（is-or-is-not test）。"],
+["固定信托","每位受益人的份额由信托条款确定，例如各占一半。","当委托人希望从一开始就确定份额时使用。"],
+["全权信托","受托人在规定范围（class）内决定哪些受益人获得收益或本金，以及获得多少。","在澳大利亚家族信托（family trust）中非常普遍，常用于保持灵活性和税务规划。"],
+["信托的完成设立","财产真正转移给受托人后，信托才成立。衡平法不会替委托人完成一项没有完成的赠与。","如果委托人已经做完了自己必须做的一切，即使尚未登记，衡平法也视赠与已经完成。"]],
+law:["三个确定性","意图按客观标准判断","商业交易中的信托意图","未分开的物品因不确定而无效","对部分相同股票设立的信托有效","全权信托的“是或不是”测试","衡平法不会完善不完整的赠与","委托人做完应做之事后在衡平法上完成"],
+quiz:[["遗嘱写道：“我把房子留给妻子，并完全相信她会照顾好我们的孩子。”这是为孩子设立的信托吗？",["是，因为提到了孩子","可能不是，这是表达希望的训诫性用语","是，因为写在遗嘱里","只有妻子同意时才是"],"“完全相信”表达的是希望。如果没有施加约束性义务的客观意图，妻子就完全拥有这栋房子。"],
+["巴里宣布对“我地窖里100瓶葡萄酒中的20瓶”设立信托，但从未把它们分开。缺少哪一个确定性？",["意图","标的财产","受益对象","都不缺"],"每瓶酒可能不同，不把20瓶分开，就没人知道哪几瓶是信托财产。"],
+["一个全权信托的受益范围是“我的所有员工及其亲属”。法院适用哪种测试？",["完整名单测试","“是或不是”测试","多数测试","不需要测试"],"对全权信托来说，只要能判断任何一个人是否属于这个范围就足够了，不需要完整名单。"],
+["罗丝奶奶签署了股票转让书，连同股票证书交给了德夫。公司还没把德夫登记为股东，奶奶就去世了。信托完成设立了吗？",["没有，因为还没登记","在衡平法上完成了，她已做完自己该做的一切","只有遗嘱写明才算","没有，德夫必须付款"],"根据 Corin v Patton，如果委托人已完成自己一方必须做的一切，受让人无需委托人也能完成转让，那么赠与在衡平法上就已完成。"]]},
+{t:"受托人的义务",s:"义务、权力以及受托人自己的权利",
+story:["德夫当受托人已经好几年了。信托财产增加了，现在还有一套海边小公寓。德夫开始动起了各种念头。","要不海边公寓我自己买下？我按市价付钱，说真的。","你把东西卖给你自己？这听起来像利益冲突。","好吧。那我把钱全部投到一种正火的加密货币里。回报超高！","那我们每个人能拿多少，由谁决定？","简单，抛硬币决定。","三个馊主意，对应三种不同的义务。来看看德夫要违反哪些规则。"],
+key:"受托人是受信人（fiduciary）。核心规则是禁止利益冲突（no conflict）和禁止获利（no profit）。此外，还有遵守信托条款、谨慎管理和认真考虑如何行使酌处权的义务。",
+cards:[["受信义务","一种忠实义务。受托人必须把自身利益放在一边，为受益人的利益行事。","在澳大利亚，受信义务具有禁止性（proscriptive）。它规定受托人不得做什么，而不是要求其积极做什么。"],
+["禁止利益冲突","受托人不得使自己处于个人利益可能与义务相冲突的位置。自己购买信托财产（自我交易，self-dealing）是典型例子。","即使价格公平，受益人也可以撤销自我交易，除非信托文件、受益人的知情同意（informed consent）或法院已予授权。"],
+["禁止获利","受托人不得利用其地位获取未经授权的利益，即使信托没有任何损失也一样。","这样的利益必须交出（account of profits），并可能被视为以推定信托（constructive trust）持有。"],
+["遵守信托条款的义务","受托人必须严格执行信托文件，并向正确的人支付。","即使是出于诚实的错误付错了人，也构成违反义务。"],
+["谨慎义务","在投资和管理财产时，受托人必须具备审慎之人（prudent person）管理他人财产时应有的谨慎、勤勉和技能。","规定在各州的受托人法中，例如 Trustee Act 1925 (NSW) s 14A。专业受托人适用更高的标准。"],
+["考虑酌处权的义务","受托人拥有酌处权时，必须真实、认真地考虑（real and genuine consideration）是否以及如何行使。","法院很少干预结果本身，但若存在恶意、未经适当考虑或目的不当，就会介入。"],
+["公平义务","受托人必须公平对待不同的受益人，例如享有收益（income）的受益人和享有本金（capital）的受益人。","当某项投资偏向一方时就会出现问题，例如现在收益高但本金几乎不增长。"],
+["记账与告知义务","受托人必须妥善记账，并随时准备向受益人说明信托的运作情况。","受益人可以要求查阅信托文件。但对某些文件，例如酌处决定的理由，由法院决定查阅范围。"],
+["费用补偿权","受托人可以用信托财产支付正当产生的费用，或从信托财产中获得偿还。","这项权利有信托财产上的衡平法留置权（equitable lien）作保障，所以在更换受托人时特别重要。"]],
+law:["受托人严格禁止获利","即使没有损失也须交出利润","澳大利亚对冲突与获利规则的阐述","受信义务的禁止性","审慎商人标准","投资时的谨慎义务","法院对酌处决定的审查","受益人查阅信托文件","更换受托人时的费用补偿权"],
+quiz:[["德夫按市价买下了信托的海边公寓。米娅和利奥可以撤销这笔交易吗？",["不可以，价格是公平的","可以，除非有适当授权，否则无论价格如何都可撤销自我交易","只有亏钱时才可以","只有罗丝奶奶反对时才可以"],"自我交易规则非常严格。价格公平不能作为抗辩，因为利益冲突本身就是问题。"],
+["德夫把全部信托资金投进了一种高风险加密货币。最相关的是哪项义务？",["禁止获利","谨慎义务（审慎之人标准）","记账义务","费用补偿权"],"把一切都投入单一的高度投机资产，很难符合审慎之人标准，该标准会考虑风险、分散投资和受益人的需要。"],
+["德夫在担任受托人时得知一个很好的投资机会，自己出钱买了。信托没有任何损失。他能保留这笔利润吗？",["能，没有损失就没问题","不能，通过其地位获得的利润必须交出","只要诚实就能保留","只能保留一半"],"即使受托人是诚实的、信托没有损失，禁止获利规则也照样适用。这是 Boardman v Phipps 案的结论。"],
+["德夫有权在米娅和利奥之间分配收益。他抛硬币决定。问题在哪里？",["没问题，这是他的酌处权","他没有对决定进行真实、认真的考虑","必须永远五五分","只有罗丝奶奶能决定"],"酌处权同样伴随着认真考虑的义务。交给运气决定，说明他没有真正考虑受益人的情况。"],
+["德夫为了解决信托股票的登记问题，付给律师800澳元。最终由谁承担？",["德夫个人","通过费用补偿权由信托财产承担","罗丝奶奶","米娅和利奥个人"],"为管理信托而正当产生的费用由信托财产承担。这就是受托人的费用补偿权。"]]},
+{t:"法律创设的信托",s:"归复信托与推定信托",
+story:["利奥19岁了。他付了全部3万澳元买车，却用朋友杰克的名字买，因为杰克的保险更便宜。","文件上写的是我的名字。那车现在是我的了吧？","我根本没打算送给你！","没有人写过信托文件。即便如此，衡平法推定利奥并没有赠与的意图。这就是归复信托。","与此同时，德夫利用信托的信息偷偷赚了5千澳元。法律不问德夫的意图是什么。这笔钱被视为为米娅和利奥以推定信托持有。","所以有些信托来自人们可能的意图，有些则是因为占有财产违背良心，由法律强加的？","正是如此。"],
+key:"明示信托来自表达出来的意图，归复信托来自推定的意图。推定信托则不论当事人意图如何，由法律为防止违背良心的行为而强加。",
+cmp:[["表达的意图","罗丝奶奶的信托"],["推定的意图","以杰克名义买的利奥的车"],["法律强加","德夫偷偷赚的钱"]],
+cards:[["归复信托","受益权“归复”（result）给提供财产或金钱之人的信托。","主要有两种情况：用自己的钱以他人名义购买财产，或明示信托失败、财产有剩余。"],
+["购买价款归复信托","如果A出钱以B的名义购买财产，衡平法推定A没有赠与的意图。B为A以信托方式持有该财产。","如果几个人出资不同，份额可以按各自出资比例确定。"],
+["赠与推定","在某些关系中，衡平法反过来推定为赠与，例如父母为子女、丈夫为妻子购买财产。","在澳大利亚仍然适用，但它只是推定，可以用实际意图的证据推翻。"],
+["自动归复信托","如果明示信托失败或财产没有用完，剩余财产归还给委托人（或其遗产）。","典型例子是某个目的已经完成的基金还有余款。"],
+["推定信托","当法律上的所有人把财产据为己有会违背良心时，不论任何人的意图，由法律强加的信托。","用于受信人获得的利益、以欺诈取得的财产、失败的共同事业（joint endeavour）以及某些关于财产的违约承诺。"],
+["共同事业推定信托","当一段关系或共同事业在无过错的情况下结束时，一方占有另一方的出资可能违背良心。","常用于事实伴侣和家庭成员之间的财产纠纷。"]],
+law:["购买价款归复信托与出资比例","澳大利亚的赠与推定","共同事业失败后的推定信托","适用于事实伴侣关系","推定信托是最后手段的救济"],
+quiz:[["利奥付了全款，以杰克的名义买了车。如果没有其他证据，衡平法上的所有人是谁？",["杰克","利奥","两人各一半","没有人"],"衡平法推定利奥无意把车送给只是朋友的杰克。杰克以归复信托为利奥持有这辆车。"],
+["父亲买了一套公寓，登记在成年女儿名下。衡平法会推定什么？",["为父亲设立的归复信托","对女儿的赠与（赠与推定）","推定信托","什么都不推定"],"在澳大利亚，父母与子女之间适用赠与推定。父亲可以用无意赠与的证据推翻这一推定。"],
+["罗丝奶奶的信托只用于米娅和利奥的大学学费。两人都毕业了，还剩1万2千澳元，信托文件对此没有规定。通常会归谁？",["德夫留下","以归复信托归还罗丝奶奶或其遗产","归政府","捐给慈善机构"],"通常会归复给委托人。不过法院也可能把“学费”理解为只是赠与的动机，认定这笔钱完全归米娅和利奥所有。"],
+["萨姆和亚历克斯凑钱一起买了房子。两人在双方都无过错的情况下分手，作为法律上所有人的萨姆想独占房子。法院可以用什么？",["明示信托","基于共同事业失败的推定信托","赠与推定","没有办法"],"根据 Muschinski v Dodds 和 Baumgartner 案，共同事业在无过错情况下结束后，占有对方的出资是违背良心的。"],
+["归复信托和推定信托的核心区别是什么？",["归复信托必须采用书面形式","归复信托基于推定的意图，推定信托由法律为防止违背良心而强加","推定信托只适用于土地","没有区别"],"归复信托回应的是出资人可能的意图；推定信托回应的是良心，与任何人的意图无关。"]]},
+{t:"违反信托与救济",s:"违反信托、救济方式与抗辩",
+story:["一切都曝光了。德夫在加密货币上亏了4万澳元，又用6万澳元信托资金买了一艘船。他的朋友金明知怎么回事，还帮忙转移了资金。","我们一件一件来。受益人想要什么？","把亏掉的4万澳元补回来。还有那艘船，因为它现在更值钱了。","我们还想撤换德夫叔叔的受托人职务。","我只是听了一个理财网红的话！我是诚实的！","也许你是诚实的。但你是否合理，是另一个问题。"],
+key:"受益人可以对受托人提出对人请求（衡平法补偿、利润返还），也可以通过追踪（tracing）请求返还财产本身。明知而参与的第三人也可能要承担责任。",
+cards:[["违反信托","受托人未履行义务的任何情况，不论是故意、疏忽还是诚实的错误。","受益人提出任何请求的起点。"],
+["衡平法补偿","受托人为使信托财产恢复到应有状态而必须支付的金钱。","用于损失，例如在加密货币上亏掉的4万澳元。违反行为与损失之间必须有因果关系。"],
+["利润返还","受托人必须交出从违反行为中获得的全部利润，即使信托没有损失。","用于秘密获得或未经授权的利润。"],
+["追踪","追踪信托财产的价值变成了什么的程序，例如用来买船的钱。","让受益人可以请求这项新资产，包括其增值部分。"],
+["物权请求与对人请求","对人请求是要求受托人付钱；物权请求是要求返还特定资产本身。","在受托人破产时最为重要，因为物权请求可以优先于普通债权人。"],
+["撤换受托人","法院可以撤换受托人并任命新的受托人，以保护受益人。","当受托人的行为危及信托财产或受益人的利益时。"],
+["法定免责","如果受托人诚实且合理地行事，并且理应公平地获得免责，法院可以免除其责任。","例如 Trustee Act 1925 (NSW) s 85。仅仅诚实是不够的。"],
+["受益人的同意","在充分知情的情况下自愿同意违反行为的成年受益人，事后不能就此起诉受托人。","只约束表示同意的受益人，不影响其他受益人。"],
+["第三人责任","根据 Barnes v Addy 原则，外人也可能承担责任：明知而接收信托财产（knowing receipt），或明知而协助不诚实、欺诈性的违反行为（knowing assistance）。","当受托人没钱、但帮助者有钱时特别有用。"]],
+law:["衡平法补偿与因果关系","利润返还","追踪至已增值的资产","第三人责任的两个分支","Barnes v Addy 在澳大利亚的适用","诚实且合理的受托人的免责","法院撤换受托人的权力"],
+quiz:[["德夫用6万澳元信托资金买的船，现在值7万5千澳元。对受益人最有利的请求是什么？",["只要求6万澳元补偿","追踪到船上，连同增值一起请求返还船","无法请求，船是德夫的","起诉卖船的人"],"通过追踪，可以追到信托资金变成了这艘船，从而请求返还资产本身，连多出的1万5千澳元也能拿回。"],
+["德夫破产了。为什么现在物权请求很重要？",["程序更快","可以优先于德夫的普通债权人","获赔金额翻倍","并不重要"],"对人请求意味着和其他所有债权人排在同一队伍里。物权请求则是主张这项资产从一开始就不真正属于德夫。"],
+["德夫说他跟着社交媒体网红投资，所以是诚实的。法院会根据 s 85 免除他的责任吗？",["会，诚实就够了","不太可能，他还必须合理行事","道歉就会免责","罗丝奶奶同意就会"],"免责需要诚实与合理两者兼备。不听取适当的专业意见而听从网红，很难说是合理的。"],
+["金明知德夫在不诚实地挪用信托资金，还帮忙转移了钱。受益人可以起诉金吗？",["不可以，金从来不是受托人","可以，依据 Barnes v Addy 的知情协助","只有金分到钱时才可以","只有罗丝奶奶能起诉"],"根据 Barnes v Addy 的第二分支，明知而协助不诚实、欺诈性违反行为的人，即使什么都没拿到也要承担责任。"],
+["投资加密货币之前，米娅读完了所有风险说明并书面同意，但没有人问过利奥。谁可以就这笔亏损提出请求？",["两人都可以","只有利奥","只有米娅","两人都不可以"],"成年受益人的知情同意只阻止同意者本人起诉。利奥从未同意，所以他仍然可以请求。"]]}
+]};
+function mergeZh(){
+  for(const k in ZH.ui) if(UI[k]) UI[k].zh=ZH.ui[k];
+  for(const k in ZH.cast){CAST[k].zh=ZH.cast[k][0];CAST[k].rz=ZH.cast[k][1];}
+  CH.forEach((c,i)=>{const z=ZH.ch[i];
+    c.title.zh=z.t;c.sub.zh=z.s;c.key.zh=z.key;
+    c.story.forEach((l,k)=>l.zh=z.story[k]);
+    if(c.compare) c.compare.forEach((x,k)=>{x.s.zh=z.cmp[k][0];x.e.zh=z.cmp[k][1]});
+    c.cards.forEach((d,k)=>{d.z=z.cards[k][0];d.d.zh=z.cards[k][1];d.w.zh=z.cards[k][2]});
+    c.law.forEach((l,k)=>l[1].zh=z.law[k]);
+    c.quiz.forEach((q,k)=>{const zq=z.quiz[k];q.q.zh=zq[0];q.o.forEach((o,m)=>o.zh=zq[1][m]);q.y.zh=zq[2]});
+  });
+}
+mergeZh();
+
+/* state */
+const KEY = "trustquest-v2";
+let S = {lang:"en",ch:0,tab:"story",view:"ch",line:{},picks:{},qi:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s) S=Object.assign(S,s,{view:"ch"});}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({lang:S.lang,ch:S.ch,picks:S.picks,line:S.line,qi:S.qi}))}catch(e){}};
+const L=o=>o==null?"":(typeof o==="string"?o:(o[S.lang]??o.en));
+const roleOf=p=>S.lang==="ko"?p.rk:S.lang==="zh"?p.rz:p.re;
+const native=d=>S.lang==="ko"?d.k:S.lang==="zh"?d.z:"";
+const u=k=>L(UI[k]);
+
+const ORDER = CH.map(c=>c.quiz.map(()=>shuffle([0,1,2,3])));
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+const picks=i=>S.picks[i]||[];
+const chScore=i=>picks(i).filter((p,k)=>p===CH[i].quiz[k].a).length;
+const chDone=i=>picks(i).length===CH[i].quiz.length;
+const total=()=>CH.reduce((n,c,i)=>n+chScore(i),0);
+const totalQ=CH.reduce((n,c)=>n+c.quiz.length,0);
+
+function diagram(){
+  const D={
+    en:{s:"Settlor",sn:"Nana Rose",t:"Trustee",tn:"Uncle Dev",b:"Beneficiaries",bn:"Mia and Leo",a1:"transfers property",a2:"holds it for their benefit",c0:"steps back after",c1:"Legal title",c2:"Equitable interest",e:"can make the trustee carry out the trust"},
+    ko:{s:"설정자",sn:"로즈 할머니",t:"수탁자",tn:"데브 삼촌",b:"수익자",bn:"미아와 레오",a1:"재산을 넘겨요",a2:"그들을 위해 보유해요",c0:"설정 후 빠져요",c1:"법적 소유권",c2:"형평법상 권리",e:"신탁을 지키라고 청구할 수 있어요"},
+    zh:{s:"委托人",sn:"罗丝奶奶",t:"受托人",tn:"德夫叔叔",b:"受益人",bn:"米娅和利奥",a1:"转移财产",a2:"为他们的利益持有",c0:"设立后退出",c1:"普通法所有权",c2:"衡平法权益",e:"可以要求受托人履行信托"}
+  };
+  const t=D[S.lang];
+
+  const node=(x,col,r,n,who)=>{
+    const two=who.length>1, tx=two?x+82:x+64;
+    const av=two?avatar(who[0],`x="${x+8}" y="57" width="40" height="40"`)+avatar(who[1],`x="${x+34}" y="57" width="40" height="40"`)
+      :avatar(who[0],`x="${x+10}" y="55" width="44" height="44"`);
+    return `<rect x="${x}" y="44" width="190" height="66" rx="14" fill="var(--surface)" stroke="${col}" stroke-width="2"/>${av}
+    <text x="${tx}" y="73" font-weight="800" font-size="15" fill="${col}">${r}</text>
+    <text x="${tx}" y="93" font-size="12.5" fill="var(--muted)">${n}</text>`;};
+  const chip=(x,col,txt,dash)=>`<rect x="${x+25}" y="122" width="140" height="26" rx="13" fill="none" stroke="${col}" ${dash?'stroke-dasharray="4 4"':''}/>
+    <text x="${x+95}" y="139.5" text-anchor="middle" font-size="12" font-weight="600" fill="${col}">${txt}</text>`;
+  return `<svg viewBox="0 0 740 232" role="img" aria-label="${t.s}, ${t.t}, ${t.b}" font-family="Manrope,'Noto Sans KR',sans-serif">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker>
+    <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--coral)"/></marker></defs>
+    ${node(10,"var(--sand)",t.s,t.sn,["rose"])}${node(275,"var(--steel)",t.t,t.tn,["dev"])}${node(540,"var(--teal)",t.b,t.bn,["mia","leo"])}
+    <line x1="204" y1="77" x2="269" y2="77" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#ah)"/>
+    <line x1="469" y1="77" x2="534" y2="77" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#ah)"/>
+    <text x="237" y="30" text-anchor="middle" font-size="12.5" fill="var(--text)">${t.a1}</text>
+    <text x="502" y="30" text-anchor="middle" font-size="12.5" fill="var(--text)">${t.a2}</text>
+    ${chip(10,"var(--muted)",t.c0,true)}${chip(275,"var(--steel)",t.c1)}${chip(540,"var(--teal)",t.c2)}
+    <path d="M635 152 C 610 214, 395 214, 372 156" fill="none" stroke="var(--coral)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ah2)"/>
+    <text x="502" y="224" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--coral)">${t.e}</text>
+  </svg>`;
+}
+
+function head(){
+  return `<header class="top"><div class="top-in">
+    <div class="brand">${ic("scale")}<span>Trust Quest</span><small>${u("sub")}</small></div>
+    <div class="spacer"></div>
+    <div class="score">${u("score")} <b>${total()}/${totalQ}</b></div>
+    <div class="seg" role="group" aria-label="Language">
+${[["en","English"],["ko","한국어"],["zh","中文"]].map(([k,n])=>`<button data-lang="${k}" class="${S.lang===k?"on":""}" aria-pressed="${S.lang===k}">${n}</button>`).join("")}
+    </div></div></header>`;
+}
+
+function nav(){
+  const items=CH.map((c,i)=>`<button class="nav-item ${S.view==="ch"&&S.ch===i?"on":""}" data-ch="${i}">
+    <span class="nav-num">${String(i+1).padStart(2,"0")}</span><span class="nav-t">${L(c.title)}</span>
+    ${chDone(i)?`<span class="nav-s">${ic("check")}${chScore(i)}/${c.quiz.length}</span>`:""}</button>`).join("");
+  return `<nav>${items}<div class="nav-res"><button class="nav-item ${S.view==="res"?"on":""}" data-res="1">
+    <span class="nav-num">${ic("flag")}</span><span class="nav-t">${u("results")}</span></button></div></nav>`;
+}
+
+function storyView(c,i){
+  const n=S.line[i]||1, lines=c.story.slice(0,n), role=roleOf;
+  const who=[...new Set(c.story.map(l=>l.w).filter(w=>w!=="narr"))];
+  const cast=`<div class="cast">${who.map(w=>{const p=CAST[w];return `<div class="cast-p" style="--c:${p.c}"><div class="av">${avatar(w)}</div><div><b>${L(p)}</b><span>${role(p)}</span></div></div>`}).join("")}</div>`;
+  const html=lines.map((l,k)=>{const nw=k===n-1?"new":"";
+    if(l.w==="narr") return `<div class="sys ${nw}">${ic("story")}<span>${L(l)}</span></div>`;
+    const p=CAST[l.w], sd=p.side||"l";
+    return `<div class="msg ${sd} ${nw}" style="--c:${p.c}"><div class="av">${avatar(l.w)}</div>
+      <div class="bub"><div class="who">${L(p)}<span>${role(p)}</span></div>${L(l)}</div></div>`}).join("");
+  const more=n<c.story.length;
+  const replay=n>1?`<button class="btn ghost" data-act="replay">${ic("redo")}${u("replay")}</button>`:"";
+  const ctrl=(more?`<button class="btn" data-act="line">${u("next")}${ic("arrow")}</button><button class="btn ghost" data-act="all">${u("all")}</button>`
+    :`<button class="btn" data-tab="cards">${u("toCards")}${ic("arrow")}</button>`)+replay;
+  const side=`<div class="key"><h4>${u("key")}</h4><p>${L(c.key)}</p></div>
+    ${c.diagram?`<div class="diagram">${diagram()}</div>`:""}
+    ${c.compare?`<div class="cmp">${c.compare.map(x=>`<div><b>${u(x.n)}</b><span class="src">${L(x.s)}</span><br><span class="eg">${L(x.e)}</span></div>`).join("")}</div>`:""}`;
+  return `${cast}<div class="story"><div><div class="chatbox"><div class="chat">${html}</div></div><div class="ctrl">${ctrl}</div></div><div class="side">${more?"":side}</div></div>`;
+}
+
+function fmtAuth(x){
+  let m=x.match(/^(.*? Act \d{4})(.*)$/); if(m) return `<i>${m[1]}</i>${m[2]}`;
+  m=x.match(/^(.*?)( [\(\[]\d{4}[\)\]].*)$/); return m?`<i>${m[1]}</i>${m[2]}`:x;
+}
+function cardsView(c){
+  const cards=c.cards.map((d,k)=>`<button class="card" data-card="${k}" data-step="0" aria-expanded="false">
+    <div class="card-top"><b>${d.t}</b>${native(d)?`<span>${native(d)}</span>`:""}<span class="pips"><i></i><i></i></span></div>
+    <p>${L(d.d)}</p><div class="when"><em>${u("when")}</em>${L(d.w)}</div></button>`).join("");
+  const rows=c.law.map(l=>{const act=/ Act \d{4}/.test(l[0]);
+    return `<tr><td><span class="tag" style="--c:${act?"var(--steel)":"var(--teal)"}">${act?u("isAct"):u("isCase")}</span></td><td>${fmtAuth(l[0])}</td><td>${L(l[1])}</td></tr>`}).join("");
+  const law=`<details class="law"><summary>${u("law")}${ic("chev")}</summary><div class="tbl"><table>
+    <thead><tr><th>${u("colType")}</th><th>${u("colAuth")}</th><th>${u("colPoint")}</th></tr></thead><tbody>${rows}</tbody></table></div></details>`;
+  return `<p class="hint">${u("tap")}</p><div class="cards">${cards}</div>${law}
+    <div class="ctrl"><button class="btn" data-tab="quiz">${u("toQuiz")}${ic("arrow")}</button></div>`;
+}
+
+function quizView(c,i){
+  const p=picks(i), qi=Math.min(S.qi[i]||0,c.quiz.length);
+  const dots=c.quiz.map((q,k)=>{const cls=k===qi?"cur":(p[k]!==undefined?(p[k]===q.a?"ok":"no"):"");
+    return k<=p.length?`<button class="dot ${cls}" data-jump="${k}" aria-label="${u("question")} ${k+1}"></button>`:`<span class="dot"></span>`}).join("");
+  if(qi>=c.quiz.length && p.length===c.quiz.length){
+    const sc=chScore(i), msg=sc===c.quiz.length?u("great"):sc>=c.quiz.length-2?u("good"):u("low");
+    const nxt=i<CH.length-1?`<button class="btn" data-ch="${i+1}">${u("nextCh")}${ic("arrow")}</button>`:`<button class="btn coral" data-res="1">${u("results")}${ic("flag")}</button>`;
+    return `<div class="dots">${dots}</div><div class="done"><div class="big">${sc}/${c.quiz.length}</div>
+      <div><b>${u("thisCh")}</b><p>${msg}</p><div class="ctrl">${nxt}<button class="btn ghost" data-jump="0">${u("review")}</button><button class="btn ghost" data-act="retry">${ic("redo")}${u("retry")}</button></div></div></div>`;
+  }
+  const q=c.quiz[qi], chosen=p[qi], answered=chosen!==undefined;
+  const opts=ORDER[i][qi].map((oi,pos)=>{
+    let cls="";
+    if(answered){cls=oi===q.a?"right":(oi===chosen?"wrong":"dim")}
+    return `<button class="opt ${cls}" data-opt="${oi}" ${answered?"disabled":""}><span class="l">${"ABCD"[pos]}</span><span>${L(q.o[oi])}</span></button>`}).join("");
+  const ok=chosen===q.a;
+  const prev=qi>0?`<button class="btn ghost" data-jump="${qi-1}">${u("prev")}</button>`:"";
+  const fb=(answered?`<div class="fb ${ok?"ok":"no"}"><b>${ok?u("right"):u("wrong")}</b>${L(q.y)}</div>`:"")+
+    `<div class="ctrl">${prev}${answered?`<button class="btn" data-act="nextq">${qi===c.quiz.length-1?u("finish"):u("nextQ")}${ic("arrow")}</button>`:""}</div>`;
+  return `<div class="quiz"><div><div class="dots">${dots}</div><p class="q">${L(q.q)}</p><div class="opts">${opts}</div>${fb}</div>
+    <div class="qside">${u("question")}<div class="big">${qi+1}<span style="color:var(--muted);font-size:18px">/${c.quiz.length}</span></div>${u("thisCh")} <b class="mono" style="color:var(--text)">${chScore(i)}</b></div></div>`;
+}
+
+function chapterView(){
+  const i=S.ch,c=CH[i];
+  const tab=(k,icn)=>`<button class="tab ${S.tab===k?"on":""}" data-tab="${k}">${ic(icn)}${u(k)}</button>`;
+  let body=S.tab==="story"?storyView(c,i):S.tab==="cards"?cardsView(c):quizView(c,i);
+  return `<section class="panel"><div class="ch-head"><div class="num">${String(i+1).padStart(2,"0")}</div>
+    <div><h2>${L(c.title)}</h2><p>${L(c.sub)}</p></div>
+    <div class="tabs">${tab("story","story")}${tab("cards","cards")}${tab("quiz","quiz")}</div></div>${body}</section>`;
+}
+
+function resultsView(){
+  const bars=CH.map((c,i)=>{const d=chDone(i),sc=chScore(i);
+    return `<div class="bar"><span>${L(c.title)}</span><div class="track"><div class="fill" style="width:${d?sc/c.quiz.length*100:0}%"></div></div><span class="mono">${d?sc+"/"+c.quiz.length:"-"}</span></div>`}).join("");
+  const all=CH.every((c,i)=>chDone(i));
+  return `<section class="panel"><div class="ch-head"><div class="num">${total()}<span style="font-size:22px;color:var(--muted)">/${totalQ}</span></div>
+    <div><h2>${u("resTitle")}</h2><p>${all?u("resSub"):u("notYet")}</p></div></div>
+    <div class="res"><div><div class="bars">${bars}</div><div class="ctrl"><button class="btn ghost" data-act="reset">${ic("redo")}${u("restart")}</button></div></div>
+    <div class="side"><div class="diagram">${diagram()}</div><div class="cmp">${CH[3].compare.map(x=>`<div><b>${u(x.n)}</b><span class="src">${L(x.s)}</span></div>`).join("")}</div></div></div></section>`;
+}
+
+const app=document.getElementById("app");
+function render(){
+  document.documentElement.lang=S.lang==="zh"?"zh-Hans":S.lang;
+  app.innerHTML=head()+`<div class="wrap">${nav()}${S.view==="res"?resultsView():chapterView()}</div>`;
+  save();
+}
+
+app.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  const d=b.dataset, i=S.ch;
+  if(d.lang){S.lang=d.lang;render();return}
+  if(d.res){S.view="res";render();window.scrollTo({top:0});return}
+  if(d.ch!==undefined){S.view="ch";S.ch=+d.ch;S.tab="story";render();window.scrollTo({top:0});return}
+  if(d.tab){S.tab=d.tab;render();return}
+  if(d.card!==undefined){const st=((+d.step||0)+1)%3;b.dataset.step=st;b.classList.toggle("s1",st===1);b.classList.toggle("s2",st===2);b.setAttribute("aria-expanded",st>0);return}
+  if(d.jump!==undefined){S.qi[i]=+d.jump;render();return}
+  if(d.opt!==undefined){const qi=S.qi[i]||0;const p=S.picks[i]||(S.picks[i]=[]);if(p[qi]===undefined){p[qi]=+d.opt;render()}return}
+  switch(d.act){
+    case "line":S.line[i]=(S.line[i]||1)+1;break;
+    case "all":S.line[i]=CH[i].story.length;break;
+    case "replay":S.line[i]=1;break;
+    case "nextq":S.qi[i]=(S.qi[i]||0)+1;break;
+    case "retry":S.picks[i]=[];S.qi[i]=0;ORDER[i]=CH[i].quiz.map(()=>shuffle([0,1,2,3]));break;
+    case "reset":S.picks={};S.qi={};S.line={};S.ch=0;S.tab="story";S.view="ch";break;
+    default:return;
+  }
+  render();
+});
+render();
+</script>
+</body>
+</html>
