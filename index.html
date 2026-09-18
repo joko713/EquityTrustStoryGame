@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#28293A">
 <title>Trust Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +29,9 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.msg,.sys,.fb{scroll-margin:80px 0 110px}
 body{background:var(--bg);color:var(--text);font-family:Manrope,"Noto Sans KR","Noto Sans SC","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 .mono{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -35,18 +39,35 @@ button:focus-visible,summary:focus-visible,.card:focus-visible{outline:2px solid
 svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
 .top{background:var(--head);color:var(--headText)}
-.top-in{max-width:1320px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}
+.top-in{padding:12px 20px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;white-space:nowrap;font-weight:800;font-size:18px;letter-spacing:-.01em}
 .brand svg{width:22px;height:22px;color:var(--sand)}
 .brand small{font-weight:500;font-size:13px;opacity:.7;margin-left:6px}
 .spacer{flex:1}
 .score{display:flex;align-items:center;gap:8px;font-size:13px;opacity:.9}
 .score b{font-family:"JetBrains Mono",monospace;font-weight:600;color:var(--sand)}
 .seg{display:flex;border:1px solid rgba(248,246,242,.25);border-radius:999px;padding:3px}
-.seg button{background:none;border:0;padding:5px 14px;border-radius:999px;font-weight:700;font-size:13px;color:var(--headText);opacity:.7}
+.seg button{white-space:nowrap;background:none;border:0;padding:5px 14px;border-radius:999px;font-weight:700;font-size:13px;color:var(--headText);opacity:.7}
+.seg .ls{display:none}
+.seg button{min-width:40px}
+.seg.mode button[data-mode="hard"].on{background:var(--coral);color:#fff}
+.icon-btn{background:none;border:1px solid rgba(248,246,242,.25);color:var(--headText);border-radius:10px;width:36px;height:36px;display:grid;place-items:center;flex:none}
+.icon-btn.on{background:rgba(248,246,242,.14)}
+.brk,.sp2{display:none}
+.panel{position:relative}
+.panel.hard{border:2px solid var(--coral)}
+.jd{display:inline-block;vertical-align:middle;font-size:12px;font-weight:700;color:#fff;background:var(--coral);border-radius:999px;padding:3px 10px;margin-left:6px;letter-spacing:0}
+.wrap.min{grid-template-columns:1fr}
+.wrap.min nav{position:static;flex-direction:row;flex-wrap:wrap;gap:6px}
+.wrap.min .nav-item{width:auto;padding:7px 12px;border-radius:999px;border-color:var(--line);background:var(--surface)}
+.wrap.min .nav-item.on{background:var(--btn);color:var(--btnText);border-color:var(--btn)}
+.wrap.min .nav-item.on .nav-num,.wrap.min .nav-item.on .nav-s{color:var(--btnText)}
+.wrap.min .nav-t{display:none}
+.wrap.min .nav-res{margin:0;border:0;padding:0}
+@media (max-width:1180px){.brand small{display:none}}
 .seg button.on{background:var(--headText);color:var(--head);opacity:1}
 
-.wrap{max-width:1320px;margin:0 auto;padding:20px 24px 32px;display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
+.wrap{padding:16px 20px 28px;display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
 nav{display:flex;flex-direction:column;gap:6px;position:sticky;top:16px}
 .nav-item{display:flex;align-items:center;gap:10px;background:none;border:1px solid transparent;border-radius:10px;padding:10px 12px;text-align:left;width:100%}
 .nav-item:hover{background:var(--surface)}
@@ -98,28 +119,37 @@ nav{display:flex;flex-direction:column;gap:6px;position:sticky;top:16px}
 .key{border-left:3px solid var(--coral);background:var(--coralTint);border-radius:0 12px 12px 0;padding:12px 16px}
 .key h4{margin:0 0 4px;font-size:13px;color:var(--coral)}
 .key p{margin:0;font-size:14.5px}
-.diagram{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface2);overflow-x:auto}
-.diagram svg{display:block;width:100%;min-width:520px;height:auto}
+.diagram{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--surface2)}
+.diagram{container-type:inline-size}
+.diagram > svg{display:block;width:100%;height:auto}
+.diagram > .dg-h{display:none}
+.diagram > .dg-v{max-width:420px;margin:0 auto}
+@container (min-width:600px){.diagram > .dg-h{display:block}.diagram > .dg-v{display:none}}
 .cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .cmp div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface2);font-size:13.5px}
 .cmp b{display:block;font-size:14px;margin-bottom:2px}
 .cmp .src{color:var(--teal);font-weight:600}
 .cmp .eg{color:var(--muted)}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;align-items:start}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;align-items:stretch}
+.card{height:88px;overflow:hidden;justify-content:flex-start}
+.card.on{border-color:var(--teal);background:var(--tealTint)}
+.card-detail{grid-column:1/-1;border:1px solid var(--teal);border-radius:12px;background:var(--surface);padding:14px 18px;animation:inU .25s ease both}
+.card-detail h5{margin:0 0 6px;font-size:15px}
+.card-detail h5 span{font-weight:500;color:var(--muted);font-size:13px;margin-left:6px}
+.card-detail p{margin:0;font-size:14.5px;max-width:90ch}
+.card-detail .when{display:block;margin-top:10px}
 .card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface2);text-align:left;width:100%;display:flex;flex-direction:column;gap:6px}
 .card:hover{border-color:var(--steel)}
-.card-top{display:flex;align-items:baseline;gap:8px}
+.card{position:relative;padding-right:36px!important}
+.card-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px}
+.card-top b{flex:1 1 100%;line-height:1.3}
 .card-top b{font-size:15.5px}
 .card-top span{color:var(--muted);font-size:13px}
-.pips{margin-left:auto;display:flex;gap:4px;align-self:center}
+.pips{position:absolute;right:12px;top:15px;display:flex;gap:4px}
 .pips i{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted)}
-.card.s1 .pips i:first-child,.card.s2 .pips i{background:var(--teal);border-color:var(--teal)}
-.card p{margin:0;font-size:14px;display:none}
-.card.s1 p,.card.s2 p{display:block}
-.when{display:none;border-top:1px dashed var(--line);padding-top:8px;margin-top:2px;font-size:13.5px}
-.card.s2 .when{display:block}
-.card.s1,.card.s2{border-color:var(--teal)}
+.card[data-step="1"] .pips i:first-child,.card[data-step="2"] .pips i{background:var(--teal);border-color:var(--teal)}
+.when{border-top:1px dashed var(--line);padding-top:8px;margin-top:2px;font-size:13.5px}
 .when em{font-style:normal;font-weight:700;color:var(--teal);display:block;font-size:12.5px;margin-bottom:2px}
 .hint{color:var(--muted);font-size:13px;margin:0 0 12px}
 details.law{margin-top:16px;border:1px solid var(--line);border-radius:12px;background:var(--sandTint)}
@@ -149,7 +179,7 @@ button.dot{cursor:pointer}button.dot:hover{outline:2px solid var(--line);outline
 .opt.right{border-color:var(--teal);background:var(--tealTint)}
 .opt.wrong{border-color:var(--coral);background:var(--coralTint)}
 .opt.dim{opacity:.55}
-.fb{margin-top:14px;border-radius:12px;padding:12px 16px;font-size:14.5px}
+.fb{margin-top:14px;border-radius:0 12px 12px 0;padding:12px 16px;font-size:14.5px}
 .fb.ok{background:var(--tealTint);border-left:3px solid var(--teal)}
 .fb.no{background:var(--coralTint);border-left:3px solid var(--coral)}
 .fb b{display:block;margin-bottom:2px}
@@ -168,21 +198,83 @@ button.dot{cursor:pointer}button.dot:hover{outline:2px solid var(--line);outline
 
 @media (max-width:980px){
   .wrap{grid-template-columns:1fr}
-  nav{position:static;flex-direction:row;overflow-x:auto;padding-bottom:4px}
+  nav{position:static;flex-direction:row;flex-wrap:wrap;padding-bottom:4px}
+  .qside{display:none}
+  .quiz{gap:0}
   .nav-item{width:auto;flex:none}
   .nav-res{margin:0;border:0;padding:0}
   .story,.quiz,.res{grid-template-columns:1fr}
   .tabs{margin-left:0;width:100%}
 }
 @media (max-width:640px){
-  .top-in{flex-wrap:wrap;padding:12px 16px}
-  .brand small{display:none}
-  .wrap{padding:14px 12px 24px}
-  .panel{padding:16px}
-  .opts{grid-template-columns:1fr}
+  body{font-size:14.5px}
+  .top-in{padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));gap:10px}
+  .brand{font-size:16px;gap:8px}.brand svg{width:20px;height:20px}
+  .brand small,.score .sl{display:none}
+  .top-in{flex-wrap:wrap;row-gap:8px}
+  .brk{display:block;flex-basis:100%;height:0}.sp2{display:block;flex:1}
+  .icon-btn{width:34px;height:34px}
+  .wrap.min nav{display:none}
+  .seg button{padding:5px 10px;font-size:12.5px}
+  .wrap{padding:0 10px 24px;gap:10px}
+  nav{position:sticky;top:0;z-index:6;background:var(--bg);margin:0 -10px;padding:8px 10px;gap:6px;border-bottom:1px solid var(--line);scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  .nav-item{padding:7px 11px;gap:5px;min-height:36px;border-color:var(--line);background:var(--surface);border-radius:999px}
+  .nav-item.on{background:var(--btn);color:var(--btnText);border-color:var(--btn)}
+  .nav-item.on .nav-num,.nav-item.on .nav-s{color:var(--btnText)}
+  .nav-t{display:none}.nav-num{width:auto;font-size:13px;display:flex}.nav-num svg{width:15px;height:15px}
+  .panel{padding:14px 12px;border-radius:14px}
+  .ch-head{gap:10px;margin-bottom:12px;align-items:center}
+  .ch-head .num{font-size:30px}
+  .ch-head h2{font-size:19px}.ch-head p{font-size:13px}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:3px}
+  .tab{justify-content:center;border:0;border-radius:9px;padding:8px 4px;font-size:12.5px;white-space:nowrap;min-height:38px}
+  .tab svg{display:none}
+  .cast{flex-wrap:nowrap;overflow-x:auto;gap:12px;margin:0 -12px 10px;padding:2px 12px 4px;scrollbar-width:none}
+  .cast::-webkit-scrollbar{display:none}
+  .cast-p{flex:none;gap:7px}.cast-p .av{width:34px;height:34px}.cast-p b{font-size:13px}.cast-p span{font-size:11.5px}
+  .chatbox{margin:0 -4px;padding:12px 10px;min-height:0;border-radius:14px}
+  .chat{gap:10px}
+  .msg{max-width:94%;gap:7px}.msg .av{width:32px;height:32px}
+  .bub{padding:7px 12px 9px;font-size:14.5px;line-height:1.5}
+  .who{font-size:11.5px}
+  .sys{font-size:13.5px;max-width:100%;padding:8px 12px}
+  .ctrl{position:sticky;bottom:0;z-index:5;background:linear-gradient(to top,var(--surface) 72%,transparent);margin:6px -12px 0;padding:14px 12px;padding-bottom:max(12px,env(safe-area-inset-bottom));flex-wrap:nowrap}
+  .ctrl .btn{flex:1;justify-content:center;min-height:46px;padding:10px 12px;font-size:14px}
+  .ctrl .btn.ghost{background:var(--surface)}
+  .ctrl .btn[data-act="replay"]{flex:0 0 46px;padding:0;font-size:0;gap:0}
+  .ctrl .btn[data-act="replay"] svg{width:20px;height:20px}
+  .story{gap:14px}
+  .key p{font-size:14px}
+  .diagram{padding:8px}
   .cmp{grid-template-columns:1fr}
-  .ch-head .num{font-size:34px}
+  .hint{font-size:12.5px}
+  .cards{grid-template-columns:1fr 1fr;gap:8px}
+  .card{padding:11px 12px;height:108px}
+  .card-detail{padding:12px 14px}
+  .card-top{flex-wrap:wrap;gap:2px 6px;align-items:flex-start}
+  .card-top b{font-size:14px;line-height:1.3;flex:1 1 100%}
+  .card-top span:not(.pips){font-size:12px}
+  .pips{position:absolute;right:10px;top:12px}
+  .card{position:relative;padding-right:30px}
+  .tbl{padding:0 10px 12px}
+  .tbl table,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl thead{display:none}
+  .tbl tr{padding:10px 12px;border-bottom:1px solid var(--line)}
+  .tbl td{border:0;padding:2px 0;white-space:normal!important}
+  .tbl td:last-child{color:var(--muted)}
+  .quiz{gap:0}.qside{display:none}
+  .dots{gap:5px}.dot{flex:1;width:auto;height:7px}
+  .q{font-size:16.5px}
+  .opts{grid-template-columns:1fr;gap:8px}
+  .opt{padding:12px;min-height:48px;font-size:14.5px}
+  .fb{font-size:14px;padding:11px 13px}
+  .done{gap:14px}.done .big{font-size:44px}
+  .done .ctrl{flex-wrap:wrap}
+  .done .ctrl .btn{flex:1 1 40%}
+  .bar{grid-template-columns:1fr 70px 36px;font-size:13px}
 }
+@media (max-width:360px){.cards{grid-template-columns:1fr}.seg button{padding:5px 7px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -202,6 +294,7 @@ const ICON = {
   cards:'<rect x="3" y="6" width="13" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v12"/>',
   quiz:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.8"/><path d="M12 17.2h.01"/>',
   arrow:'<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+  panel:'<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9 4v16"/>',
   redo:'<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>'
 };
 const ic = (n, cls='i') => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
@@ -243,9 +336,12 @@ const UI = {
   prev:{ko:"이전 문제",en:"Previous"},
   review:{ko:"답 다시 보기",en:"Review answers"},
   colType:{ko:"구분",en:"Type"},colAuth:{ko:"판례·법령",en:"Authority"},colPoint:{ko:"핵심",en:"Key point"},
-  isCase:{ko:"판례",en:"Case"},isAct:{ko:"법령",en:"Statute"}
+  isCase:{ko:"판례",en:"Case"},isAct:{ko:"법령",en:"Statute"},
+  easy:{ko:"이지",en:"Easy"},hard:{ko:"하드",en:"Hard"},
+  menu:{ko:"챕터 메뉴 접기/펼치기",en:"Show or hide chapter menu"},
+  hardTag:{ko:"JD 수준",en:"JD level"}
 };
-UI.replay.zh="重播故事";UI.prev.zh="上一题";UI.review.zh="回顾答案";UI.colType.zh="类型";UI.colAuth.zh="判例与法规";UI.colPoint.zh="要点";UI.isCase.zh="判例";UI.isAct.zh="法规";
+UI.replay.zh="重播故事";UI.prev.zh="上一题";UI.review.zh="回顾答案";UI.colType.zh="类型";UI.colAuth.zh="判例与法规";UI.colPoint.zh="要点";UI.isCase.zh="判例";UI.isAct.zh="法规";UI.easy.zh="简单";UI.hard.zh="困难";UI.menu.zh="显示或隐藏章节菜单";UI.hardTag.zh="JD 水平";
 
 const CAST = {
   narr:{c:"var(--muted)",i:"N",ko:"해설",en:"Narrator",rk:"",re:""},
@@ -268,18 +364,12 @@ const AV={
     face:EYES+SMILE,
     hair:'<path d="M20.5 28 C19 14 45 14 43.5 28 C42 21 37 18.5 32 18.5 C27 18.5 22 21 20.5 28Z" fill="#C9CBD1"/>',
     top:'<g stroke="#5A5A66" stroke-width="1.2" fill="none"><circle cx="27.5" cy="28" r="3.3"/><circle cx="36.5" cy="28" r="3.3"/><path d="M30.8 28h2.4"/></g>'},
-  dev:{bg:"#D6E1E9",skin:"#E0B08C",shirt:"#365A72",
-    collar:'<path d="M27 43.5 L32 47.5 L37 43.5" fill="none" stroke="#F8F6F2" stroke-width="1.6"/>',
-    face:EYES+'<path d="M21.2 26 C20.5 47 43.5 47 42.8 26 C41.5 33.5 37.5 35.2 32 35.2 C26.5 35.2 22.5 33.5 21.2 26Z" fill="#3B2F2A"/><path d="M29.5 37.8 Q32 39.3 34.5 37.8" stroke="#F5E1D0" stroke-width="1.3" fill="none" stroke-linecap="round"/>',
-    hair:'<path d="M20.6 26 C19.5 8.5 44.5 8.5 43.4 26 C41 21.5 36 20.5 32 20.5 C28 20.5 23.5 21.5 20.6 26Z" fill="#3B2F2A"/>'},
+  dev:{bg:"#D6E1E9",skin:"#E0B08C",shirt:"#365A72",collar:"<path d=\"M27 43.5 L32 47.5 L37 43.5\" fill=\"none\" stroke=\"#F8F6F2\" stroke-width=\"1.6\"/>",face:"<circle cx=\"27.5\" cy=\"28\" r=\"1.5\" fill=\"#2A2A35\"/><circle cx=\"36.5\" cy=\"28\" r=\"1.5\" fill=\"#2A2A35\"/><path d=\"M25.3 24.6 Q27.5 23.4 29.7 24.4 M34.3 24.4 Q36.5 23.4 38.7 24.6\" stroke=\"#3B2F2A\" stroke-width=\"1.3\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M21 26.5 C21 34 23.5 41 32 41.5 C40.5 41 43 34 43 26.5 L41.2 26.5 C40.8 31 38.5 33.2 36 33.6 C34.5 32.6 29.5 32.6 28 33.6 C25.5 33.2 23.2 31 22.8 26.5Z\" fill=\"#4A3A32\"/><path d=\"M28.3 33.4 Q32 31.6 35.7 33.4 Q32 33.9 28.3 33.4Z\" fill=\"#4A3A32\"/><path d=\"M29.6 35.8 Q32 37.3 34.4 35.8\" stroke=\"#F5E1D0\" stroke-width=\"1.3\" fill=\"none\" stroke-linecap=\"round\"/>",hair:"<path d=\"M20.8 25 C19.8 16 24 12.5 30 12.8 C36 11.5 43.5 14 43.2 25 C42 21.5 40.5 19.6 38 19 C34 20.4 28 20.2 24.5 19.4 C22.6 20.6 21.4 22.4 20.8 25Z\" fill=\"#3B2F2A\"/>"},
   mia:{bg:"#D8E6E2",skin:"#F0C9A8",shirt:"#4F7D73",
     back:'<path d="M19.5 28 C18 12 46 12 44.5 28 L46 47 C42 49 39.5 43 40 37 L24 37 C24.5 43 22 49 18 47Z" fill="#6B4632"/>',
     face:EYES+SMILE+CHEEK,
     hair:'<path d="M20.6 27 C19.8 10.5 44.2 10.5 43.4 26 C38 21 29 20.5 20.6 27Z" fill="#6B4632"/>'},
-  leo:{bg:"#D8E6E2",skin:"#C68E6A",shirt:"#3F6A61",
-    collar:'<path d="M21.5 45 C24 51 40 51 42.5 45" fill="none" stroke="#2F524A" stroke-width="2.2"/><path d="M29 48.5v6M35 48.5v6" stroke="#F8F6F2" stroke-width="1.3" stroke-linecap="round"/>',
-    face:EYES+SMILE+CHEEK,
-    hair:'<path d="M20.5 26 L21.5 17.5 L25.5 19.5 L28 14 L32 18 L36 13.5 L38.5 19 L42.5 17 L43.5 26 C40 21 24 21 20.5 26Z" fill="#22222A"/>'},
+  leo:{bg:"#D8E6E2",skin:"#C68E6A",shirt:"#3F6A61",collar:"<path d=\"M21.5 45 C24 51 40 51 42.5 45\" fill=\"none\" stroke=\"#2F524A\" stroke-width=\"2.2\"/><path d=\"M29 48.5v6M35 48.5v6\" stroke=\"#F8F6F2\" stroke-width=\"1.3\" stroke-linecap=\"round\"/>",face:"<circle cx=\"27.5\" cy=\"28\" r=\"1.5\" fill=\"#2A2A35\"/><circle cx=\"36.5\" cy=\"28\" r=\"1.5\" fill=\"#2A2A35\"/><path d=\"M28.5 33.2 Q32 35.9 35.5 33.2\" stroke=\"#2A2A35\" stroke-width=\"1.4\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"24.8\" cy=\"31.6\" r=\"2.1\" fill=\"#E8998A\" opacity=\".45\"/><circle cx=\"39.2\" cy=\"31.6\" r=\"2.1\" fill=\"#E8998A\" opacity=\".45\"/>",hair:"<path d=\"M20.6 27 C19.4 16 24 11.8 31.5 12 C39 11.8 44.8 16.5 43.4 26 C42.6 23 41.4 21.2 39.6 20.4 C36.6 23.4 30.6 24.8 24.4 24.2 C26.6 23.4 28 22.4 28.8 21.2 C26 22.6 23.4 23.6 22 24.2 C21.3 25 20.9 26 20.6 27Z\" fill=\"#22222A\"/><path d=\"M25.5 13.6 L23.6 10.6 L28.4 12.4Z M33 12.2 L34.6 9.6 L36.6 12.8Z\" fill=\"#22222A\"/>"},
   barry:{bg:"#E4E6EB",skin:"#F2D3B8",shirt:"#7C8595",
     face:EYES+'<path d="M26.5 32.6 Q32 29.4 37.5 32.6 Q32 35.2 26.5 32.6Z" fill="#A5A7AE"/>',
     hair:'<path d="M20.9 30 C20 22 21.5 20 23.2 19.5 L23.6 26.5Z M43.1 30 C44 22 42.5 20 40.8 19.5 L40.4 26.5Z" fill="#A5A7AE"/>'},
@@ -606,25 +696,323 @@ function mergeZh(){
   });
 }
 mergeZh();
+const tt=a=>({en:a[0],ko:a[1],zh:a[2]});
+const SL=(w,en,ko,zh)=>({w,en,ko,zh});
+const CD=(t,k,z,d,w)=>({t,k,z,d:tt(d),w:tt(w)});
+const LW=(a,g)=>[a,tt(g)];
+const HQ2=(q,o,y)=>({q:tt(q),o:o.map(tt),a:0,y:tt(y)});
+const HJ=[
+{story:[
+SL("narr","Ten years on, the family's wealth sits in the Rose Family Trust, a discretionary trust. The trustee is Dev Holdings Pty Ltd, with Dev as sole director. Rose is the appointor, and Mia is now a JD student.","10년 뒤, 가족 자산은 재량신탁인 ‘로즈 가족신탁(Rose Family Trust)’에 들어 있어요. 수탁자는 Dev Holdings Pty Ltd이고 데브 삼촌이 유일한 이사예요. 로즈 할머니는 지정권자(appointor)이고, 미아는 이제 JD 학생이에요.","十年后，家族财富放在全权信托“罗丝家族信托（Rose Family Trust）”里。受托人是 Dev Holdings Pty Ltd，德夫是唯一董事。罗丝奶奶是指定人（appointor），米娅现在是JD学生。"),
+SL("dev","The company is the trustee, so if anything goes wrong, creditors can only chase the company. I'm safe.","수탁자가 회사니까 뭔가 잘못돼도 채권자는 회사만 쫓을 수 있어. 나는 안전해.","受托人是公司，所以出了问题债权人只能找公司。我是安全的。"),
+SL("mia","Not necessarily. The trust isn't a legal person, so the company contracts in its own name. If it can't be indemnified from trust assets because of a breach, you as director can be personally liable under s 197 of the Corporations Act.","꼭 그렇지는 않아요. 신탁은 법적 주체가 아니라서 회사가 자기 이름으로 계약해요. 신탁 위반 때문에 회사가 신탁재산에서 보전받을 수 없으면, 이사인 삼촌이 Corporations Act s 197에 따라 개인 책임을 질 수 있어요.","不一定。信托不是法律主体，所以是公司以自己的名义订立合同。如果公司因违反信托而不能从信托财产中获得补偿，你作为董事可能要根据 Corporations Act s 197 承担个人责任。"),
+SL("leo","Half the fund is still mine though, right? There are only two of us.","그래도 신탁재산 절반은 내 거 맞지? 우리 둘뿐이잖아.","至少一半信托财产是我的吧？受益人只有我们两个。"),
+SL("mia","No. We're objects of a discretionary trust. We have a right to be considered and to have the trust properly administered, not a proprietary share in any asset.","아니야. 우리는 재량신탁의 수익 대상자(object)야. 고려받을 권리와 신탁이 제대로 운영되도록 요구할 권리가 있을 뿐, 특정 자산에 대한 재산적 지분은 없어.","不是。我们是全权信托的受益对象（object）。我们只有获得考虑的权利和要求信托得到妥善管理的权利，对任何具体资产都没有财产份额。"),
+SL("rose","And as appointor, can I remove the trustee whenever it suits me?","그럼 지정권자인 나는 마음 내킬 때 수탁자를 해임할 수 있니?","那我作为指定人，可以随时撤换受托人吗？"),
+SL("mia","That turns on the deed. If the power is held in a fiduciary capacity, it must be used in good faith and for its proper purpose, not for your own benefit.","신탁증서에 달려 있어요. 그 권한이 신인의무적 지위에서 부여된 것이라면, 할머니 자신의 이익이 아니라 선의로 본래 목적을 위해서만 행사해야 해요.","这取决于信托文件。如果这项权力是以受信身份持有的，就必须善意并为其正当目的行使，而不能用于您自己的利益。")],
+key:tt(["A trust is an obligation attached to property, not an entity. To analyse any trust, map four things: who holds legal title, who holds which powers, what rights each beneficiary has, and who bears liability to outsiders.","신탁은 법적 주체가 아니라 재산에 붙은 의무예요. 어떤 신탁이든 네 가지를 정리해 보세요. 누가 법적 소유권을 가지는지, 누가 어떤 권한을 가지는지, 각 수익자에게 어떤 권리가 있는지, 외부인에 대한 책임은 누가 지는지.","信托不是法律主体，而是附着在财产上的义务。分析任何信托，都要理清四点：谁持有普通法所有权，谁拥有哪些权力，每位受益人享有什么权利，以及谁对外承担责任。"]),
+cards:[
+CD("Trust is not an entity","신탁은 법적 주체가 아님","信托不是法律主体",["The trustee holds the property and incurs obligations personally. Third parties contract with the trustee, not the trust.","재산을 보유하고 의무를 지는 주체는 수탁자 자신이에요. 제3자는 신탁이 아니라 수탁자와 계약해요.","持有财产、承担义务的是受托人本人。第三人是与受托人而不是与信托订立合同。"],["This is why trustees are personally liable on trust contracts unless liability is expressly limited, and why the right of indemnity matters so much.","그래서 책임을 명시적으로 제한하지 않는 한 수탁자는 신탁 관련 계약에 개인적으로 책임을 지고, 비용상환청구권이 그만큼 중요해요.","因此，除非明确限制责任，受托人要对信托合同承担个人责任，费用补偿权也因此格外重要。"]),
+CD("Indemnity and subrogation","비용상환청구권과 채권자 대위","费用补偿权与债权人代位",["A trustee may reimburse itself from trust assets for liabilities properly incurred. Trust creditors can be subrogated to that right.","수탁자는 적법하게 부담한 채무를 신탁재산에서 보전받을 수 있어요. 신탁 채권자는 이 권리를 대위할 수 있어요.","受托人可以就正当承担的债务从信托财产中获得补偿。信托债权人可以代位行使这项权利。"],["Creditors stand in no better position than the trustee, so a trustee in breach passes on a reduced indemnity or none (Octavo Investments v Knight).","채권자는 수탁자보다 나은 지위에 서지 못해요. 위반한 수탁자의 비용상환청구권이 줄거나 없으면 채권자도 그만큼만 받아요(Octavo Investments v Knight).","债权人的地位不会优于受托人，所以违约受托人的补偿权减少或丧失时，债权人也只能相应受偿（Octavo Investments v Knight）。"]),
+CD("Directors of trustee companies","수탁회사 이사의 책임","受托公司董事的责任",["Directors can be personally liable for a trustee company's debts that it has not paid and cannot be fully indemnified for because of breach of trust, acting outside power or a term of the deed (Corporations Act 2001 (Cth) s 197).","수탁회사가 갚지 못한 채무가 신탁 위반, 권한 밖 행위, 신탁증서 조항 때문에 신탁재산에서 전부 보전될 수 없으면, 이사가 개인적으로 책임질 수 있어요(Corporations Act 2001 (Cth) s 197).","如果受托公司未清偿的债务因违反信托、越权行为或信托文件条款而不能从信托财产中得到全额补偿，董事可能要承担个人责任（Corporations Act 2001 (Cth) s 197）。"],["It answers the common belief that a corporate trustee completely shields the family.","회사 수탁자를 두면 가족이 완전히 보호된다는 흔한 오해에 대한 답이에요.","这回答了“设立公司受托人就能让家族完全免责”的常见误解。"]),
+CD("Rights of discretionary objects","재량신탁 수익 대상자의 권리","全权信托受益对象的权利",["An object has a right to be considered and to due administration, and may seek the court's supervision. There is no proprietary interest in specific assets.","수익 대상자는 고려받을 권리와 적법한 운영을 요구할 권리가 있고, 법원의 감독을 구할 수 있어요. 특정 자산에 대한 재산적 권리는 없어요.","受益对象享有获得考虑的权利和要求妥善管理的权利，并可请求法院监督，但对具体资产没有财产性权益。"],["It matters in family law, tax and insolvency (Kennon v Spry). Unit trusts differ, and each deed must be read (CPT Custodian).","가족법, 조세, 도산에서 중요해요(Kennon v Spry). 단위신탁(unit trust)은 다르며, 각 신탁증서를 읽어봐야 해요(CPT Custodian).","在家庭法、税务和破产中很重要（Kennon v Spry）。单位信托（unit trust）则不同，必须具体阅读信托文件（CPT Custodian）。"]),
+CD("Appointor's power","지정권자의 권한","指定人的权力",["A power under the deed to remove and appoint trustees. In a family trust it is often where real control lies.","신탁증서에 따라 수탁자를 해임하고 선임하는 권한이에요. 가족신탁에서는 실질적 지배권이 여기에 있는 경우가 많아요.","依据信托文件撤换和任命受托人的权力。在家族信托中，实际控制权往往在这里。"],["Whether it is fiduciary depends on construing the deed. If it is, it must be used in good faith and for its proper purpose.","신인의무적 권한인지는 신탁증서 해석에 달려 있어요. 그렇다면 선의로, 본래 목적을 위해 행사해야 해요.","它是否属于受信权力取决于对信托文件的解释。如果是，就必须善意并为正当目的行使。"]),
+CD("Trust, debt or agency","신탁, 채무, 대리의 구별","信托、债务与代理的区分",["A trust separates property from the trustee's own estate. A debt is only a personal obligation to pay. Agency is authority to affect the principal's legal position.","신탁은 재산을 수탁자 고유재산과 분리해요. 채무는 돈을 갚을 인적 의무일 뿐이에요. 대리는 본인의 법적 지위에 영향을 줄 수 있는 권한이에요.","信托使财产与受托人的自有财产相分离。债务只是个人的付款义务。代理则是影响被代理人法律地位的权限。"],["Characterisation decides who wins in insolvency, because property held on trust stays outside the insolvent estate.","신탁재산은 파산재단에 들어가지 않으므로, 관계의 성질 결정이 도산 시 승패를 가려요.","信托财产不属于破产财产，所以如何定性决定了破产时谁能胜出。"])],
+law:[
+LW("Corporations Act 2001 (Cth) s 197",["Director liability for trustee company debts","수탁회사 채무에 대한 이사의 책임","董事对受托公司债务的责任"]),
+LW("Octavo Investments Pty Ltd v Knight (1979) 144 CLR 360",["Right of indemnity and creditor subrogation","비용상환청구권과 채권자 대위","费用补偿权与债权人代位"]),
+LW("Kennon v Spry (2008) 238 CLR 366",["Rights of discretionary objects","재량신탁 수익 대상자의 권리","全权信托受益对象的权利"]),
+LW("CPT Custodian Pty Ltd v Commissioner of State Revenue (2005) 224 CLR 98",["Unit holders' interests depend on the deed","단위신탁 수익자의 권리는 신탁증서에 따름","单位持有人的权益取决于信托文件"]),
+LW("Gartside v Inland Revenue Commissioners [1968] AC 553",["No quantifiable interest for discretionary objects","재량신탁 대상자에게 확정 지분 없음","全权信托受益对象没有可量化的权益"]),
+LW("Saunders v Vautier (1841) 4 Beav 115",["Termination by beneficiaries absolutely entitled","확정적 권리를 가진 수익자의 신탁 종료","享有绝对权利的受益人终止信托"])]},
+{story:[
+SL("narr","Rose wants to move more assets into the trust: her Sydney flat, 10,000 listed shares, and her half share under a bare trust her late sister set up. Barry, a retired conveyancer, offers advice over coffee.","로즈 할머니가 시드니 아파트, 상장주식 1만 주, 돌아가신 언니가 만든 단순신탁(bare trust)에서의 절반 지분을 신탁에 더 넣고 싶어 해요. 은퇴한 부동산 양도 전문가(conveyancer) 배리 아저씨가 커피를 마시며 조언해요.","罗丝奶奶想把更多资产放进信托：她在悉尼的公寓、1万股上市股票，以及她已故姐姐设立的消极信托（bare trust）中的一半份额。退休的产权转让师（conveyancer）巴里边喝咖啡边给建议。"),
+SL("barry","Just tell Dev you hold the flat on trust now. Saying it out loud is enough.","데브한테 이제 아파트를 신탁으로 보유한다고 말만 하면 돼요. 말로 해도 충분해요.","你只要告诉德夫，公寓现在以信托方式持有就行了。口头说就够了。"),
+SL("mia","Not for land. A declaration of trust over land must be manifested and proved by signed writing under s 23C(1)(b) of the Conveyancing Act.","토지는 안 돼요. 토지에 대한 신탁 선언은 Conveyancing Act s 23C(1)(b)에 따라 서명된 서면으로 표시되고 증명돼야 해요.","土地不行。根据 Conveyancing Act s 23C(1)(b)，对土地的信托宣言必须以签名的书面形式表明和证明。"),
+SL("rose","And my share under my sister's trust? Can I just tell that trustee to hold it for our family trust?","언니 신탁에서의 내 지분은? 그 수탁자에게 우리 가족신탁을 위해 보유하라고 말하면 되니?","那我在姐姐信托中的份额呢？我告诉那位受托人为我们的家族信托持有就行吗？"),
+SL("mia","That's a disposition of an existing equitable interest. Under s 23C(1)(c) it needs writing signed by you or your authorised agent. An oral direction won't do.","그건 기존 형평법상 권리의 처분이에요. s 23C(1)(c)에 따라 할머니나 권한 있는 대리인이 서명한 서면이 필요해요. 말로 지시하는 건 안 돼요.","那是对现有衡平法权益的处分。根据 s 23C(1)(c)，需要您或您授权的代理人签名的书面文件。口头指示不行。"),
+SL("barry","The shares, at least, are simple. Sign the transfer and it's done.","적어도 주식은 간단해요. 양도서에 서명하면 끝이죠.","至少股票很简单。签了转让书就完事了。"),
+SL("mia","Only once she has done everything required of her, so that Dev Holdings can complete registration without her. That's the test in Corin v Patton.","할머니가 해야 할 일을 모두 마쳐서 Dev Holdings가 할머니 없이도 등록을 완료할 수 있을 때만이에요. 그게 Corin v Patton의 기준이에요.","只有当奶奶做完了自己必须做的一切，让 Dev Holdings 无需她也能完成登记时才算。这就是 Corin v Patton 的标准。")],
+key:tt(["Ask three questions in order. Are the three certainties met? Is the trust constituted, by vesting the property or by an effective self-declaration? Do writing requirements apply to land or to existing equitable interests?","세 가지를 순서대로 물어보세요. 세 가지 확실성을 충족하는가? 재산 이전이나 유효한 자기 신탁 선언으로 신탁이 구성됐는가? 토지나 기존 형평법상 권리에 대한 서면 요건이 적용되는가?","按顺序问三个问题：三个确定性是否满足？信托是否通过转移财产或有效的自我宣告而完成设立？土地或现有衡平法权益是否适用书面要求？"]),
+cards:[
+CD("Self-declaration of trust","자기 신탁 선언","自我宣告信托",["An owner can create a trust without transferring anything, by declaring that they now hold the property on trust. Clear intention is enough.","소유자는 재산을 넘기지 않고도, 이제 그 재산을 신탁으로 보유한다고 선언해 신탁을 만들 수 있어요. 분명한 의도만 있으면 돼요.","所有人无需转移任何财产，只要宣告自己现在以信托方式持有该财产，就能设立信托。有明确的意图即可。"],["Equity will not rescue a failed gift by treating it as a self-declaration (Milroy v Lord). The owner must have meant to become trustee.","형평법은 실패한 증여를 자기 신탁 선언으로 바꿔 구제해 주지 않아요(Milroy v Lord). 소유자에게 수탁자가 되려는 의도가 있어야 해요.","衡平法不会把失败的赠与当作自我宣告来补救（Milroy v Lord）。所有人必须有成为受托人的意图。"]),
+CD("Writing for trusts of land","토지 신탁의 서면 요건","土地信托的书面要求",["A declaration of trust respecting land must be manifested and proved by writing signed by the person able to declare it (Conveyancing Act 1919 (NSW) s 23C(1)(b)).","토지에 관한 신탁 선언은 선언할 수 있는 사람이 서명한 서면으로 표시되고 증명돼야 해요(Conveyancing Act 1919 (NSW) s 23C(1)(b)).","关于土地的信托宣言，必须以有权宣告之人签名的书面形式表明和证明（Conveyancing Act 1919 (NSW) s 23C(1)(b)）。"],["Without writing the trust is unenforceable rather than void, and equity will not allow the statute to be used as an instrument of fraud.","서면이 없으면 신탁은 무효가 아니라 집행 불가능해져요. 또한 형평법은 법률을 사기의 도구로 쓰는 것을 허용하지 않아요.","没有书面文件时，信托并非无效，而是不能强制执行。衡平法也不允许把成文法当作欺诈的工具。"]),
+CD("Dispositions of equitable interests","형평법상 권리의 처분","衡平法权益的处分",["A disposition of an existing equitable interest must be in writing signed by the person disposing of it or their authorised agent (s 23C(1)(c)).","기존 형평법상 권리를 처분하려면 처분하는 사람이나 권한 있는 대리인이 서명한 서면이 필요해요(s 23C(1)(c)).","处分现有衡平法权益，必须有处分人或其授权代理人签名的书面文件（s 23C(1)(c)）。"],["It catches assignments and directions to trustees to hold for someone else (Grey v IRC). Resulting, implied and constructive trusts are unaffected (s 23C(2)).","권리 양도와 수탁자에게 다른 사람을 위해 보유하라고 지시하는 경우가 포함돼요(Grey v IRC). 복귀신탁, 묵시신탁, 의제신탁에는 영향이 없어요(s 23C(2)).","包括权益转让以及指示受托人为他人持有（Grey v IRC）。归复信托、默示信托和推定信托不受影响（s 23C(2)）。"]),
+CD("Conceptual and evidential uncertainty","개념적 불확실성과 증거적 불확실성","概念上与证据上的不确定",["Conceptual uncertainty means the class description itself is unclear, like “my good friends”. Evidential uncertainty means it is hard to prove whether a person fits.","개념적 불확실성은 ‘내 좋은 친구들’처럼 범위를 정하는 표현 자체가 불분명한 경우예요. 증거적 불확실성은 누군가 그 범위에 드는지 증명하기 어려운 경우예요.","概念上的不确定是指范围描述本身不清楚，例如“我的好朋友”。证据上的不确定是指难以证明某人是否属于该范围。"],["Conceptual uncertainty is fatal. Evidential difficulty usually is not (Re Baden's Deed Trusts (No 2)).","개념적 불확실성은 치명적이지만, 증거상의 어려움은 보통 그렇지 않아요(Re Baden's Deed Trusts (No 2)).","概念上的不确定是致命的，证据上的困难通常不是（Re Baden's Deed Trusts (No 2)）。"]),
+CD("Administrative unworkability","관리 불가능성","管理上不可行",["A discretionary trust can fail if the class is so wide that it cannot sensibly be administered, even though it is conceptually certain.","재량신탁은 개념적으로 확실하더라도, 범위가 너무 넓어 합리적으로 운영할 수 없으면 실패할 수 있어요.","全权信托即使在概念上确定，如果范围过于宽泛以致无法合理管理，也可能无效。"],["Flagged in McPhail v Doulton. A trust for “all residents of a state” is the usual example.","McPhail v Doulton에서 언급됐어요. ‘어느 주의 모든 주민’을 위한 신탁이 대표적인 예예요.","McPhail v Doulton 案提到过这一点。为“某州全体居民”设立的信托是常见例子。"]),
+CD("The every-effort test","필요 행위 완료 기준","必要行为完成标准",["A gift is complete in equity once the donor has done everything necessary on their part, so that the donee can complete it without further help.","증여자가 자기 몫의 필요한 일을 모두 마쳐 수증자가 더 이상 도움 없이 완료할 수 있게 되면, 형평법상 증여가 완성돼요.","赠与人做完自己一方的所有必要行为，使受赠人无需进一步协助即可完成时，赠与在衡平法上即告完成。"],["Corin v Patton is the Australian authority, applied rather than the looser unconscionability approach in Pennington v Waine.","호주의 기준 판례는 Corin v Patton이에요. Pennington v Waine의 느슨한 비양심성 접근 대신 이 기준을 적용해요.","澳大利亚的权威判例是 Corin v Patton，适用它而不是 Pennington v Waine 较宽松的违背良心标准。"])],
+law:[
+LW("Conveyancing Act 1919 (NSW) s 23C",["Writing requirements for trusts of land and dispositions","토지 신탁과 권리 처분의 서면 요건","土地信托与权益处分的书面要求"]),
+LW("Grey v Inland Revenue Commissioners [1960] AC 1",["Directions to trustees are dispositions","수탁자에 대한 지시는 처분에 해당","对受托人的指示属于处分"]),
+LW("Milroy v Lord (1862) 4 De GF & J 264",["No rescue of a failed gift as a trust","실패한 증여를 신탁으로 구제하지 않음","不把失败的赠与当作信托补救"]),
+LW("Corin v Patton (1990) 169 CLR 540",["Every-effort test for completed gifts","증여 완성의 필요 행위 완료 기준","赠与完成的必要行为完成标准"]),
+LW("Re Baden's Deed Trusts (No 2) [1973] Ch 9",["Conceptual versus evidential uncertainty","개념적 불확실성과 증거적 불확실성","概念上与证据上的不确定"]),
+LW("Byrnes v Kendle (2011) 243 CLR 253",["Objective intention","객관적 의도","客观意图"]),
+LW("Korda v Australian Executor Trustees (SA) Ltd (2015) 255 CLR 62",["Intention in commercial arrangements","상업적 약정에서의 의도","商业安排中的意图"])]},
+{story:[
+SL("narr","Dev Holdings manages the trust's portfolio. Dev also sits on the board of FinCo, a company in which the trust holds a large stake.","Dev Holdings가 신탁의 투자 포트폴리오를 운용해요. 데브 삼촌은 신탁이 대량 지분을 가진 FinCo의 이사이기도 해요.","Dev Holdings 管理信托的投资组合。德夫同时是 FinCo 的董事，而信托持有 FinCo 的大量股份。"),
+SL("dev","FinCo pays me director's fees, and the trust gets great returns from FinCo. Everyone wins.","FinCo가 나한테 이사 보수를 주고, 신탁은 FinCo에서 좋은 수익을 얻어. 모두 이득이야.","FinCo 付给我董事报酬，信托也从 FinCo 获得丰厚回报。大家都赢。"),
+SL("mia","The no-conflict rule doesn't ask whether everyone wins. It asks whether there's a real sensible possibility of conflict. If you got the seat through the trust's shares, the fees are accountable unless the deed or informed consent allows them.","이해충돌 금지 규칙은 모두가 이득인지 묻지 않아요. 실질적이고 합리적인 충돌 가능성이 있는지를 물어요. 신탁 지분 덕분에 이사 자리를 얻었다면, 신탁증서나 충분한 정보에 기초한 동의가 없는 한 보수를 반환해야 해요.","禁止利益冲突规则不问是不是大家都赢，而是问是否存在现实而合理的冲突可能性。如果你是凭信托的股份获得董事席位，除非信托文件或知情同意允许，否则报酬必须交出。"),
+SL("leo","And the $2 million Dev Holdings paid last year to DevCo, Dev's own company? DevCo is on the list of objects.","그럼 작년에 Dev Holdings가 데브 삼촌 회사인 DevCo에 지급한 200만 달러는? DevCo도 수익 대상자 명단에 있잖아.","那去年 Dev Holdings 付给德夫自己的公司 DevCo 的200万澳元呢？DevCo 也在受益对象名单上。"),
+SL("mia","Then the question is purpose. If the real aim was to pay Dev's personal debts, it's a fraud on the power and can be set aside, even though DevCo is an object.","그러면 목적이 문제야. 진짜 목적이 데브 삼촌 개인 채무를 갚는 것이었다면, DevCo가 수익 대상자라도 권한 남용(fraud on the power)이라 취소될 수 있어.","那么问题在于目的。如果真正目的是偿还德夫的个人债务，即使 DevCo 是受益对象，这也属于滥用权力（fraud on the power），可以被撤销。"),
+SL("rose","Can't the deed simply excuse all this?","신탁증서로 이런 걸 전부 면책할 수는 없니?","信托文件不能把这些都免责吗？"),
+SL("mia","An exoneration clause can cover negligence, but never dishonesty. There is an irreducible core of obligations a trustee cannot contract out of.","면책 조항은 과실은 면책할 수 있어도 부정직은 절대 면책할 수 없어요. 수탁자가 계약으로 벗어날 수 없는 최소한의 핵심 의무가 있어요.","免责条款可以免除过失责任，但绝不能免除不诚实行为的责任。受托人有一个无法通过约定排除的核心义务。")],
+key:tt(["Split every trustee problem into three. Fiduciary duties are proscriptive rules of loyalty. Non-fiduciary duties cover care, adherence to terms and impartiality. Powers must be exercised with real consideration and for a proper purpose.","수탁자 문제는 셋으로 나눠 보세요. 신인의무는 충실에 관한 금지 규칙이에요. 비신인의무에는 주의의무, 조건 준수, 공평의무가 있어요. 권한은 실질적 고려와 적정한 목적에 따라 행사해야 해요.","把每个受托人问题拆成三部分：受信义务是关于忠实的禁止性规则；非受信义务包括谨慎、遵守条款和公平义务；权力的行使必须经过真实考虑并出于正当目的。"]),
+cards:[
+CD("Real sensible possibility of conflict","실질적이고 합리적인 충돌 가능성","现实而合理的冲突可能性",["Conflict is judged by whether a reasonable person would see a real sensible possibility of conflict, not by whether harm actually followed.","충돌 여부는 실제 손해가 생겼는지가 아니라, 합리적인 사람이 보기에 실질적이고 합리적인 충돌 가능성이 있는지로 판단해요.","是否存在冲突，要看理性之人是否会认为存在现实而合理的冲突可能性，而不是看是否实际造成损害。"],["Stated in Boardman v Phipps. Honesty, good results and benefit to the trust are no defence.","Boardman v Phipps에서 제시됐어요. 정직, 좋은 결과, 신탁의 이익은 방어가 되지 않아요.","见于 Boardman v Phipps 案。诚实、结果良好或信托获益都不能作为抗辩。"]),
+CD("Director's fees","이사 보수의 반환","董事报酬的交出",["Fees a trustee earns as a company director must be accounted for if the position was obtained through use of the trust's shareholding.","수탁자가 신탁 지분을 이용해 이사 자리를 얻었다면, 그 자리에서 받은 보수를 반환해야 해요.","如果受托人是利用信托的持股获得董事职位，其所得董事报酬必须交出。"],["Re Macadam. Common where family trusts own trading companies, so deeds often authorise retention.","Re Macadam 판례예요. 가족신탁이 영업회사를 소유하는 경우에 흔해서, 신탁증서가 보수 보유를 허용하는 경우가 많아요.","见 Re Macadam 案。家族信托持有经营公司的情况很常见，因此信托文件常允许保留报酬。"]),
+CD("Fraud on a power","권한 남용","滥用权力",["A power must be exercised for the purpose for which it was given. Using it to benefit a non-object or the power-holder is a fraud on the power, and the exercise is void.","권한은 부여된 목적을 위해 행사해야 해요. 수익 대상자가 아닌 사람이나 권한 보유자 자신을 이롭게 하려고 쓰면 권한 남용이고, 그 행사는 무효예요.","权力必须为其被授予的目的而行使。用它来使非受益对象或权力持有人自己获益，即属滥用权力，该行使无效。"],["Distributions steered to a trustee-controlled entity draw scrutiny even if that entity is an object.","수탁자가 지배하는 법인으로 흘러간 분배는 그 법인이 수익 대상자라도 엄격히 심사받아요.","流向受托人控制的实体的分配，即使该实体是受益对象，也会受到严格审查。"]),
+CD("Exoneration clauses","면책 조항","免责条款",["A deed may exclude liability for some breaches, including negligence, but cannot exclude liability for dishonesty.","신탁증서로 과실을 포함한 일부 위반의 책임을 면제할 수 있지만, 부정직에 대한 책임은 면제할 수 없어요.","信托文件可以免除包括过失在内的部分违约责任，但不能免除不诚实行为的责任。"],["Armitage v Nurse is influential in Australia. Clauses are read strictly against the trustee.","Armitage v Nurse가 호주에서도 영향력이 커요. 면책 조항은 수탁자에게 불리하게 엄격히 해석해요.","Armitage v Nurse 在澳大利亚也很有影响力。免责条款要作不利于受托人的严格解释。"]),
+CD("Investment and delegation","투자와 위임","投资与委托",["Trustees may use investment managers, but must take care in choosing and supervising them and consider the portfolio as a whole.","수탁자는 투자운용사를 쓸 수 있지만, 선정과 감독에 주의를 기울이고 포트폴리오 전체를 고려해야 해요.","受托人可以聘用投资管理人，但必须谨慎选择和监督，并从整体上考虑投资组合。"],["Trustee Act 1925 (NSW) ss 14A and 14C list matters such as diversification, risk and the beneficiaries' needs.","Trustee Act 1925 (NSW) ss 14A, 14C가 분산투자, 위험, 수익자의 필요 같은 고려사항을 규정해요.","Trustee Act 1925 (NSW) ss 14A 和 14C 列出了分散投资、风险和受益人需要等考虑事项。"]),
+CD("Fiduciary categories","신인관계의 범주","受信关系的类型",["Fiduciary relationships arise in settled categories, such as trustee and beneficiary, and ad hoc where one party undertakes to act in another's interests.","신인관계는 수탁자와 수익자처럼 확립된 범주에서 생기기도 하고, 한쪽이 다른 쪽의 이익을 위해 행동하기로 한 경우 개별적으로 생기기도 해요.","受信关系既存在于受托人与受益人等既定类型中，也可能在一方承诺为另一方利益行事时个案产生。"],["Hospital Products v United States Surgical Corp is the leading Australian discussion.","Hospital Products v United States Surgical Corp가 호주의 대표 판례예요.","Hospital Products v United States Surgical Corp 是澳大利亚的代表性判例。"])],
+law:[
+LW("Boardman v Phipps [1967] 2 AC 46",["Real sensible possibility of conflict","실질적이고 합리적인 충돌 가능성","现实而合理的冲突可能性"]),
+LW("Hospital Products Ltd v United States Surgical Corporation (1984) 156 CLR 41",["Nature and categories of fiduciary relationships","신인관계의 성질과 범주","受信关系的性质与类型"]),
+LW("Re Macadam [1946] Ch 73",["Accounting for director's fees","이사 보수의 반환","董事报酬的交出"]),
+LW("Armitage v Nurse [1998] Ch 241",["Limits of exoneration clauses","면책 조항의 한계","免责条款的限度"]),
+LW("Tito v Waddell (No 2) [1977] Ch 106",["Self-dealing and fair-dealing rules","자기거래 규칙과 공정거래 규칙","自我交易与公平交易规则"]),
+LW("Trustee Act 1925 (NSW) ss 14A, 14C",["Duty of care in investment","투자에서의 주의의무","投资中的谨慎义务"]),
+LW("Naaman v Jaken Properties Australia Pty Ltd [2025] HCA 1",["Former trustee's indemnity and successor trustee","전 수탁자의 비용상환청구권과 후임 수탁자","前任受托人的补偿权与继任受托人"])]},
+{story:[
+SL("narr","Leo, now 25, lends $150,000 to a start-up strictly to fund a product recall. Separately, Dev took a secret $400,000 commission from a broker when the trust bought FinCo shares, and used it to buy an apartment in Byron Bay.","25살이 된 레오가 제품 리콜 비용으로만 쓰라는 조건으로 스타트업에 15만 달러를 빌려줬어요. 한편 데브 삼촌은 신탁이 FinCo 주식을 살 때 중개인에게서 몰래 40만 달러 수수료를 받아 바이런베이 아파트를 샀어요.","25岁的利奥借给一家初创公司15万澳元，约定只能用于产品召回。另外，信托购买 FinCo 股票时，德夫从经纪人那里秘密收取了40万澳元佣金，并用它在拜伦湾买了一套公寓。"),
+SL("leo","The start-up went into administration before the recall. Am I just another unsecured creditor?","리콜 전에 스타트업이 관리절차(administration)에 들어갔어. 나는 그냥 무담보 채권자 중 하나야?","召回之前初创公司就进入了自愿管理程序（administration）。我只是一个普通的无担保债权人吗？"),
+SL("mia","Not if the money was lent for an exclusive purpose and the company wasn't free to use it otherwise. Then it's held on a Quistclose trust for you.","돈이 특정 목적으로만 빌려졌고 회사가 다른 용도로 쓸 자유가 없었다면 아니야. 그 경우 그 돈은 너를 위한 Quistclose 신탁으로 보유돼.","如果钱是为专门目的出借、公司不能自由挪作他用，那就不是。这种情况下，这笔钱以 Quistclose 信托为你持有。"),
+SL("judge","And the secret commission?","그럼 비밀 수수료는요?","那秘密佣金呢？"),
+SL("mia","A bribe or secret commission received by a fiduciary is held on constructive trust for the principal. Grimaldi v Chameleon Mining confirmed that in Australia, so the trust can claim the apartment itself.","신인의무자가 받은 뇌물이나 비밀 수수료는 본인(principal)을 위한 의제신탁으로 보유돼요. Grimaldi v Chameleon Mining이 호주에서 이를 확인했으니, 신탁은 아파트 자체를 청구할 수 있어요.","受信人收取的贿赂或秘密佣金，以推定信托为委托方（principal）持有。Grimaldi v Chameleon Mining 案在澳大利亚确认了这一点，所以信托可以请求取得公寓本身。"),
+SL("dev","The apartment has doubled in value. Surely they only get the $400,000 back.","아파트 값이 두 배가 됐어요. 돌려줄 건 40만 달러뿐이잖아요.","公寓已经翻倍了。他们顶多拿回40万澳元吧。"),
+SL("judge","A proprietary claim follows the value into the asset, gains included.","물권적 청구는 가치를 자산까지 따라가며, 가치 상승분도 포함해요.","物权请求会追踪价值进入该资产，增值部分也包括在内。")],
+key:tt(["Resulting trusts respond to the absence of an intention to benefit the recipient. Constructive trusts respond to unconscionable retention, and in Australia a remedial constructive trust is imposed only where lesser relief is inadequate.","복귀신탁은 수령자를 이롭게 하려는 의도가 없다는 점에 반응해요. 의제신탁은 비양심적인 보유에 반응하고, 호주에서 구제적 의제신탁은 더 약한 구제수단이 부족할 때만 부과돼요.","归复信托回应的是不存在使接收人获益的意图。推定信托回应的是违背良心的保留；在澳大利亚，救济性推定信托只有在较轻救济不足时才会施加。"]),
+cards:[
+CD("Basis of resulting trusts","복귀신탁의 근거","归复信托的基础",["Equity presumes that a person who pays for property in another's name did not intend to benefit them. Evidence of actual intention rebuts the presumption.","형평법은 남의 명의로 재산 대금을 낸 사람이 그 사람을 이롭게 할 의도가 없었다고 추정해요. 실제 의도에 관한 증거로 추정을 뒤집을 수 있어요.","衡平法推定，以他人名义支付财产价款的人并无使其获益的意图。关于实际意图的证据可以推翻这一推定。"],["Contributions are measured at acquisition, and liability under a mortgage counts (Calverley v Green).","기여는 취득 시점을 기준으로 측정하고, 저당 채무에 대한 책임도 기여로 봐요(Calverley v Green).","出资按取得时计算，承担按揭贷款责任也算出资（Calverley v Green）。"]),
+CD("Quistclose trust","Quistclose 신탁","Quistclose 信托",["Money advanced for an exclusive purpose, where the recipient is not free to use it otherwise, is held on trust. If the purpose fails, it returns to the lender.","특정 목적으로만 제공되고 수령자가 다른 용도로 쓸 수 없는 돈은 신탁으로 보유돼요. 목적이 실패하면 대여자에게 돌아가요.","为专门目的提供、接收人不能挪作他用的款项，以信托方式持有。目的落空时，款项归还出借人。"],["Powerful in insolvency. Australian courts recognise it, often drawing on Lord Millett's analysis in Twinsectra v Yardley.","도산에서 위력이 커요. 호주 법원도 인정하며, Twinsectra v Yardley에서 Millett 경의 분석을 자주 참고해요.","在破产中作用很大。澳大利亚法院也予以承认，并经常参考 Twinsectra v Yardley 案中米利特勋爵的分析。"]),
+CD("Institutional and remedial","제도적·구제적 의제신탁","制度性与救济性推定信托",["An institutional constructive trust arises by operation of law once the facts occur. A remedial one is imposed by court order to answer unconscionable conduct.","제도적 의제신탁은 사실이 발생하면 법률상 당연히 생겨요. 구제적 의제신탁은 비양심적 행위에 대응해 법원 명령으로 부과돼요.","制度性推定信托在事实发生时依法自动产生。救济性推定信托则由法院判令施加，以回应违背良心的行为。"],["Australia accepts the remedial use, but only where lesser remedies will not do (Giumelli; Bathurst City Council v PWC Properties).","호주는 구제적 활용을 인정하지만, 더 약한 구제수단으로 부족할 때만이에요(Giumelli; Bathurst City Council v PWC Properties).","澳大利亚接受其救济性运用，但仅限于较轻救济不足的情形（Giumelli；Bathurst City Council v PWC Properties）。"]),
+CD("Bribes and secret commissions","뇌물과 비밀 수수료","贿赂与秘密佣金",["A bribe or secret commission received by a fiduciary is held on constructive trust for the principal from the moment of receipt.","신인의무자가 받은 뇌물이나 비밀 수수료는 받는 순간부터 본인을 위한 의제신탁으로 보유돼요.","受信人收取的贿赂或秘密佣金，自收取之时起即以推定信托为委托方持有。"],["Grimaldi v Chameleon Mining (No 2) declined to follow Lister v Stubbs. The proprietary claim captures any rise in value.","Grimaldi v Chameleon Mining (No 2)는 Lister v Stubbs를 따르지 않았어요. 물권적 청구라서 가치 상승분까지 포함돼요.","Grimaldi v Chameleon Mining (No 2) 案没有遵循 Lister v Stubbs。由于是物权请求，增值部分也包括在内。"]),
+CD("Joint endeavour","공동사업 법리","共同事业原则",["When a joint relationship or venture ends without attributable fault, it is unconscionable for one party to keep the benefit of the other's contributions.","공동 관계나 사업이 어느 쪽의 귀책 없이 끝났을 때, 한쪽이 상대방 기여의 이익을 보유하는 것은 비양심적이에요.","当共同关系或事业在无可归责过错的情况下结束时，一方保留对方出资的利益是违背良心的。"],["Muschinski v Dodds and Baumgartner. Contributions are usually returned first, then any surplus follows the title.","Muschinski v Dodds와 Baumgartner 판례예요. 보통 기여분을 먼저 돌려주고, 남는 부분은 등기상 지분을 따라요.","见 Muschinski v Dodds 和 Baumgartner 案。通常先返还出资，剩余部分按产权份额分配。"]),
+CD("Illegality","위법성","违法性",["An illegal purpose does not automatically defeat a resulting trust claim. The court weighs the statute's purpose and may attach conditions.","위법한 목적이 있다고 해서 복귀신탁 청구가 자동으로 배척되지는 않아요. 법원은 해당 법률의 목적을 따져보고 조건을 붙일 수 있어요.","违法目的不会自动使归复信托请求失败。法院会衡量相关法律的目的，并可附加条件。"],["Nelson v Nelson, which rejects a rigid reliance test.","경직된 원용(reliance) 기준을 거부한 Nelson v Nelson이 기준 판례예요.","权威判例是 Nelson v Nelson，该案拒绝了僵化的依赖（reliance）标准。"])],
+law:[
+LW("Calverley v Green (1984) 155 CLR 242",["Measuring contributions","기여의 측정","出资的计算"]),
+LW("Barclays Bank Ltd v Quistclose Investments Ltd [1970] AC 567",["Purpose trusts of loan money","대여금의 목적 신탁","借款的目的信托"]),
+LW("Twinsectra Ltd v Yardley [2002] 2 AC 164",["Analysis of the Quistclose trust","Quistclose 신탁의 구조 분석","对 Quistclose 信托的分析"]),
+LW("Muschinski v Dodds (1985) 160 CLR 583",["Failed joint endeavour","무산된 공동사업","失败的共同事业"]),
+LW("Giumelli v Giumelli (1999) 196 CLR 101",["Constructive trust as a last resort","최후 수단으로서의 의제신탁","作为最后手段的推定信托"]),
+LW("Bathurst City Council v PWC Properties Pty Ltd (1998) 195 CLR 566",["Remedial constructive trusts","구제적 의제신탁","救济性推定信托"]),
+LW("Grimaldi v Chameleon Mining NL (No 2) (2012) 200 FCR 296",["Bribes held on constructive trust","뇌물에 대한 의제신탁","贿赂以推定信托持有"]),
+LW("Nelson v Nelson (1995) 184 CLR 538",["Illegality and resulting trusts","위법성과 복귀신탁","违法性与归复信托"])]},
+{story:[
+SL("narr","The trust has lost $1.2 million. Dev Holdings mixed trust money with its own, gave some to Dev's cousin Sal, and moved the rest through accounts run by Kim, an accountant who knew what was going on.","신탁이 120만 달러를 잃었어요. Dev Holdings는 신탁자금을 자기 돈과 섞었고, 일부는 데브 삼촌의 사촌 샐에게 줬으며, 나머지는 사정을 알던 회계사 킴이 관리하는 계좌들로 옮겼어요.","信托损失了120万澳元。Dev Holdings 把信托资金和自有资金混在一起，把一部分给了德夫的表弟萨尔，其余则通过知情的会计师金管理的账户转走。"),
+SL("judge","Start with the claims against Dev Holdings.","먼저 Dev Holdings에 대한 청구부터 봅시다.","先从对 Dev Holdings 的请求开始。"),
+SL("mia","Equitable compensation to restore the fund, with causation judged with hindsight. Where money went into assets, we trace through the mixed account using Re Hallett, Re Oatway and the lowest intermediate balance rule.","신탁재산을 회복시키는 형평법상 보상을 청구하고, 인과관계는 사후적 관점(hindsight)에서 판단해요. 돈이 자산으로 바뀐 부분은 Re Hallett, Re Oatway, 최저 중간 잔액 규칙을 적용해 혼합 계좌를 거쳐 추적해요.","我们请求衡平法补偿以恢复信托基金，因果关系以事后视角判断。资金变成资产的部分，适用 Re Hallett、Re Oatway 和最低中间余额规则，穿过混合账户进行追踪。"),
+SL("leo","Kim never kept a cent. Can we still sue him?","킴은 한 푼도 안 챙겼어. 그래도 킴을 상대로 소송할 수 있어?","金一分钱都没留。我们还能起诉他吗？"),
+SL("mia","Yes, for knowing assistance, if he assisted a dishonest and fraudulent design with knowledge in the first four Baden categories. That's the test Farah v Say-Dee adopts.","응. 킴이 Baden 기준 i~iv에 해당하는 인식을 가지고 부정직하고 기망적인 계획을 도왔다면 knowing assistance로 가능해. Farah v Say-Dee가 채택한 기준이야.","可以。如果他在具备 Baden 分类前四类知情的情况下协助了不诚实、欺诈性的计划，就构成知情协助。这是 Farah v Say-Dee 采用的标准。"),
+SL("dev","The deed limits my liability, and anyway this was all more than six years ago.","신탁증서가 내 책임을 제한하고 있고, 어차피 전부 6년도 더 지난 일이에요.","信托文件限制了我的责任，而且这些事都是六年多以前的了。"),
+SL("judge","Exoneration clauses do not reach dishonesty. And limitation periods don't protect a trustee who was party to fraud or who still holds trust property.","면책 조항은 부정직까지 미치지 않아요. 그리고 사기에 가담했거나 아직 신탁재산을 보유한 수탁자는 소멸시효로 보호받지 못해요.","免责条款不适用于不诚实行为。而且参与欺诈或仍持有信托财产的受托人，不受诉讼时效保护。")],
+key:tt(["Sort remedies by target and type. Against the trustee, claims are personal (compensation, account) or proprietary (tracing, lien, constructive trust). Against outsiders, liability is as recipient or accessory. Then test the defences: s 85 relief, consent, exoneration, laches and limitation.","구제수단을 대상과 유형으로 정리하세요. 수탁자에 대해서는 인적 청구(보상, 이익반환)나 물권적 청구(추적, 우선특권, 의제신탁)를 해요. 외부인에 대해서는 수령자 책임이나 방조자 책임을 물어요. 그다음 s 85 면책, 동의, 면책 조항, 해태(laches), 소멸시효 같은 항변을 검토해요.","按对象和类型整理救济：对受托人，可提出对人请求（补偿、利润返还）或物权请求（追踪、留置权、推定信托）；对外部人，可追究接收人责任或协助人责任。然后检验抗辩：s 85 免责、同意、免责条款、懈怠（laches）和诉讼时效。"]),
+cards:[
+CD("Restorative compensation","원상회복형 보상","恢复性补偿",["Where trust property is misapplied, the trustee must restore the fund. Causation is assessed with hindsight, and common law remoteness rules do not apply.","신탁재산이 잘못 쓰였다면 수탁자는 신탁재산을 원상회복해야 해요. 인과관계는 사후적 관점에서 판단하고, 보통법의 손해 원격성(remoteness) 규칙은 적용되지 않아요.","信托财产被错误动用时，受托人必须恢复信托基金。因果关系以事后视角判断，不适用普通法的损害遥远性（remoteness）规则。"],["Youyang v Minter Ellison. Compare Target Holdings v Redferns in a commercial setting.","Youyang v Minter Ellison 판례예요. 상업적 맥락의 Target Holdings v Redferns와 비교해 보세요.","见 Youyang v Minter Ellison 案。可与商业背景下的 Target Holdings v Redferns 比较。"]),
+CD("Lowest intermediate balance","최저 중간 잔액 규칙","最低中间余额规则",["Beneficiaries can trace into a mixed account only up to the lowest balance it reached after the trust money went in. Later deposits are not presumed to replace it.","수익자는 신탁자금이 들어간 뒤 계좌 잔액이 가장 낮았던 금액까지만 혼합 계좌를 추적할 수 있어요. 나중에 들어온 돈이 이를 채운 것으로 추정되지 않아요.","受益人对混合账户的追踪，以信托资金存入后账户达到的最低余额为限。之后的存款不被推定为补回信托资金。"],["James Roscoe (Bolton) Ltd v Winder. It stops claims against the trustee's later, untainted money.","James Roscoe (Bolton) Ltd v Winder 판례예요. 수탁자가 나중에 넣은 무관한 돈에 대한 청구를 막아요.","见 James Roscoe (Bolton) Ltd v Winder 案。它阻止对受托人后来存入的无关资金提出请求。"]),
+CD("Lien or proportionate share","우선특권 또는 비례 지분","留置权或比例份额",["When tracing into a mixed asset, beneficiaries may choose an equitable lien securing their money, or a proportionate share of the asset.","혼합 자산으로 추적할 때 수익자는 자기 돈을 담보하는 형평법상 우선특권이나 자산에 대한 비례 지분 중 하나를 고를 수 있어요.","追踪至混合资产时，受益人可以选择以衡平法留置权担保其款项，或取得该资产的比例份额。"],["Take the share if the asset has risen and the lien if it has fallen (Foskett v McKeown).","자산 가치가 올랐다면 지분을, 떨어졌다면 우선특권을 선택해요(Foskett v McKeown).","资产升值时选择份额，贬值时选择留置权（Foskett v McKeown）。"]),
+CD("Knowledge under Barnes v Addy","Barnes v Addy의 인식 기준","Barnes v Addy 的知情标准",["Knowledge covers actual knowledge, wilful blindness, wilfully and recklessly failing to make obvious inquiries, and knowing facts that would show the breach to an honest and reasonable person (Baden categories i to iv).","인식에는 실제 인식, 고의적 외면, 당연한 조사를 고의로 또는 무모하게 하지 않은 경우, 정직하고 합리적인 사람이라면 위반을 알 수 있는 사실을 안 경우가 포함돼요(Baden 기준 i~iv).","知情包括实际知情、故意视而不见、故意且轻率地不作显而易见的查询，以及知道足以让诚实理性之人认识到违约的事实（Baden 分类第 i 至 iv 类）。"],["Farah v Say-Dee. Knowing facts that would merely prompt inquiry (category v) is not enough for knowing assistance.","Farah v Say-Dee 판례예요. 조사할 계기가 될 사실을 안 정도(v단계)로는 knowing assistance에 부족해요.","见 Farah v Say-Dee 案。仅知道足以促使查询的事实（第 v 类）不足以构成知情协助。"]),
+CD("Limitation and laches","소멸시효와 해태","诉讼时效与懈怠",["Breach of trust claims are generally barred after six years, but not for fraudulent breaches or to recover trust property from the trustee.","신탁 위반 청구는 보통 6년이 지나면 제한되지만, 사기적 위반이나 수탁자로부터 신탁재산을 회수하는 청구는 예외예요.","违反信托的请求一般在六年后受时效限制，但欺诈性违约或向受托人追回信托财产的请求除外。"],["For example Limitation Act 1969 (NSW) s 47. Laches can still bar discretionary equitable relief.","Limitation Act 1969 (NSW) s 47이 그 예예요. 재량적인 형평법상 구제에는 여전히 해태가 문제될 수 있어요.","例如 Limitation Act 1969 (NSW) s 47。懈怠仍可能阻却酌定的衡平法救济。"]),
+CD("Relief under s 85","s 85에 따른 면책","依据 s 85 的免责",["The court may relieve a trustee who acted honestly and reasonably and ought fairly to be excused, wholly or partly.","법원은 정직하고 합리적으로 행동했으며 공정하게 면책되어야 할 수탁자의 책임을 전부 또는 일부 면제할 수 있어요.","对于诚实且合理行事、理应公平获得免责的受托人，法院可以全部或部分免除其责任。"],["Trustee Act 1925 (NSW) s 85. Courts are slower to relieve paid professional trustees.","Trustee Act 1925 (NSW) s 85예요. 보수를 받는 전문 수탁자에게는 면책이 더 인색해요.","见 Trustee Act 1925 (NSW) s 85。法院对收取报酬的专业受托人给予免责更为谨慎。"])],
+law:[
+LW("Youyang Pty Ltd v Minter Ellison Morris Fletcher (2003) 212 CLR 484",["Restorative compensation","원상회복형 보상","恢复性补偿"]),
+LW("Target Holdings Ltd v Redferns [1996] AC 421",["Compensation in a commercial trust","상업적 신탁에서의 보상","商业信托中的补偿"]),
+LW("Re Hallett's Estate (1880) 13 Ch D 696",["Trustee presumed to spend own money first","수탁자는 자기 돈을 먼저 쓴 것으로 추정","推定受托人先花自己的钱"]),
+LW("Re Oatway [1903] 2 Ch 356",["Beneficiaries may claim the retained asset","수익자는 남은 자산을 청구 가능","受益人可请求保留下来的资产"]),
+LW("James Roscoe (Bolton) Ltd v Winder [1915] 1 Ch 62",["Lowest intermediate balance","최저 중간 잔액 규칙","最低中间余额规则"]),
+LW("Foskett v McKeown [2001] 1 AC 102",["Lien or proportionate share","우선특권 또는 비례 지분","留置权或比例份额"]),
+LW("Farah Constructions Pty Ltd v Say-Dee Pty Ltd (2007) 230 CLR 89",["Knowledge for recipient and accessory liability","수령자·방조자 책임의 인식 기준","接收人与协助人责任的知情标准"]),
+LW("Limitation Act 1969 (NSW) s 47",["No limitation for fraud or trust property held","사기와 보유 신탁재산에는 소멸시효 없음","欺诈或仍持有信托财产时不适用时效"]),
+LW("Trustee Act 1925 (NSW) s 85",["Relief of honest and reasonable trustees","정직하고 합리적인 수탁자의 면책","诚实且合理的受托人的免责"])]}
+];
+const HQS=[
+[
+HQ2(["Dev Holdings sells trust shares in breach of trust to Priya. She pays full market value and has no idea a trust exists. Can Mia and Leo get the shares back from Priya?","Dev Holdings가 신탁을 위반해 신탁 주식을 프리야에게 팔았어요. 프리야는 시가를 전부 냈고 신탁이 있다는 사실을 전혀 몰랐어요. 미아와 레오가 프리야에게서 주식을 되찾을 수 있을까요?","Dev Holdings 违反信托，把信托股票卖给了普丽娅。她支付了全部市价，完全不知道存在信托。米娅和利奥能从普丽娅那里拿回股票吗？"],
+[["No. She is a bona fide purchaser of the legal title for value without notice, so they must pursue the trustee and the sale money","아니요. 프리야는 대가를 치르고 사정을 모른 채 법적 소유권을 취득한 선의의 매수인이라서, 수탁자와 매각 대금을 쫓아야 해요","不能。她是支付对价、不知情地取得普通法所有权的善意购买人，所以他们只能追究受托人和卖股票所得的钱"],
+["Yes. A purchaser from a trustee always takes subject to the trust","네. 수탁자에게서 산 사람은 항상 신탁의 구속을 받아요","能。从受托人处购买的人总要受信托约束"],
+["Yes. The share register gave Priya constructive notice of the trust","네. 주주명부 때문에 프리야는 신탁을 알았어야 했어요(의제 인식)","能。股东名册使普丽娅对信托具有推定知情"],
+["No, but they can recover the purchase price from Priya","아니요. 대신 프리야에게서 매매대금을 돌려받을 수 있어요","不能，但可以向普丽娅追回购买价款"]],
+["A bona fide purchaser of the legal title for value without notice takes free of earlier equitable interests. Company registers generally do not record trusts, so the register gives no notice. The beneficiaries can sue the trustee and trace into the sale proceeds.","대가를 치르고 사정을 모른 채 법적 소유권을 취득한 선의의 매수인은 기존 형평법상 권리의 구속을 받지 않아요. 주주명부에는 보통 신탁이 기록되지 않으므로 명부로 인식이 생기지 않아요. 수익자는 수탁자에게 청구하고 매각 대금을 추적할 수 있어요.","支付对价、不知情地取得普通法所有权的善意购买人，不受先前衡平法权益的约束。股东名册一般不记载信托，所以名册不构成知情。受益人可以向受托人请求，并追踪卖股票所得的款项。"]),
+HQ2(["Instead of selling, Dev Holdings gives some trust shares to Dev's friend Ella as a birthday present. Ella has no idea they were trust property. Can the beneficiaries recover them?","이번에는 Dev Holdings가 신탁 주식 일부를 데브 삼촌의 친구 엘라에게 생일 선물로 줬어요. 엘라는 그것이 신탁재산인지 몰랐어요. 수익자가 되찾을 수 있을까요?","这次 Dev Holdings 没有卖，而是把部分信托股票当作生日礼物送给了德夫的朋友埃拉。埃拉不知道那是信托财产。受益人能要回来吗？"],
+[["Yes. Ella is a volunteer who gave no value, so the equitable interest still binds the shares","네. 엘라는 대가를 치르지 않은 무상 취득자(volunteer)라서 형평법상 권리가 여전히 주식에 미쳐요","能。埃拉是没有支付对价的无偿受让人（volunteer），衡平法权益仍然约束这些股票"],
+["No. An innocent recipient always takes free of equitable interests","아니요. 선의의 수령자는 항상 형평법상 권리에서 자유로워요","不能。无辜的接收人总是不受衡平法权益约束"],
+["No. The beneficiaries' only remedy is a personal claim against the trustee","아니요. 수익자의 구제수단은 수탁자에 대한 인적 청구뿐이에요","不能。受益人只能对受托人提出对人请求"],
+["Yes, but only if Ella learns of the trust before they sue","네, 하지만 소송 전에 엘라가 신탁을 알게 된 경우에만요","能，但只限于埃拉在起诉前得知信托的情况"]],
+["The bona fide purchaser defence needs value. A volunteer takes subject to the beneficiaries' equitable interest, even if innocent. Innocence may matter to personal liability, but the shares themselves can be recovered.","선의의 매수인 항변에는 대가 지급이 필요해요. 무상 취득자는 선의라도 수익자의 형평법상 권리에 구속돼요. 선의 여부는 인적 책임에서 고려될 수 있지만, 주식 자체는 되찾을 수 있어요.","善意购买人抗辩要求支付对价。无偿受让人即使无辜，也要受受益人衡平法权益的约束。是否善意可能影响个人责任，但股票本身可以追回。"]),
+HQ2(["Mia turns 18 and demands “her half” of the Rose Family Trust now, since only she and Leo are named objects. What is her position?","18살이 된 미아가 이름이 적힌 수익 대상자는 자기와 레오뿐이라며 로즈 가족신탁의 “내 몫 절반”을 지금 달라고 해요. 미아의 법적 지위는?","米娅满18岁后，以信托中列名的受益对象只有她和利奥为由，要求立即拿到罗丝家族信托中“她的一半”。她的法律地位如何？"],
+[["She has no fixed share. She can insist on being properly considered and on due administration of the trust","정해진 몫은 없어요. 적절히 고려받을 권리와 신탁이 제대로 운영되도록 요구할 권리가 있어요","她没有固定份额。她有权要求得到适当考虑，并要求信托得到妥善管理"],
+["She has an equitable interest in half the fund, because there are two objects","대상자가 둘이니 신탁재산 절반에 대한 형평법상 권리가 있어요","因为只有两个受益对象，她对一半信托基金享有衡平法权益"],
+["She can call for her share under Saunders v Vautier now that she is 18","18세가 됐으니 Saunders v Vautier에 따라 자기 몫을 청구할 수 있어요","她已满18岁，可依据 Saunders v Vautier 要求取得自己的份额"],
+["She has no enforceable rights until the trustee decides in her favour","수탁자가 유리하게 결정하기 전까지는 집행 가능한 권리가 없어요","在受托人作出对她有利的决定之前，她没有可执行的权利"]],
+["An object of a discretionary trust has no proprietary share in the fund. What they hold is a right to be considered and to have the trust duly administered, which the court will enforce (Gartside v IRC; Kennon v Spry).","재량신탁의 수익 대상자는 신탁재산에 대한 정해진 지분이 없어요. 대신 고려받을 권리와 신탁이 적법하게 운영되도록 요구할 권리가 있고, 법원이 이를 집행해요(Gartside v IRC; Kennon v Spry).","全权信托的受益对象对信托基金没有确定的财产份额。他们享有的是获得考虑的权利和要求信托得到妥善管理的权利，法院会予以执行（Gartside v IRC；Kennon v Spry）。"]),
+HQ2(["The objects are “Mia, Leo and any other grandchildren Rose may have”. Mia and Leo, both adults, want to end the trust and split the fund. Can they?","수익 대상자가 “미아, 레오, 그리고 앞으로 로즈 할머니에게 생길 수 있는 다른 손주”예요. 성인인 미아와 레오가 신탁을 끝내고 재산을 나누고 싶어 해요. 가능할까요?","受益对象是“米娅、利奥以及罗丝奶奶将来可能有的其他孙辈”。已经成年的米娅和利奥想终止信托并分掉资金。可以吗？"],
+[["No. Not every possible beneficiary is an ascertained adult, so they are not together absolutely entitled","아니요. 가능한 수익자 모두가 확정된 성인이 아니라서, 둘이 함께 확정적 권리를 가진 것이 아니에요","不可以。并非所有可能的受益人都是已确定的成年人，所以他们两人并不共同享有绝对权利"],
+["Yes. Unborn persons are not beneficiaries until they are born","네. 태어나기 전에는 수익자가 아니에요","可以。未出生的人在出生前不是受益人"],
+["Yes. Rose, as settlor, can consent on the unborn grandchildren's behalf","네. 설정자인 로즈 할머니가 미출생 손주를 대신해 동의할 수 있어요","可以。罗丝奶奶作为委托人可以代表未出生的孙辈同意"],
+["Yes, if the trustee agrees to the termination","네, 수탁자가 종료에 동의하면요","可以，只要受托人同意终止"]],
+["Saunders v Vautier needs all beneficiaries to be ascertained, adult, of full capacity and together absolutely entitled. Unborn grandchildren are potential objects, so Mia and Leo cannot end the trust on their own.","Saunders v Vautier가 적용되려면 모든 수익자가 확정돼 있고, 성인이며, 행위능력이 있고, 함께 확정적 권리를 가져야 해요. 아직 태어나지 않은 손주도 잠재적 수익 대상자라서 미아와 레오만으로는 신탁을 끝낼 수 없어요.","适用 Saunders v Vautier 规则，要求所有受益人都已确定、已成年、具有完全行为能力并共同享有绝对权利。尚未出生的孙辈也是潜在受益对象，所以米娅和利奥不能自行终止信托。"]),
+HQ2(["Dev Holdings borrows $100,000 for a purpose the deed does not authorise. It can't repay and has no other assets. The lender asks who else is liable.","Dev Holdings가 신탁증서가 허용하지 않는 목적으로 10만 달러를 빌렸어요. 갚을 수 없고 다른 재산도 없어요. 대여자가 그 밖에 누가 책임지는지 물어요.","Dev Holdings 为信托文件未授权的目的借了10万澳元。它无力偿还，也没有其他资产。出借人问还有谁要承担责任。"],
+[["Dev personally, because the company can't be indemnified from trust assets for an unauthorised act (s 197)","데브 삼촌 개인이요. 권한 없는 행위라서 회사가 신탁재산에서 보전받을 수 없기 때문이에요(s 197)","德夫个人，因为这是越权行为，公司不能从信托财产中获得补偿（s 197）"],
+["The beneficiaries personally, in proportion to their interests","수익자들이 각자 지분 비율대로 개인적으로요","受益人按各自权益比例承担个人责任"],
+["No one. The lender took the risk of dealing with a company","아무도 없어요. 회사와 거래한 위험은 대여자가 져요","没有人。与公司交易的风险由出借人承担"],
+["The trust fund directly, because the trust is the real borrower","신탁재산이 직접요. 실제 차주는 신탁이니까요","直接由信托基金承担，因为真正的借款人是信托"]],
+["The trust isn't a legal person, and beneficiaries are generally not personally liable to trust creditors. Because the borrowing was outside power, the company has no indemnity, which is the gap s 197 fills by making directors liable.","신탁은 법적 주체가 아니고, 수익자는 보통 신탁 채권자에게 개인 책임을 지지 않아요. 권한 밖 차입이라 회사에 비용상환청구권이 없고, 바로 이 공백을 s 197이 이사에게 책임을 지워 메워요.","信托不是法律主体，受益人一般也不对信托债权人承担个人责任。由于借款越权，公司没有补偿权，而 s 197 正是通过让董事承担责任来填补这一空白。"])
+],
+[
+HQ2(["Dennis keeps a savings account in his own name, but often tells his partner Doreen “this money is as much yours as mine”. They pay joint winnings into it. Dennis dies. Did he declare a trust?","데니스는 예금 계좌를 자기 이름으로 가지고 있지만, 동거인 도린에게 “이 돈은 내 것만큼 네 것이기도 해”라고 자주 말했어요. 둘이 함께 받은 상금도 이 계좌에 넣었어요. 데니스가 사망했어요. 신탁을 선언한 것일까요?","丹尼斯的储蓄账户在他自己名下，但他经常对伴侣多琳说“这笔钱是你的，也是我的”。两人还把共同赢得的奖金存进这个账户。丹尼斯去世了。他是否宣言设立了信托？"],
+[["Yes. No formal words are needed, and his repeated words and conduct show an intention that she share the whole account","네. 형식적인 문구는 필요 없고, 반복된 말과 행동이 계좌 전체를 도린과 나누려는 의도를 보여줘요","是。无需正式用语，他反复的言行显示出让她共享整个账户的意图"],
+["No. Words like these show only an intention to make a gift in future","아니요. 이런 말은 장래에 증여하겠다는 의도일 뿐이에요","否。这类话只表明将来赠与的意图"],
+["No. A declaration of trust over money in a bank must be in writing","아니요. 은행 예금에 대한 신탁 선언은 서면이어야 해요","否。对银行存款的信托宣言必须采用书面形式"],
+["Yes, but only over the joint winnings, not over his own savings","네, 하지만 함께 받은 상금에 대해서만이고 데니스의 저축에는 아니에요","是，但只及于共同奖金，不及于他自己的存款"]],
+["In Paul v Constance a declaration of trust over the whole account was found from words and conduct alone. A declaration of trust over land, by contrast, must be evidenced in writing, for example Conveyancing Act 1919 (NSW) s 23C(1)(b).","Paul v Constance 사건에서는 말과 행동만으로 계좌 전체에 대한 신탁 선언이 인정됐어요. 반면 토지에 대한 신탁 선언은 서면 증거가 필요해요. 예를 들어 Conveyancing Act 1919 (NSW) s 23C(1)(b)예요.","在 Paul v Constance 案中，法院仅凭言行就认定对整个账户存在信托宣言。相比之下，对土地设立的信托宣言必须有书面证明，例如 Conveyancing Act 1919 (NSW) s 23C(1)(b)。"]),
+HQ2(["Mr Kendle signs a deed saying he holds half of his house on trust for his wife. Years later he says he never really meant it and signed only to keep her happy. Is there a trust?","켄들 씨가 집의 절반을 아내를 위해 신탁으로 보유한다는 증서에 서명했어요. 몇 년 뒤, 사실은 그럴 생각이 없었고 아내를 기쁘게 하려고 서명했을 뿐이라고 말해요. 신탁이 있을까요?","肯德尔先生签署了一份契据，写明他为妻子以信托方式持有房屋的一半。多年后，他说自己从未真的这样打算，签字只是为了让妻子高兴。信托成立吗？"],
+[["Yes. Intention is judged objectively from the deed's words, not from his private thoughts","네. 의도는 속마음이 아니라 증서 문언을 기준으로 객관적으로 판단해요","成立。意图根据契据文字客观判断，而不是看他的内心想法"],
+["No. The deed is a sham, because he never subjectively intended it","아니요. 켄들 씨가 주관적으로 의도하지 않았으니 가장행위(sham)예요","不成立。他主观上从未有此意图，所以契据是虚假行为（sham）"],
+["No. Under s 23C his wife also had to sign the deed","아니요. s 23C에 따라 아내도 증서에 서명해야 했어요","不成立。根据 s 23C，妻子也必须在契据上签名"],
+["Only over the portion of the price he personally paid","켄들 씨가 직접 낸 대금 부분에 대해서만요","只及于他本人支付的那部分价款"]],
+["In Byrnes v Kendle (2011) the High Court held that intention is found objectively from the words used. A sham requires a shared intention to create a false appearance, which was not shown.","Byrnes v Kendle (2011)에서 고등법원은 의도를 사용된 문언에서 객관적으로 판단한다고 했어요. 가장행위가 되려면 거짓 외관을 만들려는 공동의 의도가 필요한데, 그런 사정은 없었어요.","在 Byrnes v Kendle (2011) 案中，高等法院认为意图应根据所用文字客观判断。虚假行为需要双方共同意图制造虚假外观，本案并无此情形。"]),
+HQ2(["A timber company's contract says sale money for a supplier's timber goes into a “separate account”, but the same contract lets the company mix it with its own funds and use it freely. The company goes broke. Was the money held on trust for the supplier?","목재 회사의 계약서에는 공급업체 목재 판매대금을 “별도 계좌”에 넣는다고 돼 있지만, 같은 계약서가 회사가 그 돈을 자기 자금과 섞어 자유롭게 쓸 수 있게 허용해요. 회사가 파산했어요. 그 돈은 공급업체를 위한 신탁재산이었을까요?","一家木材公司的合同写明，供应商木材的销售款将存入“单独账户”，但同一份合同又允许公司把这笔钱与自有资金混在一起并自由使用。公司破产了。这笔钱是否以信托方式为供应商持有？"],
+[["Probably not. Freedom to mix and use the money as its own is inconsistent with an intention to create a trust","아마 아니에요. 돈을 섞어서 자기 돈처럼 자유롭게 쓸 수 있다는 점은 신탁 의도와 맞지 않아요","可能不是。可以混合并像自己的钱一样自由使用，这与设立信托的意图不一致"],
+["Yes. A term requiring a separate account is conclusive of a trust","네. 별도 계좌 조항이 있으면 신탁이 확정돼요","是。只要有单独账户条款，就可确定存在信托"],
+["Yes. The supplier kept title to the timber until payment, so the proceeds are its property","네. 공급업체가 대금 지급 전까지 목재 소유권을 유보했으니 판매대금도 공급업체 재산이에요","是。供应商在付款前保留了木材所有权，所以销售款也是供应商的财产"],
+["No. Trusts cannot arise from contracts between commercial parties","아니요. 상업 당사자 간 계약에서는 신탁이 생길 수 없어요","不是。商业主体之间的合同不能产生信托"]],
+["Courts read the whole commercial arrangement. In Korda v Australian Executor Trustees (SA) Ltd, a dispute about timber sale proceeds, the High Court found the arrangement as a whole did not create a trust over the proceeds.","법원은 상업적 약정 전체를 읽어요. 목재 판매대금이 문제된 Korda v Australian Executor Trustees (SA) Ltd 사건에서 고등법원은 약정 전체로 볼 때 판매대금에 대한 신탁이 성립하지 않았다고 판단했어요.","法院会通读整个商业安排。在涉及木材销售款的 Korda v Australian Executor Trustees (SA) Ltd 案中，高等法院认为从整体安排来看，并未对销售款设立信托。"]),
+HQ2(["Rose signs a transfer of land to Dev Holdings. The certificate of title is held by her bank as mortgagee, and she never authorises the bank to produce it for registration. She dies. Is the gift complete in equity?","로즈 할머니가 토지를 Dev Holdings에 넘기는 양도서에 서명했어요. 등기권리증은 저당권자인 은행이 보관하고 있고, 할머니는 등록을 위해 이를 제출하라는 권한을 은행에 준 적이 없어요. 할머니가 돌아가셨어요. 형평법상 증여가 완성됐을까요?","罗丝奶奶签署了把土地转让给 Dev Holdings 的转让书。产权证由作为抵押权人的银行保管，她从未授权银行为登记出示产权证。奶奶去世了。赠与在衡平法上完成了吗？"],
+[["No. She had not done everything necessary on her part, because the transferee could not get the certificate without her further act","아니요. 양수인이 할머니의 추가 행위 없이는 등기권리증을 받을 수 없었으니, 할머니가 자기 몫의 일을 다 한 게 아니에요","没有。没有她的进一步行为，受让人就拿不到产权证，所以她并未做完自己一方必须做的一切"],
+["Yes. She executed a registrable transfer, which is all a donor must do","네. 등록 가능한 양도서에 서명했으니 증여자가 할 일은 다 했어요","完成了。她签署了可登记的转让书，这就是赠与人应做的全部"],
+["Yes. Equity regards as done that which ought to be done","네. 형평법은 마땅히 해야 할 일을 이미 한 것으로 봐요","完成了。衡平法视应做之事为已做"],
+["Yes. Under the rule in Strong v Bird, Dev Holdings' role as trustee perfects the gift","네. Strong v Bird 원칙에 따라 Dev Holdings가 수탁자라는 사실만으로 증여가 완성돼요","完成了。根据 Strong v Bird 规则，Dev Holdings 的受托人身份即可使赠与完成"]],
+["These are close to the facts of Corin v Patton (1990). The gift was incomplete because Mrs Patton had not done all that was necessary on her part, such as authorising the mortgagee to produce the certificate. Strong v Bird needs the donee to become the donor's executor.","Corin v Patton (1990) 사건과 비슷한 사실관계예요. 패튼 부인이 저당권자에게 등기권리증 제출을 허락하는 등 자기 몫의 필요한 일을 다 하지 않아 증여가 완성되지 않았어요. Strong v Bird는 수증자가 증여자의 유언집행자가 되어야 적용돼요.","这与 Corin v Patton (1990) 案的事实相近。帕顿夫人没有做完自己一方必须做的一切，例如授权抵押权人出示产权证，所以赠与并未完成。Strong v Bird 规则要求受赠人成为赠与人的遗嘱执行人。"]),
+HQ2(["Mia is absolutely entitled to a half share under a bare trust her great-aunt created. She phones the trustee and tells it to hold her share for Leo from now on. Nothing is in writing. Is the disposition effective?","미아는 이모할머니가 만든 단순신탁(bare trust)에서 절반 지분에 대해 확정적 권리를 가져요. 미아가 수탁자에게 전화해 앞으로 자기 지분을 레오를 위해 보유하라고 했어요. 서면은 없어요. 이 처분은 유효할까요?","米娅对其姨婆设立的消极信托（bare trust）中的一半份额享有绝对权利。她打电话告诉受托人，今后为利奥持有她的份额。没有任何书面文件。这项处分有效吗？"],
+[["No. A direction to the trustee to hold for another is a disposition of an existing equitable interest and needs signed writing","아니요. 수탁자에게 다른 사람을 위해 보유하라고 지시하는 것은 기존 형평법상 권리의 처분이므로 서명된 서면이 필요해요","无效。指示受托人为他人持有属于对现有衡平法权益的处分，需要签名的书面文件"],
+["Yes. The trustee's agreement cures the lack of writing","네. 수탁자가 동의하면 서면 부재가 치유돼요","有效。受托人的同意可以弥补缺乏书面文件"],
+["Yes. Section 23C applies only to land","네. s 23C는 토지에만 적용돼요","有效。s 23C 只适用于土地"],
+["Yes, if Leo provides consideration","네, 레오가 대가를 제공하면요","有效，只要利奥提供对价"]],
+["Section 23C(1)(c) is not limited to land. In Grey v IRC an oral direction to trustees was held to be a disposition caught by the equivalent English provision.","s 23C(1)(c)는 토지에 한정되지 않아요. Grey v IRC에서는 수탁자에 대한 구두 지시가 영국의 같은 취지 규정이 적용되는 처분으로 인정됐어요.","s 23C(1)(c) 并不限于土地。在 Grey v IRC 案中，对受托人的口头指示被认定为受英国同类条文规制的处分。"])
+],
+[
+HQ2(["Dev and the trust's lawyer use information learned while acting for the trust to buy company shares for themselves. They act honestly, work hard, and the trust also makes a large profit. What happens to their personal profit?","데브 삼촌과 신탁 담당 변호사가 신탁 일을 하며 알게 된 정보로 개인적으로 회사 주식을 샀어요. 둘은 정직하게 열심히 일했고, 신탁도 큰 이익을 봤어요. 두 사람의 개인 이익은 어떻게 될까요?","德夫和信托的律师利用为信托办事时得知的信息，以个人名义买入了某公司的股票。他们诚实、努力，信托也获得了丰厚利润。他们个人的利润怎么处理？"],
+[["They must account for it, but the court may allow them fair remuneration for their skill and work","이익을 반환해야 하지만, 법원이 그들의 능력과 노력에 대한 적정한 보수를 인정할 수 있어요","他们必须交出利润，但法院可以就其技能和付出准许合理报酬"],
+["They keep it. They acted honestly and the trust benefited too","그대로 가져요. 정직했고 신탁도 이익을 봤으니까요","全部保留。他们诚实行事，信托也获益了"],
+["They account only to the extent the trust suffered loss","신탁이 손해를 본 범위에서만 반환해요","只在信托遭受损失的范围内交出"],
+["They must account and get no allowance, because fiduciaries may never be paid for their work","반환해야 하고 보수도 없어요. 신인의무자는 일한 대가를 절대 받을 수 없으니까요","必须交出利润且没有任何报酬，因为受信人永远不能因工作获得报酬"]],
+["In Boardman v Phipps the fiduciaries had to account despite their honesty and the benefit to the trust. Because of their skill and effort, the court allowed them generous remuneration.","Boardman v Phipps 사건에서 신인의무자들은 정직했고 신탁에도 이익이 있었지만 이익을 반환해야 했어요. 다만 그들의 능력과 노력을 고려해 법원이 넉넉한 보수를 인정했어요.","在 Boardman v Phipps 案中，尽管受信人是诚实的，而且信托也获益，他们仍须交出利润。考虑到他们的技能和付出，法院准许他们获得相当丰厚的报酬。"]),
+HQ2(["Dev Holdings holds a shop lease on trust for a minor beneficiary. When it expires, the landlord refuses to renew it for the trust, so Dev takes a new lease in his own name. Is that allowed?","Dev Holdings가 미성년 수익자를 위해 상가 임차권을 신탁으로 보유하고 있어요. 임대차가 끝나자 임대인은 신탁을 위해서는 갱신하지 않겠다고 했고, 데브 삼촌이 자기 이름으로 새 임대차를 맺었어요. 괜찮을까요?","Dev Holdings 以信托方式为一名未成年受益人持有一份商铺租约。租约到期后，出租人拒绝为信托续租，于是德夫以自己的名义签了新租约。这样可以吗？"],
+[["No. He holds the new lease on constructive trust for the beneficiary, even though the trust could not renew","아니요. 신탁이 갱신할 수 없었더라도 데브 삼촌은 새 임차권을 수익자를 위한 의제신탁으로 보유해요","不可以。即使信托无法续租，德夫也要以推定信托为该受益人持有新租约"],
+["Yes. The opportunity was not available to the trust, so there is no conflict","네. 신탁이 잡을 수 없던 기회라 충돌이 없어요","可以。这个机会信托得不到，所以不存在冲突"],
+["Yes, as long as Dev pays the beneficiary the difference in rent","네, 데브 삼촌이 수익자에게 임대료 차액을 주면요","可以，只要德夫把租金差额付给受益人"],
+["Only if the beneficiary can show a loss","수익자가 손해를 증명할 때만 문제돼요","只有受益人证明遭受损失时才有问题"]],
+["Keech v Sandford (1726) is the classic case. The rule is strict because a trustee who could benefit whenever the trust cannot would be tempted not to try hard for the trust.","Keech v Sandford (1726)가 대표 판례예요. 신탁이 얻지 못할 때마다 수탁자가 이익을 볼 수 있다면 신탁을 위해 최선을 다하지 않을 유인이 생기므로, 규칙이 엄격해요.","Keech v Sandford (1726) 是经典判例。如果信托得不到的机会受托人就可以自己拿，受托人就可能不尽力为信托争取，因此这一规则非常严格。"]),
+HQ2(["Dev is also trustee of a separate fixed trust in which adult Mia has a half share. She needs cash, so she sells that share to him. He tells her everything he knows and pays an independent valuation. Can the sale stand?","데브 삼촌은 성인이 된 미아가 절반 지분을 가진 별도 고정신탁의 수탁자이기도 해요. 현금이 필요한 미아가 그 지분을 삼촌에게 팔았어요. 삼촌은 아는 정보를 모두 알려주고 독립 감정가대로 돈을 냈어요. 이 매매는 유효할까요?","德夫还是另一个固定信托的受托人，成年的米娅在其中享有一半份额。米娅需要现金，就把这份份额卖给了他。他把知道的一切都告诉了她，并按独立评估价付款。这笔买卖能成立吗？"],
+[["Probably yes. Under the fair-dealing rule it stands if he shows full disclosure, a fair price and no advantage taken","아마 유효해요. 공정거래 규칙(fair-dealing rule)상 완전한 정보 공개, 공정한 가격, 부당한 이익 없음을 증명하면 유지돼요","很可能成立。根据公平交易规则（fair-dealing rule），只要他证明已充分披露、价格公平且未占便宜，就可以成立"],
+["No. The self-dealing rule makes it voidable however fair it was","아니요. 자기거래 규칙 때문에 아무리 공정해도 취소할 수 있어요","不能。根据自我交易规则，无论多公平都可撤销"],
+["Yes, automatically, because Mia is an adult who agreed","네, 미아가 동의한 성인이니 당연히 유효해요","能，而且自动成立，因为米娅是同意交易的成年人"],
+["No. A trustee can never acquire a beneficiary's interest","아니요. 수탁자는 수익자의 권리를 절대 취득할 수 없어요","不能。受托人永远不能取得受益人的权益"]],
+["Buying trust property from the trust is self-dealing. Buying a beneficiary's own interest from that beneficiary falls under the less strict fair-dealing rule, and the trustee must show the deal was fair and fully informed (Tito v Waddell (No 2)).","신탁에서 신탁재산을 사는 것은 자기거래예요. 수익자에게서 그 수익자의 권리를 사는 것은 덜 엄격한 공정거래 규칙이 적용되고, 수탁자는 거래가 공정하고 충분한 정보에 기초했음을 증명해야 해요(Tito v Waddell (No 2)).","从信托购买信托财产属于自我交易。从受益人手中购买其本人的受益权，适用较宽松的公平交易规则，受托人必须证明交易公平且对方充分知情（Tito v Waddell (No 2)）。"]),
+HQ2(["Dev Holdings properly runs up $20,000 of debts running the trust's business. It is then replaced as trustee by a professional trustee company. Does Dev Holdings lose its right to be repaid from the trust assets?","Dev Holdings가 신탁 사업을 운영하며 적법하게 2만 달러의 채무를 졌어요. 그 뒤 전문 수탁회사로 교체됐어요. Dev Holdings는 신탁재산에서 상환받을 권리를 잃을까요?","Dev Holdings 在经营信托业务时正当地欠下了2万澳元债务。之后它被一家专业受托公司取代。Dev Holdings 会失去从信托财产中获得偿还的权利吗？"],
+[["No. A former trustee keeps its right of indemnity, secured by an equitable lien over the trust assets","아니요. 전 수탁자도 비용상환청구권을 유지하고, 이는 신탁재산에 대한 형평법상 우선특권으로 담보돼요","不会。前任受托人仍保有费用补偿权，并以信托财产上的衡平法留置权作担保"],
+["Yes. The right belongs only to the trustee in office","네. 이 권리는 현직 수탁자에게만 있어요","会。这项权利只属于在任受托人"],
+["Only if the new trustee agrees to honour it","새 수탁자가 인정하기로 동의할 때만 유지돼요","只有新受托人同意承认时才保留"],
+["It becomes an unsecured personal claim against the beneficiaries","수익자에 대한 무담보 인적 청구권으로 바뀌어요","它变成对受益人的无担保对人请求权"]],
+["The right of indemnity and its equitable lien survive a change of trustee. What the successor owes the former trustee when dealing with those assets was the question in Naaman v Jaken Properties Australia Pty Ltd [2025] HCA 1, where the Court was divided.","비용상환청구권과 그 형평법상 우선특권은 수탁자가 바뀌어도 유지돼요. 후임 수탁자가 그 재산을 다룰 때 전 수탁자에게 어떤 의무를 지는지가 Naaman v Jaken Properties Australia Pty Ltd [2025] HCA 1의 쟁점이었고, 재판부 의견이 나뉘었어요.","费用补偿权及其衡平法留置权在更换受托人后依然存在。继任受托人在处理这些财产时对前任受托人负有何种义务，正是 Naaman v Jaken Properties Australia Pty Ltd [2025] HCA 1 案的争点，法官意见存在分歧。"]),
+HQ2(["The deed lets Dev Holdings distribute income to any company in which Dev holds shares. It pays $2 million to DevCo, which immediately uses it to pay Dev's personal tax debt. Mia challenges it. What is her strongest ground?","신탁증서는 Dev Holdings가 데브 삼촌이 주주인 회사에 수익을 분배할 수 있게 해요. Dev Holdings가 DevCo에 200만 달러를 지급했고, DevCo는 바로 그 돈으로 삼촌 개인의 세금 채무를 갚았어요. 미아가 이를 다투려 해요. 가장 강력한 근거는?","信托文件允许 Dev Holdings 把收益分配给德夫持股的任何公司。它向 DevCo 支付了200万澳元，DevCo 随即用这笔钱偿还德夫个人的税款债务。米娅提出异议。她最有力的理由是什么？"],
+[["Fraud on the power. The purpose was to benefit Dev personally, not DevCo as an object","권한 남용이에요. 목적이 수익 대상자인 DevCo가 아니라 데브 삼촌 개인을 이롭게 하는 것이었어요","滥用权力。目的是让德夫个人获益，而不是作为受益对象的 DevCo"],
+["None. DevCo is within the class of objects, so the distribution is valid","없어요. DevCo가 수익 대상자 범위에 있으니 분배는 유효해요","没有。DevCo 属于受益对象范围，所以分配有效"],
+["Breach of the duty of impartiality only","공평의무 위반뿐이에요","只是违反公平义务"],
+["Breach of the prudent person investment duty","신중한 사람 투자 의무 위반이에요","违反审慎之人的投资义务"]],
+["Being an object is not enough. A distribution made for a collateral purpose, here paying the director's own debts, is a fraud on the power and void. The no-conflict rule is engaged too.","수익 대상자라는 것만으로는 부족해요. 이사 개인 채무를 갚는 것처럼 부수적 목적을 위한 분배는 권한 남용으로 무효예요. 이해충돌 금지 규칙도 함께 문제돼요.","仅是受益对象还不够。为附带目的进行的分配，例如偿还董事个人债务，属于滥用权力，归于无效。同时也涉及禁止利益冲突规则。"])
+],
+[
+HQ2(["Leo lends $150,000 to a start-up strictly to fund a product recall, and the money goes into a separate account. The start-up enters administration before the recall. Can Leo recover ahead of unsecured creditors?","레오가 제품 리콜 비용으로만 쓰라는 조건으로 스타트업에 15만 달러를 빌려줬고, 그 돈은 별도 계좌에 들어갔어요. 리콜 전에 스타트업이 관리절차에 들어갔어요. 레오는 무담보 채권자보다 먼저 돈을 돌려받을 수 있을까요?","利奥借给一家初创公司15万澳元，约定只能用于产品召回，钱存进了单独账户。召回前公司进入了自愿管理程序。利奥能先于无担保债权人拿回钱吗？"],
+[["Yes, if the money was lent for that exclusive purpose. It is then held on a Quistclose trust for Leo","네, 그 목적으로만 빌려준 돈이라면요. 그 경우 레오를 위한 Quistclose 신탁으로 보유돼요","能，只要这笔钱是专为该目的出借的。此时它以 Quistclose 信托为利奥持有"],
+["No. A loan creates only a debt, and the lender takes the insolvency risk","아니요. 대여는 채권만 만들고, 도산 위험은 대여자가 져요","不能。借款只产生债务，破产风险由出借人承担"],
+["No. Once paid into the borrower's account, the money became the borrower's property","아니요. 차용인 계좌에 들어간 순간 돈은 차용인 재산이 됐어요","不能。一旦存入借款人账户，这笔钱就成了借款人的财产"],
+["Yes, but only if the loan agreement used the word “trust”","네, 하지만 대여 계약서에 ‘신탁’이라는 단어가 있을 때만요","能，但前提是借款合同中使用了“信托”一词"]],
+["In Barclays Bank v Quistclose Investments, money lent for an exclusive purpose that failed was held on trust for the lender. The key is that the borrower was never free to use the money for anything else. No particular words are required.","Barclays Bank v Quistclose Investments 사건에서 특정 목적으로만 빌려준 돈의 목적이 실패하자 그 돈은 대여자를 위한 신탁으로 인정됐어요. 핵심은 차용인이 그 돈을 다른 용도로 쓸 자유가 처음부터 없었다는 점이에요. 특정 문구는 필요 없어요.","在 Barclays Bank v Quistclose Investments 案中，专为特定目的出借的款项在目的落空后，被认定为以信托方式为出借人持有。关键在于借款人从一开始就不能自由把钱用于其他用途，无需特定用语。"]),
+HQ2(["A mother buys a house in her children's names so she can claim a housing subsidy she is not entitled to. Later she wants to prove the house is really hers. Can she rebut the presumption of advancement?","어머니가 받을 자격이 없는 주택 보조금을 받으려고 자녀 명의로 집을 샀어요. 나중에 집이 사실 자기 것이라고 증명하고 싶어 해요. 증여 추정을 뒤집을 수 있을까요?","一位母亲为了领取她无权享有的住房补贴，用子女的名义买了房子。后来她想证明房子其实是她的。她能推翻赠与推定吗？"],
+[["Yes, but the court can require her to repay the benefit she wrongly obtained","네, 다만 법원은 부당하게 얻은 혜택을 반환하라는 조건을 붙일 수 있어요","可以，但法院可以要求她退还不当获得的利益"],
+["No. A claimant who must rely on their own illegal purpose can never rebut the presumption","아니요. 자신의 위법한 목적을 원용해야 하는 청구인은 추정을 절대 뒤집을 수 없어요","不能。必须援引自身违法目的的请求人永远不能推翻推定"],
+["Yes, unconditionally, because the presumption of advancement does not apply to mothers","네, 조건 없이요. 증여 추정은 어머니에게 적용되지 않으니까요","可以，而且无条件，因为赠与推定不适用于母亲"],
+["No. The subsidy legislation makes the purchase void","아니요. 보조금 법률 때문에 매매 자체가 무효예요","不能。补贴法律使这次购买无效"]],
+["In Nelson v Nelson (1995) the High Court let the mother rely on a resulting trust despite the illegal purpose, on condition that she account for the subsidy. It also accepted that the presumption of advancement can apply to mothers.","Nelson v Nelson (1995)에서 고등법원은 위법한 목적이 있었는데도 보조금 상당액을 반환하는 조건으로 어머니가 복귀신탁을 주장하도록 허용했어요. 증여 추정이 어머니에게도 적용될 수 있다는 점도 받아들였어요.","在 Nelson v Nelson (1995) 案中，尽管存在违法目的，高等法院仍允许母亲主张归复信托，条件是她要退还补贴。法院还认可赠与推定也可适用于母亲。"]),
+HQ2(["Partners buy a property as equal tenants in common. One paid most of the price, the other promised to renovate. The relationship ends without fault before the plan works out. How does Muschinski v Dodds divide it?","커플이 동등한 공유자로 부동산을 샀어요. 한 명이 대금 대부분을 냈고, 다른 한 명은 리모델링을 하기로 했어요. 계획이 이뤄지기 전에 누구의 잘못도 없이 관계가 끝났어요. Muschinski v Dodds 방식으로는 어떻게 나눌까요?","一对伴侣以均等份额的按份共有人身份买了一处房产。一方支付了大部分价款，另一方承诺负责装修。计划实现前，两人在无过错的情况下分手。按照 Muschinski v Dodds 的做法如何分配？"],
+[["Each first gets back their own contributions, then any surplus is shared as the title says","각자 먼저 자기 기여분을 돌려받고, 남는 부분은 등기상 지분대로 나눠요","各自先拿回自己的出资，剩余部分再按产权份额分配"],
+["Strictly by the registered shares, because equity follows the law","등기상 지분대로 엄격히 나눠요. 형평법은 법을 따르니까요","严格按登记份额分配，因为衡平法遵循普通法"],
+["By contributions under a purchase money resulting trust, ignoring the renovation promise","리모델링 약속은 무시하고 매수대금 복귀신탁에 따라 기여 비율대로 나눠요","不考虑装修承诺，按购买价款归复信托的出资比例分配"],
+["However the court thinks just and equitable, as under the Family Law Act","가족법(Family Law Act)처럼 법원이 정당하고 공평하다고 보는 대로 나눠요","像 Family Law Act 那样，按法院认为公正合理的方式分配"]],
+["Deane J reasoned that it would be unconscionable for either party to keep the benefit of the other's contributions after the joint endeavour failed. A constructive trust was imposed so contributions are returned first.","Deane 대법관은 공동사업이 실패한 뒤 한쪽이 상대방 기여의 이익을 가지는 것은 비양심적이라고 봤어요. 그래서 의제신탁을 부과해 기여분을 먼저 돌려주도록 했어요.","迪恩法官（Deane J）认为，共同事业失败后，任何一方保留对方出资带来的利益都是违背良心的。因此法院施加推定信托，让双方先拿回各自的出资。"]),
+HQ2(["Parents promise their son a lot of the family orchard if he stays and works on it. He relies on the promise for years. They later refuse. Must the court order a constructive trust transferring the land?","부모가 아들에게 가족 과수원에 남아 일하면 땅 한 필지를 주겠다고 약속했어요. 아들은 몇 년 동안 이 약속을 믿고 일했어요. 나중에 부모가 거절해요. 법원은 반드시 토지를 넘기는 의제신탁을 명해야 할까요?","父母答应儿子，只要他留下来在家族果园工作，就给他一块地。儿子多年来一直信赖这个承诺。后来父母反悔。法院必须判令以推定信托转让土地吗？"],
+[["No. A constructive trust is a last resort, and a money order may be enough to do justice","아니요. 의제신탁은 최후의 수단이고, 금전 지급 명령으로도 정의를 실현할 수 있어요","不必。推定信托是最后手段，判令支付金钱可能就足以实现公正"],
+["Yes. Proprietary estoppel always requires the expectation to be fulfilled","네. 재산적 금반언(proprietary estoppel)은 항상 기대를 그대로 실현해야 해요","必须。财产性禁反言（proprietary estoppel）总要求实现当事人的期待"],
+["Yes. A constructive trust is the standard remedy where land is promised","네. 토지를 약속한 경우 의제신탁이 표준 구제수단이에요","必须。承诺给予土地时，推定信托是标准救济"],
+["No. A promise without consideration can never be enforced","아니요. 대가 없는 약속은 절대 강제할 수 없어요","不必。没有对价的承诺永远不能强制执行"]],
+["In Giumelli v Giumelli (1999) the High Court said a constructive trust should be imposed only where no lesser remedy will do. It ordered a money sum instead, partly because transferring the lot would affect other family members.","Giumelli v Giumelli (1999)에서 고등법원은 더 약한 구제수단으로 충분하지 않을 때만 의제신탁을 부과해야 한다고 했어요. 토지 이전이 다른 가족에게 영향을 주는 점 등을 고려해 금전 지급을 명했어요.","在 Giumelli v Giumelli (1999) 案中，高等法院指出，只有在较轻的救济不足时才应施加推定信托。部分由于转让土地会影响其他家庭成员，法院改为判令支付一笔金钱。"]),
+HQ2(["Dev's secret $400,000 commission bought a Byron Bay apartment now worth $800,000. What can the beneficiaries claim in Australia?","데브 삼촌이 몰래 받은 40만 달러 수수료로 산 바이런베이 아파트가 지금 80만 달러예요. 호주에서 수익자는 무엇을 청구할 수 있을까요?","德夫用秘密收取的40万澳元佣金买下的拜伦湾公寓，现在价值80万澳元。在澳大利亚，受益人可以请求什么？"],
+[["The apartment itself, gain included, because the commission was held on constructive trust from receipt","아파트 자체와 가치 상승분이요. 수수료는 받는 순간부터 의제신탁으로 보유됐으니까요","公寓本身连同增值，因为佣金自收取时起即以推定信托持有"],
+["Only $400,000 as a debt, following Lister v Stubbs","Lister v Stubbs에 따라 40만 달러 채권만요","依据 Lister v Stubbs，只能作为债务追讨40万澳元"],
+["Only $400,000 plus interest, as equitable compensation","형평법상 보상으로 40만 달러와 이자만요","只能以衡平法补偿方式追讨40万澳元加利息"],
+["Nothing, because the trust paid a fair price for the FinCo shares","아무것도요. 신탁은 FinCo 주식을 공정한 가격에 샀으니까요","什么都不能，因为信托以公平价格买入了 FinCo 股票"]],
+["Grimaldi v Chameleon Mining (No 2) declined to follow Lister v Stubbs, consistent with the Privy Council in A-G for Hong Kong v Reid. The principal can take the asset and its increase in value.","Grimaldi v Chameleon Mining (No 2)는 Lister v Stubbs를 따르지 않았고, 이는 추밀원의 A-G for Hong Kong v Reid와도 일치해요. 본인은 자산과 그 가치 상승분을 가져갈 수 있어요.","Grimaldi v Chameleon Mining (No 2) 案没有遵循 Lister v Stubbs，这与枢密院在 A-G for Hong Kong v Reid 案中的立场一致。委托方可以取得该资产及其增值。"])
+],
+[
+HQ2(["Dev Holdings pays $10,000 of trust money into its own account, which already holds $10,000 of its money. It buys $10,000 of shares from the account, which later double, then spends the rest. What can the beneficiaries claim?","Dev Holdings가 자기 돈 1만 달러가 든 계좌에 신탁자금 1만 달러를 넣었어요. 그 계좌에서 1만 달러로 주식을 샀고 주식은 나중에 두 배가 됐어요. 나머지 돈은 다 써버렸어요. 수익자는 무엇을 청구할 수 있을까요?","Dev Holdings 把1万澳元信托资金存进了自己已有1万澳元的账户。它从账户中拿出1万澳元买了股票，股票后来翻倍，剩下的钱则全部花掉。受益人可以请求什么？"],
+[["The shares, now worth $20,000, because the trustee cannot say it spent its own money on the good asset","현재 2만 달러가 된 주식이요. 수탁자는 좋은 자산에는 자기 돈을 썼다고 주장할 수 없어요","现值2万澳元的股票，因为受托人不能主张买好资产用的是自己的钱"],
+["Only $10,000, because Re Hallett presumes the trustee spent its own money first, on the shares","1만 달러만요. Re Hallett에 따라 수탁자가 자기 돈을 먼저, 즉 주식에 썼다고 추정되니까요","只能拿1万澳元，因为根据 Re Hallett，推定受托人先把自己的钱用在了股票上"],
+["A lien over the shares for $10,000, never a share of the gain","주식에 대한 1만 달러 우선특권만요. 가치 상승분은 절대 안 돼요","只能对股票享有1万澳元的留置权，绝不能分享增值"],
+["A half share of the shares, because the account was half trust money","계좌의 절반이 신탁자금이었으니 주식의 절반이요","股票的一半，因为账户里一半是信托资金"]],
+["Re Hallett presumes a trustee spends its own money first. Re Oatway stops a trustee relying on that to keep the profitable asset once the rest is gone. Equity resolves doubts against the wrongdoer, so the beneficiaries can take the shares.","Re Hallett은 수탁자가 자기 돈을 먼저 쓴 것으로 추정해요. 하지만 Re Oatway는 나머지 돈이 소진된 경우 수탁자가 이 추정을 이용해 수익 나는 자산을 챙기지 못하게 해요. 형평법은 의문을 위반자에게 불리하게 해석하므로 수익자가 주식을 가져갈 수 있어요.","Re Hallett 推定受托人先花自己的钱。但 Re Oatway 规定，剩余资金已花光时，受托人不能借此推定保住升值的资产。衡平法对不确定之处作不利于违约者的解释，因此受益人可以取得股票。"]),
+HQ2(["Dev Holdings mixes $30,000 from the Rose Family Trust and $10,000 from another family trust in one account, then loses $20,000. Both trusts are innocent. How is the remaining $20,000 usually shared in Australia?","Dev Holdings가 로즈 가족신탁의 3만 달러와 다른 가족신탁의 1만 달러를 한 계좌에 섞은 뒤 2만 달러를 잃었어요. 두 신탁 모두 잘못이 없어요. 호주에서 남은 2만 달러는 보통 어떻게 나눌까요?","Dev Holdings 把罗丝家族信托的3万澳元和另一个家族信托的1万澳元混在一个账户里，然后亏掉了2万澳元。两个信托都没有过错。在澳大利亚，剩下的2万澳元通常怎么分？"],
+[["Pro rata at 3:1, so $15,000 and $5,000","비율대로 3:1, 즉 1만 5천 달러와 5천 달러","按3:1比例分，即1万5千澳元和5千澳元"],
+["First in, first out under Clayton's Case, which still binds Australian courts","Clayton's Case의 선입선출 규칙이요. 여전히 호주 법원을 구속해요","按 Clayton's Case 的先进先出规则，它仍约束澳大利亚法院"],
+["Equally, $10,000 each, because both are innocent","둘 다 무고하니 1만 달러씩 똑같이요","平分，各1万澳元，因为双方都无过错"],
+["The Rose Family Trust takes all, because the trustee owed it a higher duty","수탁자가 로즈 가족신탁에 더 높은 의무를 졌으니 전부 가져요","全部归罗丝家族信托，因为受托人对它负有更高的义务"]],
+["The first-in, first-out rule in Clayton's Case often gives arbitrary results. Australian courts generally prefer proportionate sharing between innocent beneficiaries, as in Re French Caledonia Travel (2003).","Clayton's Case의 선입선출 규칙은 자의적인 결과를 낳기 쉬워요. 호주 법원은 Re French Caledonia Travel (2003)처럼 무고한 수익자들 사이에서는 대체로 비례 배분을 선호해요.","Clayton's Case 的先进先出规则往往导致随意的结果。澳大利亚法院在无过错受益人之间通常倾向于按比例分配，例如 Re French Caledonia Travel (2003) 案。"]),
+HQ2(["Dev Holdings gives $5,000 of trust money to Dev's cousin Sal as a gift. Sal has no idea where it came from and spends it all on a holiday. Is Sal liable for knowing receipt?","Dev Holdings가 신탁자금 5천 달러를 데브 삼촌의 사촌 샐에게 선물로 줬어요. 샐은 돈의 출처를 전혀 몰랐고 여행에 전부 썼어요. 샐은 knowing receipt 책임을 질까요?","Dev Holdings 把5千澳元信托资金作为礼物送给德夫的表弟萨尔。萨尔完全不知道钱的来源，并把钱全部花在了度假上。萨尔是否要承担知情接收责任？"],
+[["No. Knowing receipt needs knowledge of the breach, and Sal had none","아니요. knowing receipt에는 위반 사실에 대한 인식이 필요한데 샐은 몰랐어요","不需要。知情接收要求知道违反信托的事实，而萨尔并不知情"],
+["Yes. Knowing receipt is strict liability, subject only to a change of position defence","네. knowing receipt는 엄격책임이고, 지위 변경(change of position) 항변만 가능해요","要。知情接收是严格责任，只能以地位改变（change of position）抗辩"],
+["Yes. Sal gave no value, and that is enough on its own","네. 샐은 대가를 치르지 않았고, 그것만으로 충분해요","要。萨尔没有支付对价，仅此就足够"],
+["No. Both limbs of Barnes v Addy require participation in a dishonest and fraudulent design","아니요. Barnes v Addy의 두 원칙 모두 부정직하고 기망적인 계획에 가담해야 성립해요","不要。Barnes v Addy 的两个分支都要求参与不诚实、欺诈性的计划"]],
+["In Farah Constructions v Say-Dee (2007) the High Court confirmed that knowing receipt turns on knowledge and rejected a strict liability approach based on unjust enrichment. The dishonest design element belongs to the assistance limb only. Sal may still face a proprietary claim if traceable proceeds remain.","Farah Constructions v Say-Dee (2007)에서 고등법원은 knowing receipt의 핵심이 인식이라고 확인했고, 부당이득에 근거한 엄격책임 접근을 받아들이지 않았어요. 부정직한 계획 요건은 방조(assistance) 원칙에만 해당해요. 추적 가능한 재산이 남아 있다면 샐도 물권적 청구를 받을 수 있어요.","在 Farah Constructions v Say-Dee (2007) 案中，高等法院确认知情接收的关键在于是否知情，并拒绝采纳以不当得利为基础的严格责任思路。不诚实计划这一要件只属于协助分支。如果仍有可追踪的财产，萨尔仍可能面临物权请求。"]),
+HQ2(["The deed says Dev Holdings may release $500,000 to an investor only after receiving a bank guarantee. It releases the money without one, and a fraudster then steals it. Dev argues the fraud caused the loss. Does the trustee escape liability?","신탁증서에 Dev Holdings는 은행 보증을 받은 뒤에만 투자자에게 50만 달러를 내줄 수 있다고 돼 있어요. 보증 없이 돈을 내줬고, 그 뒤 사기꾼이 돈을 가로챘어요. 데브 삼촌은 손실 원인이 사기라고 주장해요. 수탁자는 책임을 면할까요?","信托文件规定，Dev Holdings 必须先取得银行保函，才能向投资人放款50万澳元。它在没有保函的情况下放款，随后钱被骗子卷走。德夫辩称损失是欺诈造成的。受托人能免责吗？"],
+[["No. It must restore the money paid out in breach, and the later fraud does not break the chain","아니요. 위반해서 내준 돈을 신탁에 되돌려야 하고, 이후의 사기가 인과관계를 끊지 않아요","不能。它必须补回违规付出的钱，之后的欺诈并不切断因果关系"],
+["Yes. The fraud was a new intervening act that broke the chain of causation","네. 사기가 새로운 개입 행위라 인과관계가 끊겼어요","能。欺诈是新的介入行为，切断了因果关系"],
+["Partly. It is liable only for losses foreseeable at the date of breach","일부만요. 위반 당시 예견 가능한 손실에 대해서만 책임져요","部分免责。它只对违约时可预见的损失负责"],
+["Yes, if it shows the investor would have produced a guarantee anyway","네, 투자자가 어차피 보증을 제공했을 것이라고 증명하면요","能，只要它证明投资人无论如何都会提供保函"]],
+["Youyang v Minter Ellison (2003) involved money released without a required bank guarantee. The High Court held the full amount had to be restored, because compensation for misapplied trust money aims to put the fund back, and common law foreseeability does not limit it.","Youyang v Minter Ellison (2003)은 필요한 은행 보증 없이 돈을 내준 사건이에요. 고등법원은 잘못 지급된 신탁자금에 대한 보상은 신탁재산 원상회복이 목적이고 보통법상 예견가능성으로 제한되지 않으므로, 전액을 회복해야 한다고 판단했어요.","Youyang v Minter Ellison (2003) 涉及在没有取得必要银行保函的情况下放款。高等法院认为，对被错误动用的信托资金进行补偿，目的是让信托基金恢复原状，不受普通法可预见性的限制，因此必须补回全部金额。"]),
+HQ2(["Dev Holdings pays $50,000 of trust money into an account holding $20,000 of its own. The balance later falls to $5,000. Then it deposits $100,000 of its own money. How much can the beneficiaries trace into the account?","Dev Holdings가 자기 돈 2만 달러가 든 계좌에 신탁자금 5만 달러를 넣었어요. 이후 잔액이 5천 달러까지 떨어졌어요. 그 뒤 자기 돈 10만 달러를 입금했어요. 수익자는 이 계좌에서 얼마까지 추적할 수 있을까요?","Dev Holdings 把5万澳元信托资金存入已有2万澳元自有资金的账户。之后余额降到5千澳元，然后它又存入10万澳元自有资金。受益人能在该账户中追踪多少？"],
+[["$5,000, the lowest intermediate balance","최저 중간 잔액인 5천 달러요","5千澳元，即最低中间余额"],
+["$50,000, because the later deposit is presumed to replace the trust money","5만 달러요. 나중 입금이 신탁자금을 채운 것으로 추정되니까요","5万澳元，因为推定后来的存款补回了信托资金"],
+["$105,000, the whole balance, because the trustee mixed wrongfully","잔액 전부인 10만 5천 달러요. 수탁자가 위법하게 섞었으니까요","全部余额10万5千澳元，因为受托人不当混合"],
+["Nothing, because the trust money was dissipated when the balance fell","없어요. 잔액이 떨어질 때 신탁자금은 소진됐으니까요","什么都没有，因为余额下降时信托资金已被耗尽"]],
+["Under Roscoe v Winder, the proprietary claim is capped at the lowest balance after the trust money went in, unless the trustee showed an intention to replace the trust money. The beneficiaries keep a personal claim for the rest.","Roscoe v Winder에 따르면 물권적 청구는 신탁자금 입금 후 최저 잔액으로 제한돼요. 수탁자가 신탁자금을 채워 넣으려는 의도를 보인 경우는 예외예요. 나머지는 인적 청구로 받을 수 있어요.","根据 Roscoe v Winder，物权请求以信托资金存入后的最低余额为限，除非受托人表现出补回信托资金的意图。其余部分受益人仍可提出对人请求。"])
+]
+];
+
+CH.forEach((c,i)=>{c.H=HJ[i];c.hard=HQS[i]});
+
+
 
 /* state */
-const KEY = "trustquest-v2";
-let S = {lang:"en",ch:0,tab:"story",view:"ch",line:{},picks:{},qi:{}};
+const KEY = "trustquest-v3";
+let S = {lang:"en",mode:"easy",navMin:false,ch:0,tab:"story",view:"ch",line:{},picks:{},qi:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s) S=Object.assign(S,s,{view:"ch"});}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({lang:S.lang,ch:S.ch,picks:S.picks,line:S.line,qi:S.qi}))}catch(e){}};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({lang:S.lang,mode:S.mode,navMin:S.navMin,ch:S.ch,picks:S.picks,line:S.line,qi:S.qi}))}catch(e){}};
 const L=o=>o==null?"":(typeof o==="string"?o:(o[S.lang]??o.en));
 const roleOf=p=>S.lang==="ko"?p.rk:S.lang==="zh"?p.rz:p.re;
 const native=d=>S.lang==="ko"?d.k:S.lang==="zh"?d.z:"";
 const u=k=>L(UI[k]);
 
-const ORDER = CH.map(c=>c.quiz.map(()=>shuffle([0,1,2,3])));
+CH.forEach(c=>{c.easy=c.quiz;delete c.quiz;Object.defineProperty(c,"quiz",{get(){return S.mode==="hard"?c.hard:c.easy}});
+  ["story","key","cards","law","compare","diagram"].forEach(k=>{const e=c[k];c[k+"E"]=e;delete c[k];Object.defineProperty(c,k,{get(){return S.mode==="hard"?c.H[k]:e}})});});
+const ORDER = {easy:CH.map(c=>c.easy.map(()=>shuffle([0,1,2,3]))),hard:CH.map(c=>c.hard.map(()=>shuffle([0,1,2,3])))};
+const pk=i=>(S.mode==="hard"?"h":"e")+i;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
-const picks=i=>S.picks[i]||[];
+const picks=i=>S.picks[pk(i)]||[];
 const chScore=i=>picks(i).filter((p,k)=>p===CH[i].quiz[k].a).length;
 const chDone=i=>picks(i).length===CH[i].quiz.length;
 const total=()=>CH.reduce((n,c,i)=>n+chScore(i),0);
-const totalQ=CH.reduce((n,c)=>n+c.quiz.length,0);
+const totalQ=()=>CH.reduce((n,c)=>n+c.quiz.length,0);
 
 function diagram(){
   const D={
@@ -643,7 +1031,7 @@ function diagram(){
     <text x="${tx}" y="93" font-size="12.5" fill="var(--muted)">${n}</text>`;};
   const chip=(x,col,txt,dash)=>`<rect x="${x+25}" y="122" width="140" height="26" rx="13" fill="none" stroke="${col}" ${dash?'stroke-dasharray="4 4"':''}/>
     <text x="${x+95}" y="139.5" text-anchor="middle" font-size="12" font-weight="600" fill="${col}">${txt}</text>`;
-  return `<svg viewBox="0 0 740 232" role="img" aria-label="${t.s}, ${t.t}, ${t.b}" font-family="Manrope,'Noto Sans KR',sans-serif">
+  return `<svg class="dg-h" viewBox="0 0 740 232" role="img" aria-label="${t.s}, ${t.t}, ${t.b}" font-family="Manrope,'Noto Sans KR',sans-serif">
     <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker>
     <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--coral)"/></marker></defs>
     ${node(10,"var(--sand)",t.s,t.sn,["rose"])}${node(275,"var(--steel)",t.t,t.tn,["dev"])}${node(540,"var(--teal)",t.b,t.bn,["mia","leo"])}
@@ -652,31 +1040,61 @@ function diagram(){
     <text x="237" y="30" text-anchor="middle" font-size="12.5" fill="var(--text)">${t.a1}</text>
     <text x="502" y="30" text-anchor="middle" font-size="12.5" fill="var(--text)">${t.a2}</text>
     ${chip(10,"var(--muted)",t.c0,true)}${chip(275,"var(--steel)",t.c1)}${chip(540,"var(--teal)",t.c2)}
-    <path d="M635 152 C 610 214, 395 214, 372 156" fill="none" stroke="var(--coral)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ah2)"/>
-    <text x="502" y="224" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--coral)">${t.e}</text>
+    <path d="M635 152 V196 H372 V157" fill="none" stroke="var(--coral)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ah2)"/>
+    <text x="502" y="218" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--coral)">${t.e}</text>
+  </svg>`+diagramV(t);
+}
+
+function diagramV(t){
+  const X=30,W=188;
+  const node=(y,col,r,n,who)=>{
+    const two=who.length>1, tx=two?X+76:X+58;
+    const av=two?avatar(who[0],`x="${X+6}" y="${y+12}" width="38" height="38"`)+avatar(who[1],`x="${X+30}" y="${y+12}" width="38" height="38"`)
+      :avatar(who[0],`x="${X+8}" y="${y+10}" width="42" height="42"`);
+    return `<rect x="${X}" y="${y}" width="${W}" height="62" rx="14" fill="var(--surface)" stroke="${col}" stroke-width="2"/>${av}
+    <text x="${tx}" y="${y+28}" font-weight="800" font-size="14" fill="${col}">${r}</text>
+    <text x="${tx}" y="${y+46}" font-size="12" fill="var(--muted)">${n}</text>`;};
+  const chip=(y,col,txt,dash)=>`<rect x="228" y="${y+18}" width="124" height="26" rx="13" fill="none" stroke="${col}" ${dash?'stroke-dasharray="4 4"':''}/>
+    <text x="290" y="${y+35.5}" text-anchor="middle" font-size="11.5" font-weight="600" fill="${col}">${txt}</text>`;
+  return `<svg class="dg-v" viewBox="0 0 360 404" role="img" aria-label="${t.s}, ${t.t}, ${t.b}" font-family="Manrope,'Noto Sans KR','Noto Sans SC',sans-serif">
+    <defs><marker id="ahv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--muted)"/></marker>
+    <marker id="ah2v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="var(--coral)"/></marker></defs>
+    ${node(8,"var(--sand)",t.s,t.sn,["rose"])}${chip(8,"var(--muted)",t.c0,true)}
+    <line x1="124" y1="74" x2="124" y2="150" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#ahv)"/>
+    <text x="136" y="116" font-size="12" fill="var(--text)">${t.a1}</text>
+    ${node(156,"var(--steel)",t.t,t.tn,["dev"])}${chip(156,"var(--steel)",t.c1)}
+    <line x1="124" y1="222" x2="124" y2="298" stroke="var(--muted)" stroke-width="1.6" marker-end="url(#ahv)"/>
+    <text x="136" y="264" font-size="12" fill="var(--text)">${t.a2}</text>
+    ${node(304,"var(--teal)",t.b,t.bn,["mia","leo"])}${chip(304,"var(--teal)",t.c2)}
+    <path d="M${X} 335 H12 V187 H${X-3}" fill="none" stroke="var(--coral)" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ah2v)"/>
+    <text x="${X}" y="396" font-size="12" font-weight="600" fill="var(--coral)">${t.e}</text>
   </svg>`;
 }
 
 function head(){
   return `<header class="top"><div class="top-in">
+    <button class="icon-btn ${S.navMin?"":"on"}" data-act="nav" aria-label="${u("menu")}" aria-pressed="${!S.navMin}">${ic("panel")}</button>
     <div class="brand">${ic("scale")}<span>Trust Quest</span><small>${u("sub")}</small></div>
     <div class="spacer"></div>
-    <div class="score">${u("score")} <b>${total()}/${totalQ}</b></div>
+    <div class="score"><span class="sl">${u("score")}</span> <b>${total()}/${totalQ()}</b></div>
+    <div class="brk"></div>
+    <div class="seg mode" role="group" aria-label="Mode">${["easy","hard"].map(m=>`<button data-mode="${m}" class="${S.mode===m?"on":""}" aria-pressed="${S.mode===m}">${u(m)}</button>`).join("")}</div>
+    <div class="sp2"></div>
     <div class="seg" role="group" aria-label="Language">
-${[["en","English"],["ko","한국어"],["zh","中文"]].map(([k,n])=>`<button data-lang="${k}" class="${S.lang===k?"on":""}" aria-pressed="${S.lang===k}">${n}</button>`).join("")}
+${[["en","Eng","English"],["ko","한","한국어"],["zh","中文","中文"]].map(([k,n,f])=>`<button data-lang="${k}" class="${S.lang===k?"on":""}" aria-pressed="${S.lang===k}" aria-label="${f}">${n}</button>`).join("")}
     </div></div></header>`;
 }
 
 function nav(){
-  const items=CH.map((c,i)=>`<button class="nav-item ${S.view==="ch"&&S.ch===i?"on":""}" data-ch="${i}">
+  const items=CH.map((c,i)=>`<button class="nav-item ${S.view==="ch"&&S.ch===i?"on":""}" data-ch="${i}" title="${L(c.title)}" aria-label="${L(c.title)}">
     <span class="nav-num">${String(i+1).padStart(2,"0")}</span><span class="nav-t">${L(c.title)}</span>
     ${chDone(i)?`<span class="nav-s">${ic("check")}${chScore(i)}/${c.quiz.length}</span>`:""}</button>`).join("");
-  return `<nav>${items}<div class="nav-res"><button class="nav-item ${S.view==="res"?"on":""}" data-res="1">
+  return `<nav>${items}<div class="nav-res"><button class="nav-item ${S.view==="res"?"on":""}" data-res="1" aria-label="${u("results")}">
     <span class="nav-num">${ic("flag")}</span><span class="nav-t">${u("results")}</span></button></div></nav>`;
 }
 
 function storyView(c,i){
-  const n=S.line[i]||1, lines=c.story.slice(0,n), role=roleOf;
+  const n=S.line[pk(i)]||1, lines=c.story.slice(0,n), role=roleOf;
   const who=[...new Set(c.story.map(l=>l.w).filter(w=>w!=="narr"))];
   const cast=`<div class="cast">${who.map(w=>{const p=CAST[w];return `<div class="cast-p" style="--c:${p.c}"><div class="av">${avatar(w)}</div><div><b>${L(p)}</b><span>${role(p)}</span></div></div>`}).join("")}</div>`;
   const html=lines.map((l,k)=>{const nw=k===n-1?"new":"";
@@ -700,8 +1118,7 @@ function fmtAuth(x){
 }
 function cardsView(c){
   const cards=c.cards.map((d,k)=>`<button class="card" data-card="${k}" data-step="0" aria-expanded="false">
-    <div class="card-top"><b>${d.t}</b>${native(d)?`<span>${native(d)}</span>`:""}<span class="pips"><i></i><i></i></span></div>
-    <p>${L(d.d)}</p><div class="when"><em>${u("when")}</em>${L(d.w)}</div></button>`).join("");
+    <div class="card-top"><b>${d.t}</b>${native(d)?`<span>${native(d)}</span>`:""}<span class="pips"><i></i><i></i></span></div></button>`).join("");
   const rows=c.law.map(l=>{const act=/ Act \d{4}/.test(l[0]);
     return `<tr><td><span class="tag" style="--c:${act?"var(--steel)":"var(--teal)"}">${act?u("isAct"):u("isCase")}</span></td><td>${fmtAuth(l[0])}</td><td>${L(l[1])}</td></tr>`}).join("");
   const law=`<details class="law"><summary>${u("law")}${ic("chev")}</summary><div class="tbl"><table>
@@ -711,7 +1128,7 @@ function cardsView(c){
 }
 
 function quizView(c,i){
-  const p=picks(i), qi=Math.min(S.qi[i]||0,c.quiz.length);
+  const p=picks(i), qi=Math.min(S.qi[pk(i)]||0,c.quiz.length);
   const dots=c.quiz.map((q,k)=>{const cls=k===qi?"cur":(p[k]!==undefined?(p[k]===q.a?"ok":"no"):"");
     return k<=p.length?`<button class="dot ${cls}" data-jump="${k}" aria-label="${u("question")} ${k+1}"></button>`:`<span class="dot"></span>`}).join("");
   if(qi>=c.quiz.length && p.length===c.quiz.length){
@@ -721,7 +1138,7 @@ function quizView(c,i){
       <div><b>${u("thisCh")}</b><p>${msg}</p><div class="ctrl">${nxt}<button class="btn ghost" data-jump="0">${u("review")}</button><button class="btn ghost" data-act="retry">${ic("redo")}${u("retry")}</button></div></div></div>`;
   }
   const q=c.quiz[qi], chosen=p[qi], answered=chosen!==undefined;
-  const opts=ORDER[i][qi].map((oi,pos)=>{
+  const opts=ORDER[S.mode][i][qi].map((oi,pos)=>{
     let cls="";
     if(answered){cls=oi===q.a?"right":(oi===chosen?"wrong":"dim")}
     return `<button class="opt ${cls}" data-opt="${oi}" ${answered?"disabled":""}><span class="l">${"ABCD"[pos]}</span><span>${L(q.o[oi])}</span></button>`}).join("");
@@ -737,8 +1154,8 @@ function chapterView(){
   const i=S.ch,c=CH[i];
   const tab=(k,icn)=>`<button class="tab ${S.tab===k?"on":""}" data-tab="${k}">${ic(icn)}${u(k)}</button>`;
   let body=S.tab==="story"?storyView(c,i):S.tab==="cards"?cardsView(c):quizView(c,i);
-  return `<section class="panel"><div class="ch-head"><div class="num">${String(i+1).padStart(2,"0")}</div>
-    <div><h2>${L(c.title)}</h2><p>${L(c.sub)}</p></div>
+  return `<section class="panel ${S.mode==="hard"?"hard":""}"><div class="ch-head"><div class="num">${String(i+1).padStart(2,"0")}</div>
+    <div><h2>${L(c.title)}${S.mode==="hard"?` <span class="jd">${u("hardTag")}</span>`:""}</h2><p>${L(c.sub)}</p></div>
     <div class="tabs">${tab("story","story")}${tab("cards","cards")}${tab("quiz","quiz")}</div></div>${body}</section>`;
 }
 
@@ -746,39 +1163,61 @@ function resultsView(){
   const bars=CH.map((c,i)=>{const d=chDone(i),sc=chScore(i);
     return `<div class="bar"><span>${L(c.title)}</span><div class="track"><div class="fill" style="width:${d?sc/c.quiz.length*100:0}%"></div></div><span class="mono">${d?sc+"/"+c.quiz.length:"-"}</span></div>`}).join("");
   const all=CH.every((c,i)=>chDone(i));
-  return `<section class="panel"><div class="ch-head"><div class="num">${total()}<span style="font-size:22px;color:var(--muted)">/${totalQ}</span></div>
+  return `<section class="panel"><div class="ch-head"><div class="num">${total()}<span style="font-size:22px;color:var(--muted)">/${totalQ()}</span></div>
     <div><h2>${u("resTitle")}</h2><p>${all?u("resSub"):u("notYet")}</p></div></div>
     <div class="res"><div><div class="bars">${bars}</div><div class="ctrl"><button class="btn ghost" data-act="reset">${ic("redo")}${u("restart")}</button></div></div>
-    <div class="side"><div class="diagram">${diagram()}</div><div class="cmp">${CH[3].compare.map(x=>`<div><b>${u(x.n)}</b><span class="src">${L(x.s)}</span></div>`).join("")}</div></div></div></section>`;
+    <div class="side"><div class="diagram">${diagram()}</div><div class="cmp">${CH[3].compareE.map(x=>`<div><b>${u(x.n)}</b><span class="src">${L(x.s)}</span></div>`).join("")}</div></div></div></section>`;
 }
 
+function openCard(b){
+  const grid=b.parentElement, st=((+b.dataset.step||0)+1)%3;
+  grid.querySelectorAll(".card-detail").forEach(x=>x.remove());
+  grid.querySelectorAll(".card").forEach(x=>{if(x!==b){x.dataset.step=0;x.classList.remove("on");x.setAttribute("aria-expanded","false")}});
+  b.dataset.step=st;b.classList.toggle("on",st>0);b.setAttribute("aria-expanded",st>0);
+  if(!st)return;
+  const d=CH[S.ch].cards[+b.dataset.card], nt=native(d);
+  const box=document.createElement("div");box.className="card-detail";box.setAttribute("role","region");
+  box.innerHTML=`<h5>${d.t}${nt?`<span>${nt}</span>`:""}</h5><p>${L(d.d)}</p>${st===2?`<div class="when"><em>${u("when")}</em>${L(d.w)}</div>`:""}`;
+  const top=b.offsetTop; let last=b;
+  grid.querySelectorAll(".card").forEach(x=>{if(x.offsetTop===top)last=x});
+  last.after(box);
+  box.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+window.addEventListener("resize",()=>{const on=document.querySelector(".card.on");if(on&&document.querySelector(".card-detail")){on.dataset.step=(+on.dataset.step)-1;openCard(on)}});
 const app=document.getElementById("app");
-function render(){
+function render(focus){
   document.documentElement.lang=S.lang==="zh"?"zh-Hans":S.lang;
-  app.innerHTML=head()+`<div class="wrap">${nav()}${S.view==="res"?resultsView():chapterView()}</div>`;
+  const navX=app.querySelector("nav")?.scrollLeft||0;
+  app.innerHTML=head()+`<div class="wrap ${S.navMin?"min":""}">${nav()}${S.view==="res"?resultsView():chapterView()}</div>`;
+  const nv=app.querySelector("nav"); if(nv){nv.scrollLeft=navX; const on=nv.querySelector(".on"); on&&on.scrollIntoView({block:"nearest",inline:"nearest"});}
+  if(focus){const el=app.querySelector(focus); el&&el.scrollIntoView({block:"nearest",behavior:"smooth"});}
   save();
 }
+const toPanel=()=>{const pn=app.querySelector(".panel");if(pn&&pn.getBoundingClientRect().top<0)pn.scrollIntoView({block:"start"})};
 
 app.addEventListener("click",e=>{
   const b=e.target.closest("button"); if(!b) return;
   const d=b.dataset, i=S.ch;
   if(d.lang){S.lang=d.lang;render();return}
+  if(d.mode){S.mode=d.mode;render();return}
   if(d.res){S.view="res";render();window.scrollTo({top:0});return}
   if(d.ch!==undefined){S.view="ch";S.ch=+d.ch;S.tab="story";render();window.scrollTo({top:0});return}
-  if(d.tab){S.tab=d.tab;render();return}
-  if(d.card!==undefined){const st=((+d.step||0)+1)%3;b.dataset.step=st;b.classList.toggle("s1",st===1);b.classList.toggle("s2",st===2);b.setAttribute("aria-expanded",st>0);return}
-  if(d.jump!==undefined){S.qi[i]=+d.jump;render();return}
-  if(d.opt!==undefined){const qi=S.qi[i]||0;const p=S.picks[i]||(S.picks[i]=[]);if(p[qi]===undefined){p[qi]=+d.opt;render()}return}
+  if(d.tab){S.tab=d.tab;render();toPanel();return}
+  if(d.card!==undefined){openCard(b);return}
+  if(d.jump!==undefined){S.qi[pk(i)]=+d.jump;render();toPanel();return}
+  if(d.opt!==undefined){const qi=S.qi[pk(i)]||0;const p=S.picks[pk(i)]||(S.picks[pk(i)]=[]);if(p[qi]===undefined){p[qi]=+d.opt;render(".fb")}return}
   switch(d.act){
-    case "line":S.line[i]=(S.line[i]||1)+1;break;
-    case "all":S.line[i]=CH[i].story.length;break;
-    case "replay":S.line[i]=1;break;
-    case "nextq":S.qi[i]=(S.qi[i]||0)+1;break;
-    case "retry":S.picks[i]=[];S.qi[i]=0;ORDER[i]=CH[i].quiz.map(()=>shuffle([0,1,2,3]));break;
+    case "line":S.line[pk(i)]=(S.line[pk(i)]||1)+1;break;
+    case "all":S.line[pk(i)]=CH[i].story.length;break;
+    case "replay":S.line[pk(i)]=1;break;
+    case "nextq":S.qi[pk(i)]=(S.qi[pk(i)]||0)+1;break;
+    case "retry":S.picks[pk(i)]=[];S.qi[pk(i)]=0;ORDER[S.mode][i]=CH[i].quiz.map(()=>shuffle([0,1,2,3]));break;
+    case "nav":S.navMin=!S.navMin;break;
     case "reset":S.picks={};S.qi={};S.line={};S.ch=0;S.tab="story";S.view="ch";break;
     default:return;
   }
-  render();
+  render(d.act==="line"?".chat > .new":null);
+  if(d.act==="nextq"||d.act==="retry"||d.act==="replay")toPanel();
 });
 render();
 </script>
